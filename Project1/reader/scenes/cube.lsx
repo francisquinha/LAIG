@@ -1,0 +1,176 @@
+
+<SCENE>
+
+
+<INITIALS>
+    <frustum near="1" far="50"/>                      <!-- frustum planes -->
+    <translation x="0" y="0" z="25"/>                 <!-- initial translate -->
+    <rotation axis="z" angle="0"/>                    <!-- initial rotation 3 -->
+    <rotation axis="x" angle="-45"/>                  <!-- initial rotation 2 -->
+    <rotation axis="y" angle="-45"/>                  <!-- initial rotation 1 -->
+    <scale sx="1" sy="1" sz="1"/>                     <!-- initial scaling -->
+    <reference length="5"/>                           <!-- axis length, "0" means no axis -->
+</INITIALS>
+
+
+<ILLUMINATION>
+    <ambient r="0.2" g="0.2" b="0.2" a="1"/>          <!-- global ambient -->
+    <background r="0" g="0" b="0" a="1"/>             <!-- background color -->
+</ILLUMINATION>
+
+
+<LIGHTS>
+    <LIGHT id="action">                               <!-- light identifier -->
+        <enable value ="1"/>         				  <!-- enable/disable -->
+        <position x="3" y="3" z="3" w="1"/>           <!-- light position -->
+        <ambient r="1" g="1" b="1" a="1"/>            <!-- ambient component -->
+        <diffuse r="1" g="1" b="1" a="1"/>  		  <!-- diffuse component -->
+        <specular r="1" g="1" b="1" a="1"/>       	  <!-- specular component -->
+    </LIGHT>
+	<!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
+</LIGHTS>
+
+
+<TEXTURES>
+    <TEXTURE id="world">
+        <file path="/resources/images/ball.png"/>      <!-- path to file -->
+        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+    </TEXTURE>
+    <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->   
+</TEXTURES>
+
+
+<MATERIALS>
+    <MATERIAL id="branco">                                  
+        <shininess value="1"/>
+        <specular r="1" g="1" b="1" a="1"/>            <!-- specular reflection -->
+        <diffuse r="1" g="1" b="1" a="1"/>             <!-- diffuse reflection -->
+        <ambient r="1" g="1" b="1" a="1"/>             <!-- ambient reflection -->
+        <emission r="1" g="1" b="1" a="1"/>            <!-- emission component -->
+    </MATERIAL>
+    <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
+</MATERIALS>
+
+
+<LEAVES>
+    <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
+    <LEAF id="square" type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+    <LEAF id="cylinder" type="cylinder" args="1 1 1 8 8"/> 
+    <LEAF id="sphere" type="sphere" args="1 8 8"/>
+    <LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/>
+    <!-- Parameters of the above primitives: -->
+        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
+        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
+        <!-- sphere: radius, parts along radius, parts per section -->
+        <!-- triangle: coordinates of each vertex -->
+</LEAVES>
+
+
+<NODES>
+
+    <ROOT id="cube"/>   <!-- identifier of root node of the scene graph; this node -->
+                        <!-- must be defined in one of the following NODE declarations -->
+
+    <NODE id="cube">    <!-- defines one intermediate node; may be repeated as necessary -->
+
+        <!-- next two lines are mandatory -->
+        <MATERIAL id="branco"/>      		<!-- declared material superimposes the material received from parent node -->
+                                  	  		<!-- id="null" maintains material from parent node -->
+        <TEXTURE id="world"/>        		<!-- declared texture superimposes the texture received from parent node -->
+                                  	  		<!-- id="null" maintains texture from parent node -->
+                                  	  		<!-- id="clear" clears texture declaration received from parent node -->
+
+        <!-- geometric transformations are optional and may be repeated, in any order, as necessary
+        <TRANSLATION x="ff" y="ff" z="ff"/>
+        <ROTATION axis="cc" angle="ff"/>
+        <SCALE sx="ff" sy="ff" sz="ff"/> -->
+
+        <!-- declaring descendants, ate least one node or one leaf must be present -->
+        <DESCENDANTS>
+            <DESCENDANT id="face1"/>        <!-- "ss" is the identifier of a node or of leaf -->
+                                         	<!-- may be repeated as necessary. It can refer an -->
+                                         	<!-- identifier of another node or leaf, later defined in the lsx file. -->
+			<DESCENDANT id="face2"/>
+			<DESCENDANT id="face3"/>
+			<DESCENDANT id="face4"/>
+			<DESCENDANT id="face5"/>
+			<DESCENDANT id="face6"/>
+        </DESCENDANTS>
+
+    </NODE>
+
+    this.scene.pushMatrix();
+    this.scene.rotate(Math.PI/2, 0, 1, 0);
+    this.scene.translate(0, 0, 0.5);
+    this.quad.display(); // direita - coloca na frente e depois roda para a direita
+    this.scene.popMatrix();
+
+    this.scene.pushMatrix();
+    this.scene.rotate(-Math.PI/2, 0, 1, 0);
+    this.scene.translate(0, 0, 0.5);
+    this.quad.display(); // esquerda - coloca na frente e depois roda para a esquerda
+    this.scene.popMatrix();
+
+    <NODE id="face1"> <!-- face da frente do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente -->
+		<DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="face2"> <!-- face de cima do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <ROTATION axis="x" angle="-45"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para cima -->
+        <DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="face3"> <!-- face de tras do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <ROTATION axis="x" angle="90"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para tras -->
+        <DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="face4"> <!-- face de baixo do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <ROTATION axis="x" angle="45"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para baixo -->
+        <DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="face5"> <!-- face da direita do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <ROTATION axis="y" angle="45"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a direita -->
+        <DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="face6"> <!-- face da esquerda do cubo -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <ROTATION axis="y" angle="-45"/>
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a esquerda -->
+        <DESCENDANTS>
+            <DESCENDANT id="square"/>
+        </DESCENDANTS>
+    </NODE>
+
+</NODES>
+
+
+</SCENE>
