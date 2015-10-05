@@ -3,11 +3,11 @@
 
 
 <INITIALS>
-    <frustum near="1" far="50"/>                      <!-- frustum planes -->
+    <frustum near="0" far="10"/>                      <!-- frustum planes -->
     <translation x="0" y="0" z="25"/>                 <!-- initial translate -->
-    <rotation axis="z" angle="0"/>                    <!-- initial rotation 3 -->
-    <rotation axis="x" angle="-45"/>                  <!-- initial rotation 2 -->
-    <rotation axis="y" angle="-45"/>                  <!-- initial rotation 1 -->
+    <rotation axis="x" angle="-45"/>                  <!-- initial rotation 3 -->
+    <rotation axis="y" angle="-45"/>                  <!-- initial rotation 2 -->
+    <rotation axis="z" angle="0"/>                    <!-- initial rotation 1 -->
     <scale sx="1" sy="1" sz="1"/>                     <!-- initial scaling -->
     <reference length="5"/>                           <!-- axis length, "0" means no axis -->
 </INITIALS>
@@ -15,6 +15,7 @@
 
 <ILLUMINATION>
     <ambient r="0.2" g="0.2" b="0.2" a="1"/>          <!-- global ambient -->
+    <doubleside value="0" />                          <!-- double or single side illumination -->
     <background r="0" g="0" b="0" a="1"/>             <!-- background color -->
 </ILLUMINATION>
 

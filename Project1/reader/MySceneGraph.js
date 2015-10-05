@@ -114,16 +114,16 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	if (elems == null)  return "translation tag is missing!";
 	if (elems.length != 1) return "More than one translation tag found.";
 
-	var translate = elems[0];
+	var translation = elems[0];
 
-	this.initialsInformation.translate={};
-	this.initialsInformation.translate['x']=this.reader.getFloat(translate,'x',true);
-	this.initialsInformation.translate['y']=this.reader.getFloat(translate,'y',true);
-	this.initialsInformation.translate['z']=this.reader.getFloat(translate,'z',true);
+	this.initialsInformation.translation={};
+	this.initialsInformation.translation['x']=this.reader.getFloat(translation,'x',true);
+	this.initialsInformation.translation['y']=this.reader.getFloat(translation,'y',true);
+	this.initialsInformation.translation['z']=this.reader.getFloat(translation,'z',true);
 	
-	if(isNaN(this.initialsInformation.translate['x'])) return "value of translation in x axis invalid. It mus be a float.";
-	if(isNaN(this.initialsInformation.translate['y'])) return "value of translation in y axis invalid. It mus be a float.";
-	if(isNaN(this.initialsInformation.translate['z'])) return "value of translation in z axis invalid. It mus be a float.";
+	if(isNaN(this.initialsInformation.translation['x'])) return "value of translation in x axis invalid. It mus be a float.";
+	if(isNaN(this.initialsInformation.translation['y'])) return "value of translation in y axis invalid. It mus be a float.";
+	if(isNaN(this.initialsInformation.translation['z'])) return "value of translation in z axis invalid. It mus be a float.";
 
 	
 	//Rotation
