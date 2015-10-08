@@ -1,0 +1,383 @@
+
+<SCENE>
+
+
+<INITIALS>
+    <frustum near="0" far="10"/>                      <!-- frustum planes -->
+    <translation x="0" y="0" z="25"/>                 <!-- initial translate -->
+    <rotation axis="x" angle="-45"/>                  <!-- initial rotation 3 -->
+    <rotation axis="y" angle="-45"/>                  <!-- initial rotation 2 -->
+    <rotation axis="z" angle="0"/>                    <!-- initial rotation 1 -->
+    <scale sx="1" sy="1" sz="1"/>                     <!-- initial scaling -->
+    <reference length="5"/>                           <!-- axis length, "0" means no axis -->
+</INITIALS>
+
+
+<ILLUMINATION>
+    <ambient r="0.2" g="0.2" b="0.2" a="1"/>          <!-- global ambient -->
+    <background r="0" g="0" b="0" a="1"/>             <!-- background color -->
+</ILLUMINATION>
+
+
+<LIGHTS>
+    <LIGHT id="action">                               <!-- light identifier -->
+        <enable value ="1"/>         				  <!-- enable/disable -->
+        <position x="3" y="3" z="3" w="1"/>           <!-- light position -->
+        <ambient r="1" g="1" b="1" a="1"/>            <!-- ambient component -->
+        <diffuse r="1" g="1" b="1" a="1"/>  		  <!-- diffuse component -->
+        <specular r="1" g="1" b="1" a="1"/>       	  <!-- specular component -->
+    </LIGHT>
+	<!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
+</LIGHTS>
+
+
+<TEXTURES>
+    <TEXTURE id="world">
+        <file path="/resources/images/ball.png"/>      <!-- path to file -->
+        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+    </TEXTURE>
+    <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->   
+</TEXTURES>
+
+
+<MATERIALS>
+    <MATERIAL id="branco">                                  
+        <shininess value="1"/>
+        <specular r="1" g="1" b="1" a="1"/>            <!-- specular reflection -->
+        <diffuse r="1" g="1" b="1" a="1"/>             <!-- diffuse reflection -->
+        <ambient r="1" g="1" b="1" a="1"/>             <!-- ambient reflection -->
+        <emission r="1" g="1" b="1" a="1"/>            <!-- emission component -->
+    </MATERIAL>
+    <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
+</MATERIALS>
+
+
+<LEAVES>
+    <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
+    <LEAF id="square" type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+    <LEAF id="cylinder" type="cylinder" args="1 1 1 8 8"/> 
+    <LEAF id="sphere" type="sphere" args="1 8 8"/>
+    <LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/>
+    <!-- Parameters of the above primitives: -->
+        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
+        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
+        <!-- sphere: radius, parts along radius, parts per section -->
+        <!-- triangle: coordinates of each vertex -->
+</LEAVES>
+
+
+<NODES>
+
+    <ROOT id="monster"/>   	<!-- identifier of root node of the scene graph; this node -->
+                         	<!-- must be defined in one of the following NODE declarations -->
+
+    <NODE id="monster">    	<!-- defines one intermediate node; may be repeated as necessary -->
+
+        <!-- next two lines are mandatory -->
+        <MATERIAL id="null"/>      			<!-- declared material superimposes the material received from parent node -->
+                                  	  		<!-- id="null" maintains material from parent node -->
+        <TEXTURE id="null"/>        		<!-- declared texture superimposes the texture received from parent node -->
+                                  	  		<!-- id="null" maintains texture from parent node -->
+                                  	  		<!-- id="clear" clears texture declaration received from parent node -->
+
+        <!-- geometric transformations are optional and may be repeated, in any order, as necessary
+        <TRANSLATION x="ff" y="ff" z="ff"/>
+        <ROTATION axis="cc" angle="ff"/>
+        <SCALE sx="ff" sy="ff" sz="ff"/> -->
+
+        <!-- declaring descendants, ate least one node or one leaf must be present -->
+        <DESCENDANTS>
+            <DESCENDANT id="head"/>        	<!-- "ss" is the identifier of a node or of leaf -->
+                                         	<!-- may be repeated as necessary. It can refer an -->
+                                         	<!-- identifier of another node or leaf, later defined in the lsx file. -->
+			<DESCENDANT id="body"/>
+			<DESCENDANT id="legs"/>
+			<DESCENDANT id="arms"/>
+        </DESCENDANTS>
+
+    </NODE>
+	
+    <NODE id="head"> <!-- centrado na origem, material branco, textura world -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="back_head"/>
+            <DESCENDANT id="middle_head"/>
+            <DESCENDANT id="front_head"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="back_head"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="middle_head"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="ears"/>
+            <DESCENDANT id="skull"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="ears"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="left_ear"/>
+            <DESCENDANT id="right_ear"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="left_ear"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="ear"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="right_ear"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="ear"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="ear"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="skull1"/>
+            <DESCENDANT id="skull2"/>
+            <DESCENDANT id="skull3"/>
+            <DESCENDANT id="skull4"/>
+            <DESCENDANT id="skull5"/>
+            <DESCENDANT id="skull6"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull1"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull2"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull3"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull4"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull5"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="skull6"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="front_head"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="face"/>
+            <DESCENDANT id="hat"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="face"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="hat"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="body"> <!-- no quadrante positivo, sem material, sem textura -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="neck"/>	
+            <DESCENDANT id="upper_body"/>	
+            <DESCENDANT id="lower_body"/>	
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="neck"> <!-- no quadrante positivo, sem material, sem textura -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>	
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="upper_body"> <!-- no quadrante positivo, sem material, sem textura -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>	
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="lower_body"> <!-- no quadrante positivo, sem material, sem textura -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>	
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="legs"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="left_leg"/>
+            <DESCENDANT id="right_leg"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="left_leg"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="leg"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="right_leg"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="leg"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="leg"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="foot"/>
+            <DESCENDANT id="actual_leg"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="foot"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="actual_leg"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="arms"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="left_arm"/>
+            <DESCENDANT id="right_arm"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="left_arm"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="arm"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="right_arm"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="arm"/>
+        </DESCENDANTS>
+    </NODE>
+	
+    <NODE id="arm"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="hand"/>
+            <DESCENDANT id="actual_arm"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="hand"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="actual_arm"> <!-- no quadrante negativo, material branco, textura world, redefinidos nas faces -->
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+		<DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+</NODES>
+
+
+</SCENE>
