@@ -10,8 +10,8 @@ XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initCameras();
-
-    //this.initLights();
+	
+    
 
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -21,8 +21,10 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	//this.axis=new CGFaxis(this, this.graph.initialsInformation.reference);
+	
+
 };
+
 
 XMLscene.prototype.initLights = function () {
 
@@ -56,15 +58,79 @@ XMLscene.prototype.setDefaultAppearance = function () {
     this.setShininess(10.0);	
 };
 
+
 // Handler called when the graph is finally loaded. 
 // As loading is asynchronous, this may be called already after the application has started the run loop
 
 XMLscene.prototype.onGraphLoaded = function () 
 {
 	this.gl.clearColor(this.graph.illumina.background[0],this.graph.illumina.background[1],this.graph.illumina.background[2],this.graph.illumina.background[3]);
+	// Lights
+
 	this.initLights();
+
+    // Illumination
+   
+
+		// Background
+		var illuBackground = this.graph.illumina.background;
+		this.gl.clearColor(illuBackground.r, illuBackground.g, illuBackground.b, illuBackground.a);
+
+		// Ambient
+		var illuAmbient = this.graph.illumina.ambient;
+		this.setGlobalAmbientLight(illuAmbient.r, illuAmbient.g, illuAmbient.b, illuAmbient.a);
+
+	// Axis
+
 	this.axis=new CGFaxis(this, this.graph.initialsInformation.reference);
+
+
+    //Textures
+     
+    if (this.graph.textures.length > 0)
+        this.enableTextures(true);
+
+    var textures = this.graph.textures;
+    for (var i = 0 ; i < textures.length ; i++) {
+        var temp = new addTexture(this, textures[i].id, textures[i].file, textures[i].amplif_factor);
+
+        this.textures.push(temp);
+    }
+
+    // Materials
+    
+    var materials = this.graph.materials;
+    for (i = 0 ; i < materials.length ; i++) {
+        temp = new addMaterial(this, materials[i].id);
+        temp.setShininess(materials[i].shininess);
+        temp.setSpecular(materials[i].specular.r, materials[i].specular.g, materials[i].specular.b, materials[i].specular.a);
+        temp.setDiffuse(materials[i].diffuse.r, materials[i].diffuse.g, materials[i].diffuse.b, materials[i].diffuse.a);
+        temp.setAmbient(materials[i].ambient.r, materials[i].ambient.g, materials[i].ambient.b, materials[i].ambient.a);
+        temp.setEmission(materials[i].emission.r, materials[i].emission.g, materials[i].emission.b, materials[i].emission.a);
+     
+        this.materials.push(temp);
+    }
+
 };
+
+// Functions to add Textures, Materials
+
+function addTexture(scene, id, path, amplif_factor) {
+    CGFtexture.call(this, scene, path);
+    this.id = id;
+    this.amplif_factor = amplif_factor;
+}
+addTexture.prototype = Object.create(CGFtexture.prototype);
+addTexture.prototype.constructor = addTexture;
+
+function addMaterial(scene, id) {
+    CGFappearance.call(this, scene);
+    this.id = id;
+}
+addMaterial.prototype = Object.create(CGFappearance.prototype);
+addMaterial.prototype.constructor = addMaterial;
+
+// Display
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
