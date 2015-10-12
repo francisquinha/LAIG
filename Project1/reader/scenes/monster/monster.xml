@@ -4,7 +4,7 @@
 
 <INITIALS>
     <frustum near="2" far="500"/>                      <!-- frustum planes -->
-    <translation x="-100" y="-40" z="-20"/>                 <!-- initial translate -->
+    <translation x="-100" y="-40" z="-30"/>                 <!-- initial translate -->
     <rotation axis="x" angle="20"/>                  <!-- initial rotation 3 -->
     <rotation axis="y" angle="40"/>                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="-25"/>                    <!-- initial rotation 1 -->
@@ -132,7 +132,7 @@
         <TRANSLATION x="3.3" y="0" z="3.3"/>
         <ROTATION axis="y" angle="45"/>
         <ROTATION axis="x" angle="-90"/>
-        <SCALE sx="50" sy="80" sz="1"/>
+        <SCALE sx="65" sy="80" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
@@ -143,7 +143,7 @@
         <TEXTURE id="blue"/>
         <TRANSLATION x="-25" y="25" z="-25"/>
         <ROTATION axis="y" angle="45"/>
-        <SCALE sx="50" sy="50" sz="1"/>
+        <SCALE sx="65" sy="50" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
