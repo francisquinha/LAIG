@@ -5,7 +5,7 @@
  */
 
 //rectangle e uma subclasse de CGFobject
-function rectangle(scene, xbl, ybl, xtr, ytr, minS, maxS, minT, maxT) {
+function rectangle(scene, xbl, ybl, xtr, ytr, s, t) {
 
 	CGFobject.call(this,scene);
 	
@@ -14,10 +14,9 @@ function rectangle(scene, xbl, ybl, xtr, ytr, minS, maxS, minT, maxT) {
 	this.xtr = xtr;
 	this.ytr = ytr;
 
-	this.minS = minS;
-	this.maxS = maxS;
-	this.minT = minT;
-	this.maxT = maxT;
+	// amplification factors
+	this.s = s;		
+	this.t = t;
 
 	this.initBuffers();
 
@@ -50,10 +49,10 @@ rectangle.prototype.initBuffers = function () {
     ];
 
     this.texCoords = [    
-		this.minS, this.maxT,
-		this.maxS, this.maxT,
-		this.minS, this.minT,
-		this.maxS, this.minT
+		0, 0,
+		this.xtr / this.s, 0,
+		0, this.ytr / this.t,
+		this.xtr / this.s, this.xtr / this.s
 	];
 
 	this.initGLBuffers();

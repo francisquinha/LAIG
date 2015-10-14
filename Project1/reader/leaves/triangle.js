@@ -1,4 +1,4 @@
-function triangle(scene, x0, y0, z0, x1, y1, z1, x2, y2, z2) {
+function triangle(scene, x0, y0, z0, x1, y1, z1, x2, y2, z2, s, t) {
 
     CGFobject.call(this, scene);
 
@@ -11,6 +11,9 @@ function triangle(scene, x0, y0, z0, x1, y1, z1, x2, y2, z2) {
     this.x2 = x2;
     this.y2 = y2;
     this.z2 = z2;
+
+	this.s = s;
+	this.t = t;
 
     this.initBuffers();
 
@@ -44,10 +47,18 @@ triangle.prototype.initBuffers = function() {
 		normal[0], normal[1], normal[2]
     ];
 
+    // compute texCoords
+
+   	var a = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1));
+   	var a = sqrt((x2 - x0) * (x2 - x0) + (y2 - y0) * (y2 - y0) + (z2 - z0) * (z2 - z0));
+   	var c = sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0) + (z1 - z0) * (z1 - z0));
+   	var cos_beta = (a * a - b * b + c * c) / (2 * a * c);
+   	var sin_beta = sqrt(1 - cos_beta * cos_beta);
+
     this.texCoords = [
     	0, 0,
-		1, 0,
-		1, 1 // isto esta errado!
+		c / this.s, 0,
+		(c - a * cos_beta) / this.s, (a * sin_beta) / this.t
 	];
 
     this.primitiveType = this.scene.gl.TRIANGLES;

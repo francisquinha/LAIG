@@ -2,7 +2,7 @@
  * cylinder
  * @constructor
  */
- function cylinder(scene, height, bottom, top, slices, stacks, minS, maxS, minT, maxT) {
+ function cylinder(scene, height, bottom, top, slices, stacks, s, t) {
 
  	CGFobject.call(this, scene);
 	
@@ -12,10 +12,8 @@
 	this.slices = slices;
 	this.stacks = stacks;
 
-	this.minS = minS || 0;
-	this.maxS = maxS || 1;
-	this.minT = minT || 0;
-	this.maxT = maxT || 1;
+	this.s = s;
+	this.t = t;
 
  	this.initBuffers();
 
@@ -42,18 +40,18 @@
 	var z_now = 0;
 	var z = this.height / this.stacks;
 
-	var tex_j = 0;
-	var tex_j_add = 1/this.stacks;
-	var tex_i_sub = 1/this.slices;
-	
+	var tex_height = this.height / this.t;
+	var tex_length = 2 * Math.PI * (this.bottom + (this.top - this.bottom) / 2)  / this.s;
+
 	for (j = 0; j < this.stacks; j++) {
 		
 		var ang_now = 0;
 		var ang_then = ang;
 		var ind_i = 0;
-		var tex_i = 1;
 
 		for (i = 0; i < this.slices; i++) {
+
+			//var tex_length_now = 2 * Math.PI * rad_now / this.s;
 
 			var x0 = rad_now * Math.cos(ang_now);
 			var y0 = rad_now * Math.sin(ang_now);
@@ -71,6 +69,7 @@
 
 			rad_now += rad;
 			z_now += z;
+			//var tex_length_then = 2 * Math.PI * rad_now / this.s;
 
 			var x2 = rad_now * Math.cos(ang_now);
 			var y2 = rad_now * Math.sin(ang_now);
@@ -122,17 +121,14 @@
 			this.normals.push(0);
 
 			// coordenadas textura
-			this.texCoords.push(tex_i, tex_j);
-			this.texCoords.push(tex_i - tex_i_sub, tex_j);
-			this.texCoords.push(tex_i, tex_j + tex_j_add);
-			this.texCoords.push(tex_i - tex_i_sub, tex_j + tex_j_add);
-
-			tex_i -= tex_i_sub;
+			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * j / this.stacks);
+			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * j / this.stacks);
+			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * (j + 1) / this.stacks);
+			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * (j + 1) / this.stacks);
 
 		}
 					
 		ind_j += aux_j;
-		tex_j += tex_j_add;
 	
 	}
  	

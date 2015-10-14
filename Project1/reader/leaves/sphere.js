@@ -2,12 +2,15 @@
  * sphere
  * @constructor
  */
- function sphere(scene, radius, slices, stacks) {
+ function sphere(scene, radius, slices, stacks, s, t) {
  	CGFobject.call(this,scene);
 	
 	this.radius = radius;
 	this.slices = slices;
 	this.stacks = stacks;
+
+	this.s = s;
+	this.t = t;
 
  	this.initBuffers();
  };
@@ -30,15 +33,13 @@
 	var ind_j = 0;
 	var aux_j = 4 * this.slices;
 
-	var tex_j = 0;
-	var tex_j_add = 1/this.stacks;
-	var tex_i_sub = 1/this.slices;
+	var tex_height = Math.PI * this.radius / this.t;
+	var tex_length = 2 * Math.PI * this.radius / this.s;
 	
 	for (j = 0; j < this.stacks; j++) {
 		
 		var ang_0_now = 0;
 		var ind_i = 0;
-		var tex_i = 1;
 
 		for (i = 0; i < this.slices; i++) {
 
@@ -109,18 +110,16 @@
 			this.normals.push(z3);
 
 			// coordenadas textura
-			this.texCoords.push(tex_i, tex_j);
-			this.texCoords.push(tex_i - tex_i_sub, tex_j);
-			this.texCoords.push(tex_i, tex_j + tex_j_add);
-			this.texCoords.push(tex_i - tex_i_sub, tex_j + tex_j_add);
+			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * j / this.stacks);
+			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * j / this.stacks);
+			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * (j + 1) / this.stacks);
+			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * (j + 1) / this.stacks);
 
-			tex_i -= tex_i_sub;
 		}
 					
 		ang_1_now += ang_1;
 		ang_1_then += ang_1;
 		ind_j += aux_j;
-		tex_j += tex_j_add;
 
 	}
 
