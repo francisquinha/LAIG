@@ -1,58 +1,64 @@
 /**
- * MySphere
+ * sphere
  * @constructor
  */
- function MySphere(scene, slices, stacks) {
+ function sphere(scene, radius, slices, stacks) {
  	CGFobject.call(this,scene);
 	
-	this.slices=slices;
-	this.stacks=stacks;
+	this.radius = radius;
+	this.slices = slices;
+	this.stacks = stacks;
 
  	this.initBuffers();
  };
 
- MySphere.prototype = Object.create(CGFobject.prototype);
- MySphere.prototype.constructor = MySphere;
+ sphere.prototype = Object.create(CGFobject.prototype);
+ sphere.prototype.constructor = sphere;
 
- MySphere.prototype.initBuffers = function() {
-
-	var ang_0 = 360 * degToRad / this.slices;
-	var ang_1 = 180 * degToRad / this.stacks;
+ sphere.prototype.initBuffers = function() {
 
 	this.vertices = [];
 	this.indices = [];
 	this.normals = [];
 	this.texCoords = [];
 
+	var ang_0 = 360 * degToRad / this.slices;
+	var ang_1 = 180 * degToRad / this.stacks;
+
 	var ang_1_now = 0;
 	var ang_1_then = ang_1;
 	var ind_j = 0;
 	var aux_j = 4 * this.slices;
+
+	var tex_j = 0;
+	var tex_j_add = 1/this.stacks;
+	var tex_i_sub = 1/this.slices;
 	
 	for (j = 0; j < this.stacks; j++) {
 		
 		var ang_0_now = 0;
 		var ind_i = 0;
+		var tex_i = 1;
 
 		for (i = 0; i < this.slices; i++) {
 
-			var x0 = Math.sin(ang_1_now) * Math.cos(ang_0_now);
-			var y0 = Math.cos(ang_1_now);
-			var z0 = Math.sin(ang_1_now) * Math.sin(ang_0_now);
+			var x0 = this.radius * Math.sin(ang_1_now) * Math.cos(ang_0_now);
+			var y0 = this.radius * Math.cos(ang_1_now);
+			var z0 = this.radius * Math.sin(ang_1_now) * Math.sin(ang_0_now);
 
-			var x2 = Math.sin(ang_1_then) * Math.cos(ang_0_now);
-			var y2 = Math.cos(ang_1_then);
-			var z2 = Math.sin(ang_1_then) * Math.sin(ang_0_now);
+			var x2 = this.radius * Math.sin(ang_1_then) * Math.cos(ang_0_now);
+			var y2 = this.radius * Math.cos(ang_1_then);
+			var z2 = this.radius * Math.sin(ang_1_then) * Math.sin(ang_0_now);
 
 			ang_0_now += ang_0;
 
-			var x1 = Math.sin(ang_1_now) * Math.cos(ang_0_now);
-			var y1 = Math.cos(ang_1_now);
-			var z1 = Math.sin(ang_1_now) * Math.sin(ang_0_now);
+			var x1 = this.radius * Math.sin(ang_1_now) * Math.cos(ang_0_now);
+			var y1 = this.radius * Math.cos(ang_1_now);
+			var z1 = this.radius * Math.sin(ang_1_now) * Math.sin(ang_0_now);
 
-			var x3 = Math.sin(ang_1_then) * Math.cos(ang_0_now);
-			var y3 = Math.cos(ang_1_then);
-			var z3 = Math.sin(ang_1_then) * Math.sin(ang_0_now);
+			var x3 = this.radius * Math.sin(ang_1_then) * Math.cos(ang_0_now);
+			var y3 = this.radius * Math.cos(ang_1_then);
+			var z3 = this.radius * Math.sin(ang_1_then) * Math.sin(ang_0_now);
 
 			this.vertices.push(x0);
 			this.vertices.push(y0);
@@ -103,15 +109,22 @@
 			this.normals.push(z3);
 
 			// coordenadas textura
-			this.texCoords.push(1 - i / this.slices, j / this.stacks);
-			this.texCoords.push(1 - (i + 1) / this.slices, j / this.stacks);
-			this.texCoords.push(1 - i / this.slices, (j + 1) / this.stacks);
-			this.texCoords.push(1 - (i + 1) / this.slices, (j + 1) / this.stacks);
-		}			
+			this.texCoords.push(tex_i, tex_j);
+			this.texCoords.push(tex_i - tex_i_sub, tex_j);
+			this.texCoords.push(tex_i, tex_j + tex_j_add);
+			this.texCoords.push(tex_i - tex_i_sub, tex_j + tex_j_add);
+
+			tex_i -= tex_i_sub;
+		}
+					
 		ang_1_now += ang_1;
 		ang_1_then += ang_1;
 		ind_j += aux_j;
+		tex_j += tex_j_add;
+
 	}
+
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
+ 	
  };
