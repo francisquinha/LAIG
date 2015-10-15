@@ -567,6 +567,10 @@ MySceneGraph.prototype.parseNodes= function(rootElement) {
 	 
 	console.log(this.nodes);
 
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+
 };
 
 MySceneGraph.prototype.parseNode = function(element) {

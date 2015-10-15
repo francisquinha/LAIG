@@ -1,4 +1,11 @@
-var deg2rad = Math.PI / 180;
+
+var stackMatrix = [];
+var stackMaterial = [];
+var stackTexture = [];
+
+function deg2rad(degrees) {
+	return degrees * Math.PI / 180;
+}
 
 function XMLscene() {
     CGFscene.call(this);
@@ -123,9 +130,9 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.processLeaves();
 
     // Nodes
-
-    this.processNodes();
 */
+    this.processNodes();
+
 };
 
 // Display
@@ -200,47 +207,140 @@ XMLscene.prototype.initialAxis = function() {
     for (var i = 0; i < r.length; i++) {
         switch (r[i].axis) {
             case 'x':
-                this.rotate(r[i].angle * deg2rad, 1, 0, 0);
+                this.rotate(deg2rad(r[i].angle), 1, 0, 0);
                 break;
             case 'y':
-                this.rotate(r[i].angle * deg2rad, 0, 1, 0);
+                this.rotate(deg2rad(r[i].angle), 0, 1, 0);
                 break;
             case 'z':
-                this.rotate(r[i].angle * deg2rad, 0, 0, 1);
+                this.rotate(deg2rad(r[i].angle), 0, 0, 1);
                 break;
         }
     }
     this.scale(s.sx, s.sy, s.sz);
 };
 
-XMLscene.prototype.processLeaves = function() {
-    for (var i = 0; i < this.graph.leaves.length; i++) {
-        var leaf = this.graph.leaves[i];
-        var primitive;
-        switch (leaf.type) {
-            case "rectangle":
-                primitive = new rectangle(this, leaf.args);
-                primitive.id = leaf.id;
-                this.leaves.push(primitive);
-                break;
-            case "cylinder":
-                primitive = new cylinder(this, leaf.args);
-                primitive.id = leaf.id;
-                this.leaves.push(primitive);
-                break;
-            case "sphere":
-                primitive = new sphere(this, leaf.args);
-                primitive.id = leaf.id;
-                this.leaves.push(primitive);
-                break;
-            case "triangle":
-                primitive = new triangle(this, leaf.args);
-                primitive.id = leaf.id;
-                this.leaves.push(primitive);
-                break;
-        }
-    }
+
+XMLscene.prototype.processLeaf = function(leaf) {
+	
+	var trf_matrix = stackMatrix[stackMatrix.length - 1];
+	//var material = stackMaterial[stackMaterial.length - 1];
+	//var texture = stackTexture[stackTexture.length - 1];
+	var s = 1; //texture.amplif_factor.s;
+	var t = 1; //texture.amplif_factor.t;
+
+	var primitive;
+
+	switch (leaf.type) {
+		case "rectangle":
+			primitive = new rectangle(this, leaf.args, s, t);
+			break;
+		case "cylinder":
+			primitive = new cylinder(this, leaf.args, s, t);
+			break;
+		case "sphere":
+			primitive = new sphere(this, leaf.args, s, t);
+			break;
+		case "triangle":
+			primitive = new triangle(this, leaf.args, s, t);
+			break;
+	}
+
+	return primitive;
+	   
 };
+
+
+XMLscene.prototype.processNodes = function() {
+
+	var trf_matrix = mat4.create();	// create matrix
+	mat4.identity(trf_matrix); 		// set to identity
+	stackMatrix.push(trf_matrix);	// place in stack
+
+	var material = this.materials["default"];
+	stackMaterial.push(material);
+
+	var texture = this.textures["default"];
+	stackTexture.push(texture);
+
+	var root_id = this.graph.nodes['root'];
+	var root_node = this.graph.nodes[root_id];
+
+	this.processNode(root_node);
+	stackMatrix.pop();
+	stackMaterial.pop();
+	stackTexture.pop();
+
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
+	
+};
+
+
+XMLscene.prototype.processNode = function(node) {
+
+	var trf_matrix = stackMatrix[stackMatrix.length - 1];
+	for (i = node.transformations.length - 1; i >= 0 ; i--) {
+		var transformation = node.transformations[i];
+		switch (transformation.type) {
+			case "scale":
+				mat4.scale(trf_matrix, trf_matrix, [transformation.sx, transformation.sy, transformation.sz]);
+				break;
+			case "rotation":
+				switch(transformation.axis) {
+					case "x":
+						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [1, 0, 0]);
+						break;
+					case "y":
+						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [0, 1, 0]);
+						break;
+					case "z":
+						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [0, 0, 1]);
+						break;
+				}
+				break;
+			case "translation":
+				mat4.translate(trf_matrix, trf_matrix, [transformation.x, transformation.y, transformation.z]);
+				break;
+		}
+	}
+	stackMatrix.push(trf_matrix);
+
+	if (node.material == "null")
+		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
+	else
+		stackMaterial.push(this.materials[node.material]);
+
+	if (node.texture == "null")
+		stackTexture.push(stackTexture[stackTexture.length - 1]);
+	else if (node.texture == "clear")
+	 	stackTexture.push("clear");
+	else
+		stackTexture.push(this.textures[node.texture]);
+	
+	console.log(node.descendants);
+	for (i = 0; i < node.descendants.length; i++) {
+		var new_node_id = node.descendants[i];
+		console.log(new_node_id);
+		var new_node = this.graph.nodes[new_node_id];
+		if (new_node == undefined) {
+			var leaf = this.graph.leaves[new_node_id];
+			node.primitive = this.processLeaf(leaf);
+			console.log(node);
+		}
+		else this.processNode(new_node);
+	}
+
+	//stackMatrix.pop();
+	//stackMaterial.pop();
+	//stackTexture.pop();
+
+};
+
+
+
+/*
 //////////////////////////////////////////////////////////////
 XMLscene.prototype.processNodes = function() {
    var nodes_list = this.graph.nodes;
@@ -301,16 +401,21 @@ XMLscene.prototype.getTexture = function(id) {
     return null;
 };
 //////////////////////////////////////////////////////////////
-
-function createMaterial(scene, id) {
+function addMaterial(scene, id) {
     CGFappearance.call(this, scene);
     this.id = id;
 }
-createMaterial.prototype = Object.create(CGFappearance.prototype);
-createMaterial.prototype.constructor = createMaterial;
-
+addMaterial.prototype = Object.create(CGFappearance.prototype);
+addMaterial.prototype.constructor = addMaterial;
 /////////////////////////////////////////////////////////////7
-
+function addTexture(scene, id, file, amplif_factor) {
+    CGFtexture.call(this, scene, file);
+    this.id = id;
+    this.amplif_factor = amplif_factor;
+}
+addTexture.prototype = Object.create(CGFtexture.prototype);
+addTexture.prototype.constructor = addTexture;
+/////////////////////////////////////////////////////////////7
 function GlobalNode(id) {
     this.id = id;
     this.material = null;
@@ -319,3 +424,4 @@ function GlobalNode(id) {
     this.primitive = null;
 }
 
+*/
