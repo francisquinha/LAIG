@@ -1,3 +1,4 @@
+var deg2rad = Math.PI / 180;
 
 function XMLscene() {
     CGFscene.call(this);
@@ -10,21 +11,21 @@ XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
     this.initCameras();
-	
-    
-
-
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
+	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	
+    //
+
+	this.textures = [];
+    this.materials = [];
+    this.leaves = [];
+    this.nodes = [];
+	//
 
 };
-
 
 XMLscene.prototype.initLights = function () {
 
@@ -52,10 +53,12 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);	
+    for (var i = 0; i < this.graph.materials.length ; i++) {
+        if (this.materials[i].id == "default") {
+            this.materials[i].apply();
+            break;
+        }
+    }
 };
 
 
@@ -64,11 +67,16 @@ XMLscene.prototype.setDefaultAppearance = function () {
 
 XMLscene.prototype.onGraphLoaded = function () 
 {
-	this.gl.clearColor(this.graph.illumina.background[0],this.graph.illumina.background[1],this.graph.illumina.background[2],this.graph.illumina.background[3]);
 	// Lights
 
 	this.initLights();
 
+	// Frustum
+    this.camera.near = this.graph.initialsInformation.frustum.near;
+    this.camera.far = this.graph.initialsInformation.frustum.far;
+
+	//this.gl.clearColor(this.graph.illumina.background[0],this.graph.illumina.background[1],this.graph.illumina.background[2],this.graph.illumina.background[3]);
+	
     // Illumination
    
 
@@ -82,24 +90,26 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	// Axis
 
-	this.axis=new CGFaxis(this, this.graph.initialsInformation.reference);
+	this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
 
 
     //Textures
-     
-    if (this.graph.textures.length > 0)
-        this.enableTextures(true);
-
-    var textures = this.graph.textures;
-    for (var i = 0 ; i < textures.length ; i++) {
-        var temp = new addTexture(this, textures[i].id, textures[i].file, textures[i].amplif_factor);
-
-        this.textures.push(temp);
+	var i = 0;
+    for(var texture in this.graph.textures)
+	{
+    this.textures[i] = texture;
+	i++;
+	//console.log(texture);
     }
-
+    if(this.textures.length > 0)
+		this.enableTextures(true);
+console.log(this.textures[0]);
+    
+/*
     // Materials
     
     var materials = this.graph.materials;
+    //console.log(materials.length);
     for (i = 0 ; i < materials.length ; i++) {
         temp = new addMaterial(this, materials[i].id);
         temp.setShininess(materials[i].shininess);
@@ -110,7 +120,17 @@ XMLscene.prototype.onGraphLoaded = function ()
      
         this.materials.push(temp);
     }
+*/
 
+/*
+    // Leaves
+
+    this.processLeaves();
+
+    // Nodes
+
+    this.processNodes();
+*/
 };
 
 // Display
@@ -139,19 +159,172 @@ XMLscene.prototype.display = function () {
 
 	if (this.graph.loadedOk)
 	{
-		for(var i = 0 ; i < this.lights.length ; i++){
+		//
+		this.setDefaultAppearance();
+		//
 
+		for(var i = 0 ; i < this.lights.length ; i++){
 		this.lights[i].update();
 		}
 		
 		// Draw axis
-		this.axis.display();
-
+		if(this.axis.length > 0)
+		{
+			this.initialAxis();
+			this.axis.display();
+		}
 
 		this.setDefaultAppearance();
 		
+	
+
+		 for (i = 0; i < this.nodes.length; i++) {
+            var node = this.nodes[i];
+            this.pushMatrix();
+            node.material.setTexture(node.texture);
+            if (node.texture != null) {
+                node.primitive.updateTex(node.texture.amplif_factor.s, node.texture.amplif_factor.t);
+            }
+            node.material.apply();
+            this.multMatrix(node.matrix);
+            node.primitive.display();
+            this.popMatrix();
+        }
 	};	
 
     this.shader.unbind();
 };
+
+XMLscene.prototype.initialAxis = function() {
+    var init = this.graph.initialsInformation;
+    var t = init.translate;
+    var s = init.scale;
+    var r = init.rotation;
+
+    this.translate(t.x, t.y, t.z);
+    for (var i = 0; i < r.length; i++) {
+        switch (r[i].axis) {
+            case 'x':
+                this.rotate(r[i].angle * deg2rad, 1, 0, 0);
+                break;
+            case 'y':
+                this.rotate(r[i].angle * deg2rad, 0, 1, 0);
+                break;
+            case 'z':
+                this.rotate(r[i].angle * deg2rad, 0, 0, 1);
+                break;
+        }
+    }
+    this.scale(s.sx, s.sy, s.sz);
+};
+
+XMLscene.prototype.processLeaves = function() {
+    for (var i = 0; i < this.graph.leaves.length; i++) {
+        var leaf = this.graph.leaves[i];
+        switch (leaf.type) {
+            case "rectangle":
+                var primitive = new rectangle(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
+            case "cylinder":
+                primitive = new cylinder(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
+            case "sphere":
+                primitive = new sphere(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
+            case "triangle":
+                primitive = new triangle(this, leaf.args);
+                primitive.id = leaf.id;
+                this.leaves.push(primitive);
+                break;
+        }
+    }
+};
+//////////////////////////////////////////////////////////////
+XMLscene.prototype.processNodes = function() {
+   var nodes_list = this.graph.nodes;
+   var root_node = this.graph.findNode(this.graph.root_id);
+   this.searchNode(root_node, root_node.material, root_node.texture, root_node.matrix);
+};
+//////////////////////////////////////////////////////////////
+XMLscene.prototype.searchNode = function(node, currMaterial, currTexture, currMatrix) {
+    var nextMat = node.material;
+    if (node.material == "null") nextMat = currMaterial;
+
+    var nextTex = node.texture;
+    if (node.texture == "null") nextTex = currTexture;
+    else if (node.texture == "clear") nextTex = null;
+
+    var nextMatrix = mat4.create();
+    mat4.multiply(nextMatrix, currMatrix, node.matrix);
+
+    for (var i = 0; i < node.descendants.length; i++) {
+        var nextNode = this.graph.findNode(node.descendants[i]);
+
+        if (nextNode == null) {
+            var temp = new GlobalNode(node.descendants[i]);
+            temp.material = this.getMaterial(nextMat);
+            temp.texture = this.getTexture(nextTex);
+            temp.matrix = nextMatrix;
+            temp.isLeaf = true;
+            for (var j = 0; j < this.leaves.length; j++) {
+                if (this.leaves[j].id == temp.id) {
+                    temp.primitive = this.leaves[j];
+                    break;
+                }
+            }
+            this.nodes.push(aux);
+            continue;
+        }
+
+        this.searchNode(nextNode, nextMat, nextTex, nextMatrix);
+    }
+};
+
+//////////////////////////////////////////////////////////////
+XMLscene.prototype.getMaterial = function(id) {
+    if (id == null) return null;
+
+    for (var i = 0; i < this.materials.length; i++)
+        if (id == this.materials[i].id) return this.materials[i];
+
+    return null;
+};
+//////////////////////////////////////////////////////////////
+XMLscene.prototype.getTexture = function(id) {
+    if (id == null) return null;
+
+    for (var i = 0; i < this.textures.length; i++)
+        if (id == this.textures[i].id) return this.textures[i];
+
+    return null;
+};
+//////////////////////////////////////////////////////////////
+function addMaterial(scene, id) {
+    CGFappearance.call(this, scene);
+    this.id = id;
+}
+addMaterial.prototype = Object.create(CGFappearance.prototype);
+addMaterial.prototype.constructor = addMaterial;
+/////////////////////////////////////////////////////////////7
+function addTexture(scene, id, file, amplif_factor) {
+    CGFtexture.call(this, scene, file);
+    this.id = id;
+    this.amplif_factor = amplif_factor;
+}
+addTexture.prototype = Object.create(CGFtexture.prototype);
+addTexture.prototype.constructor = addTexture;
+/////////////////////////////////////////////////////////////7
+function GlobalNode(id) {
+    this.id = id;
+    this.material = null;
+    this.texture = null;
+    this.matrix = null;
+    this.primitive = null;
+}
 

@@ -15,6 +15,8 @@ function MySceneGraph(filename, scene) {
 	 */
 	 
 	this.reader.open('scenes/'+filename, this);  
+
+	
 }
 
 
@@ -516,19 +518,18 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
     for (var i = 0; i < all_leaves.children.length ; i++)
     {
         var leaf = all_leaves.children[i];
-        console.log(leaf);
-		var arrangedLeaf = {};
+
+		var arrangedArgsLeaf = {};
     	var argsWithSpace;
 
-    	arrangedLeaf['type'] = this.reader.getString(leaf, 'type', true);
+    	arrangedArgsLeaf['type'] = this.reader.getString(leaf, 'type', true);
     	argsWithSpace = this.reader.getString(leaf, 'args', true);
-    	arrangedLeaf['args'] = argsWithSpace.split(' ');
-	
-    	for(var i = 0; i < arrangedLeaf['args'].length; i++){
-        	arrangedLeaf['args'][i] = parseFloat(arrangedLeaf['args'][i]);
+    	arrangedArgsLeaf['args'] = argsWithSpace.split(' ');
+    	
+    	for(var j = 0; j < arrangedArgsLeaf['args'].length; j++){
+        	arrangedArgsLeaf['args'][j] = parseFloat(arrangedArgsLeaf['args'][j]);
     	}
-    
-    	this.leaves[leaf.id] = arrangedLeaf;
+    	this.leaves[leaf.id] = arrangedArgsLeaf;
     }
 	console.log(this.leaves);	
 };
@@ -619,3 +620,9 @@ MySceneGraph.prototype.onXMLError=function (message) {
 };
 
 
+MySceneGraph.prototype.findNode = function(id) {
+    for (i = 0; i < this.nodes.length; i++)
+        if (this.nodes[i].id == id) return this.nodes[i];
+
+    return null;
+};

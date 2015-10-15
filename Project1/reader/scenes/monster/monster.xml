@@ -1,7 +1,6 @@
 
 <SCENE>
 
-
 <INITIALS>
     <frustum near="2" far="500"/>                      <!-- frustum planes -->
     <translation x="-100" y="-40" z="-30"/>                 <!-- initial translate -->
@@ -9,7 +8,7 @@
     <rotation axis="y" angle="40"/>                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="-25"/>                    <!-- initial rotation 1 -->
     <scale sx="1" sy="1" sz="1"/>                     <!-- initial scaling -->
-    <reference length="0"/>                           <!-- axis length, "0" means no axis -->
+    <reference length="5"/>                           <!-- axis length, "0" means no axis -->
 </INITIALS>
 
 

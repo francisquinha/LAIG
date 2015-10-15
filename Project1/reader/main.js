@@ -11,8 +11,8 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','leaves/MyCircle.js','leaves/MyCylinder.js','leaves/MySphere.js', 
-'addMaterials.js', 'addTextures.js',
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','leaves/triangle.js','leaves/rectangle.js','leaves/sphere.js', 'leaves/cylinder.js', 
+'GlobalNode.js',
 
 main=function()
 {
@@ -31,7 +31,7 @@ main=function()
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 	
-	var filename=getUrlVars()['file'] || "cube.lsx";
+	var filename=getUrlVars()['file'] || "monster/monster.xml";
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
