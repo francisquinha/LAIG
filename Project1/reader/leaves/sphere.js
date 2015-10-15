@@ -15,10 +15,6 @@
  	this.initBuffers();
  };
 
-function deg2rad(degrees) {
-	return degrees * Math.PI / 180;
-}
-
  sphere.prototype = Object.create(CGFobject.prototype);
  sphere.prototype.constructor = sphere;
 
@@ -29,8 +25,8 @@ function deg2rad(degrees) {
 	this.normals = [];
 	this.texCoords = [];
 
-	var ang_0 = deg2rad(360) / this.slices;
-	var ang_1 = deg2rad(180) / this.stacks;
+	var ang_0 = 2 * Math.PI / this.slices;
+	var ang_1 = Math.PI / this.stacks;
 
 	var ang_1_now = 0;
 	var ang_1_then = ang_1;

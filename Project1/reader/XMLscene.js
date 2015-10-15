@@ -7,6 +7,20 @@ function deg2rad(degrees) {
 	return degrees * Math.PI / 180;
 }
 
+function pushMatrixStack(someMatrix) {
+	var copy = mat4.create();
+	mat4.copy(copy, someMatrix);
+	stackMatrix.push(copy);
+}
+
+function popMatrixStack() {
+	if (stackMatrix.length == 0) {
+	    throw "Invalid popMatrix!";
+	}
+	return stackMatrix.pop();
+}
+
+
 function XMLscene() {
     CGFscene.call(this);
 }
@@ -133,6 +147,19 @@ XMLscene.prototype.onGraphLoaded = function ()
 */
     this.processNodes();
 
+    for (node_id in this.graph.nodes) {
+    	var node = this.graph.nodes[node_id];
+    	if (node.primitive != undefined) {
+			console.log(node);
+			this.pushMatrix();
+		//	node.mater.setTexture(node.text);
+			node.mater.apply();
+			this.multMatrix(node.trf_matrix);
+			node.primitive.display();
+			this.popMatrix();
+    	}
+    }
+
 };
 
 // Display
@@ -223,11 +250,9 @@ XMLscene.prototype.initialAxis = function() {
 
 XMLscene.prototype.processLeaf = function(leaf) {
 	
-	var trf_matrix = stackMatrix[stackMatrix.length - 1];
-	//var material = stackMaterial[stackMaterial.length - 1];
-	//var texture = stackTexture[stackTexture.length - 1];
-	var s = 1; //texture.amplif_factor.s;
-	var t = 1; //texture.amplif_factor.t;
+	var texture = stackTexture[stackTexture.length - 1];
+	var s = texture.amplif_factor.s;
+	var t = texture.amplif_factor.t;
 
 	var primitive;
 
@@ -253,9 +278,10 @@ XMLscene.prototype.processLeaf = function(leaf) {
 
 XMLscene.prototype.processNodes = function() {
 
-	var trf_matrix = mat4.create();	// create matrix
-	mat4.identity(trf_matrix); 		// set to identity
-	stackMatrix.push(trf_matrix);	// place in stack
+	var trf_matrix = mat4.create();		// create matrix
+	mat4.identity(trf_matrix); 			// set to identity
+	pushMatrixStack(trf_matrix);	// place in stack
+//	console.log('push ' + trf_matrix);
 
 	var material = this.materials["default"];
 	stackMaterial.push(material);
@@ -267,9 +293,9 @@ XMLscene.prototype.processNodes = function() {
 	var root_node = this.graph.nodes[root_id];
 
 	this.processNode(root_node);
-	stackMatrix.pop();
-	stackMaterial.pop();
-	stackTexture.pop();
+//	stackMatrix.pop();
+//	stackMaterial.pop();
+//	stackTexture.pop();
 
 	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
 	console.log('-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-');
@@ -277,12 +303,13 @@ XMLscene.prototype.processNodes = function() {
 	
 };
 
-
 XMLscene.prototype.processNode = function(node) {
 
-	var trf_matrix = stackMatrix[stackMatrix.length - 1];
-	for (i = node.transformations.length - 1; i >= 0 ; i--) {
-		var transformation = node.transformations[i];
+	var trf_matrix = popMatrixStack(); //stackMatrix[stackMatrix.length - 1];
+	pushMatrixStack(trf_matrix);
+//	console.log('trf_ini ' + trf_matrix);
+	for (j = node.transformations.length - 1; j >= 0 ; j--) {
+		var transformation = node.transformations[j];
 		switch (transformation.type) {
 			case "scale":
 				mat4.scale(trf_matrix, trf_matrix, [transformation.sx, transformation.sy, transformation.sz]);
@@ -305,7 +332,8 @@ XMLscene.prototype.processNode = function(node) {
 				break;
 		}
 	}
-	stackMatrix.push(trf_matrix);
+	pushMatrixStack(trf_matrix);
+//	console.log('push ' + trf_matrix);
 
 	if (node.material == "null")
 		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
@@ -319,23 +347,27 @@ XMLscene.prototype.processNode = function(node) {
 	else
 		stackTexture.push(this.textures[node.texture]);
 	
-	console.log(node.descendants);
-	for (i = 0; i < node.descendants.length; i++) {
-		var new_node_id = node.descendants[i];
-		console.log(new_node_id);
-		var new_node = this.graph.nodes[new_node_id];
+	//console.log(node.descendants);
+	var new_node_id;
+	var new_node;
+	var leaf;
+	for (var i in node.descendants) {
+		new_node_id = node.descendants[i];
+		//console.log(new_node_id)
+		new_node = this.graph.nodes[new_node_id];
 		if (new_node == undefined) {
-			var leaf = this.graph.leaves[new_node_id];
+			leaf = this.graph.leaves[new_node_id];
 			node.primitive = this.processLeaf(leaf);
-			console.log(node);
+			node.trf_matrix = popMatrixStack();
+//			console.log('pop ' + node.trf_matrix);
+    		node.mater = stackMaterial.pop();
+			node.text = stackTexture.pop();
 		}
 		else this.processNode(new_node);
 	}
-
-	//stackMatrix.pop();
-	//stackMaterial.pop();
-	//stackTexture.pop();
-
+//	stackMatrix.pop();
+//	stackMaterial.pop();
+//	stackTexture.pop();
 };
 
 

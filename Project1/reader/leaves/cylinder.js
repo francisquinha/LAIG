@@ -29,7 +29,7 @@
 	this.normals = [];
 	this.texCoords = [];
 
-	var ang = 360 * degToRad / this.slices;
+	var ang = 2 * Math.PI / this.slices;
 
 	var ind_j = 0;
 	var aux_j = 4 * this.slices;
