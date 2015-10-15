@@ -1,106 +1,107 @@
 
 <SCENE>
 
+
 <INITIALS>
-    <frustum near="2" far="500"/>                      <!-- frustum planes -->
-    <translation x="-100" y="-40" z="-30"/>                 <!-- initial translate -->
-    <rotation axis="x" angle="20"/>                  <!-- initial rotation 3 -->
-    <rotation axis="y" angle="40"/>                  <!-- initial rotation 2 -->
-    <rotation axis="z" angle="-25"/>                    <!-- initial rotation 1 -->
-    <scale sx="1" sy="1" sz="1"/>                     <!-- initial scaling -->
-    <reference length="5"/>                           <!-- axis length, "0" means no axis -->
+    <frustum near="2" far="500"/>
+    <translation x="-10" y="-10" z="-10"/>     
+    <rotation axis="x" angle="0"/>                 
+    <rotation axis="y" angle="0"/>                 
+    <rotation axis="z" angle="0"/>                   
+<!--<translation x="-100" y="-40" z="-30"/>     
+    <rotation axis="x" angle="20"/>                 
+    <rotation axis="y" angle="40"/>                 
+    <rotation axis="z" angle="-25"/>    -->             
+    <scale sx="1" sy="1" sz="1"/>                   
+    <reference length="5"/>                         
 </INITIALS>
 
 
 <ILLUMINATION>
-    <ambient r="0.2" g="0.2" b="0.2" a="1"/>          <!-- global ambient -->
-    <background r="0" g="0" b="0" a="1"/>             <!-- background color -->
+    <ambient r="0.2" g="0.2" b="0.2" a="1"/>        
+    <background r="0" g="0" b="0" a="1"/>           
 </ILLUMINATION>
 
 
 <LIGHTS>
-    <LIGHT id="headlight">                               <!-- light identifier -->
-        <enable value ="1"/>         				  <!-- enable/disable -->
-        <position x="4.8" y="8.6" z="4.8" w="1"/>           <!-- light position -->
-        <ambient r="0.4" g="0.4" b="0.4" a="1"/>            <!-- ambient component -->
-        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  		  <!-- diffuse component -->
-        <specular r="0.5" g="0.5" b="0.5" a="1"/>       	  <!-- specular component -->
+    <LIGHT id="headlight">                          
+        <enable value ="1"/>         				
+        <position x="4.8" y="8.6" z="4.8" w="1"/>   
+        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
+        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
+        <specular r="0.5" g="0.5" b="0.5" a="1"/>   
     </LIGHT>
-    <LIGHT id="moonlight">                               <!-- light identifier -->
-        <enable value ="1"/>         				  <!-- enable/disable -->
-        <position x="-45" y="40" z="0" w="1"/>           <!-- light position -->
-        <ambient r="0.4" g="0.4" b="0.4" a="1"/>            <!-- ambient component -->
-        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  		  <!-- diffuse component -->
-        <specular r="0.8" g="0.8" b="0.8" a="1"/>       	  <!-- specular component -->
+    <LIGHT id="moonlight">                          
+        <enable value ="1"/>         				
+        <position x="-45" y="40" z="0" w="1"/>      
+        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
+        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
+        <specular r="0.8" g="0.8" b="0.8" a="1"/>   
     </LIGHT>
-	<!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
 </LIGHTS>
 
 
 <TEXTURES>
     <TEXTURE id="yellow">
-        <file path="textures/yellow.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/yellow.jpg"/>    
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="blackmetal">
-        <file path="textures/blackmetal.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/blackmetal.jpg"/>
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="smiley">
-        <file path="textures/smiley.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/smiley.jpg"/>    
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="chess">
-        <file path="textures/chess.png"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/chess.png"/>     
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="pattern2">
-        <file path="textures/pattern2.png"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/pattern2.png"/>  
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="blue">
-        <file path="textures/blue.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/blue.jpg"/>      
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="bluefloor">
-        <file path="textures/floor.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/floor.jpg"/>     
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
     <TEXTURE id="moontext">
-        <file path="textures/moon.jpg"/>      <!-- path to file -->
-        <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
+        <file path="textures/moon.jpg"/>      
+        <amplif_factor s="1" t="1"/>          
     </TEXTURE>
-    <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->   
 </TEXTURES>
 
 
 <MATERIALS>
-    <MATERIAL id="default">                                  
-        <shininess value="1"/>
-        <specular r="1" g="1" b="1" a="1"/>            <!-- specular reflection -->
-        <diffuse r="1" g="1" b="1" a="1"/>             <!-- diffuse reflection -->
-        <ambient r="1" g="1" b="1" a="1"/>             <!-- ambient reflection -->
-        <emission r="0" g="0" b="0" a="1"/>            <!-- emission component -->
-    </MATERIAL>
     <MATERIAL id="branco">                                  
         <shininess value="1"/>
-        <specular r="1" g="1" b="1" a="1"/>            <!-- specular reflection -->
-        <diffuse r="1" g="1" b="1" a="1"/>             <!-- diffuse reflection -->
-        <ambient r="1" g="1" b="1" a="1"/>             <!-- ambient reflection -->
-        <emission r="1" g="1" b="1" a="1"/>            <!-- emission component -->
+        <specular r="1" g="1" b="1" a="1"/>           
+        <diffuse r="1" g="1" b="1" a="1"/>            
+        <ambient r="1" g="1" b="1" a="1"/>            
+        <emission r="0" g="0" b="0" a="1"/>           
     </MATERIAL>
-    <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
+    <MATERIAL id="branco_brilhante">                            
+        <shininess value="1"/>
+        <specular r="1" g="1" b="1" a="1"/>           
+        <diffuse r="1" g="1" b="1" a="1"/>            
+        <ambient r="1" g="1" b="1" a="1"/>            
+        <emission r="1" g="1" b="1" a="1"/>           
+    </MATERIAL>
 </MATERIALS>
 
 
 <LEAVES>
-    <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
     <LEAF id="square" type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
     <LEAF id="rectangle" type="rectangle" args="-1 0.5 1 -0.5"/>
     <LEAF id="cylinder" type="cylinder" args="1 1 1 16 16"/> 
     <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
     <LEAF id="sphere" type="sphere" args="1 16 16"/>
-    <LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/>
+	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
         <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
@@ -111,8 +112,8 @@
 
 <NODES>
 
-    <ROOT id="scene"/>   	<!-- identifier of root node of the scene graph; this node -->
-                         	<!-- must be defined in one of the following NODE declarations -->
+    <ROOT id="scene"/>
+                      
 
     <NODE id="scene">
         <MATERIAL id="null"/>
@@ -126,7 +127,7 @@
     </NODE>
     
     <NODE id="floor">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="bluefloor"/>
         <TRANSLATION x="3.3" y="0" z="3.3"/>
         <ROTATION axis="y" angle="45"/>
@@ -138,7 +139,7 @@
     </NODE>
 
     <NODE id="wall">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="blue"/>
         <TRANSLATION x="-25" y="25" z="-25"/>
         <ROTATION axis="y" angle="45"/>
@@ -149,7 +150,7 @@
     </NODE>
 
     <NODE id="moon">
-        <MATERIAL id="branco"/>
+        <MATERIAL id="branco_brilhante"/>
         <TEXTURE id="moontext"/>
         <TRANSLATION x="-45" y="40" z="0"/>
         <SCALE sx="3" sy="3" sz="3"/>
@@ -158,25 +159,13 @@
         </DESCENDANTS>
     </NODE>
 
-    <NODE id="monster">    	<!-- defines one intermediate node; may be repeated as necessary -->
-
-        <!-- next two lines are mandatory -->
-        <MATERIAL id="null"/>      			<!-- declared material superimposes the material received from parent node -->
-                                  	  		<!-- id="null" maintains material from parent node -->
-        <TEXTURE id="null"/>        		<!-- declared texture superimposes the texture received from parent node -->
-                                  	  		<!-- id="null" maintains texture from parent node -->
-                                  	  		<!-- id="clear" clears texture declaration received from parent node -->
-
-        <!-- geometric transformations are optional and may be repeated, in any order, as necessary-->
+    <NODE id="monster"> 
+        <MATERIAL id="null"/>      			
+        <TEXTURE id="null"/>        		
         <TRANSLATION x="4" y="6" z="4"/>
-        <!--<ROTATION axis="cc" angle="ff"/>-->
         <SCALE sx="2" sy="2" sz="2"/>
-
-        <!-- declaring descendants, ate least one node or one leaf must be present -->
         <DESCENDANTS>
-            <DESCENDANT id="head"/>        	<!-- "ss" is the identifier of a node or of leaf -->
-                                         	<!-- may be repeated as necessary. It can refer an -->
-                                         	<!-- identifier of another node or leaf, later defined in the lsx file. -->
+            <DESCENDANT id="head"/>      
 			<DESCENDANT id="body"/>
 			<DESCENDANT id="legs"/>
 			<DESCENDANT id="arms"/>
@@ -186,7 +175,7 @@
 	
 
     <NODE id="head">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="blackmetal"/>
         <TRANSLATION x="0.8" y="6.2" z="0.8"/>        
 		<DESCENDANTS>
@@ -273,7 +262,7 @@
     </NODE>
 
     <NODE id="face">
-        <MATERIAL id="branco"/>
+        <MATERIAL id="branco_brilhante"/>
         <TEXTURE id="smiley"/>
         <ROTATION axis="y" angle="135"/>
         <SCALE sx="0.4" sy="1.6" sz="1.6"/>
@@ -293,7 +282,7 @@
     </NODE>
 	
     <NODE id="body">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="pattern2"/>
 		<DESCENDANTS>
             <DESCENDANT id="neck"/>	
@@ -334,7 +323,7 @@
     </NODE>
 
     <NODE id="legs">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="chess"/>
 		<DESCENDANTS>
             <DESCENDANT id="left_leg"/>
@@ -391,7 +380,7 @@
     </NODE>
 
     <NODE id="arms">
-        <MATERIAL id="default"/>
+        <MATERIAL id="branco"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
             <DESCENDANT id="left_arm"/>

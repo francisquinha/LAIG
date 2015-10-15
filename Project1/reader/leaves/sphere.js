@@ -2,15 +2,15 @@
  * sphere
  * @constructor
  */
- function sphere(scene, radius, slices, stacks, s, t) {
+ function sphere(scene, args, s, t) {
  	CGFobject.call(this,scene);
 	
-	this.radius = radius;
-	this.slices = slices;
-	this.stacks = stacks;
+	this.radius = args[0];
+	this.stacks = args[1];
+	this.slices = args[2];
 
-	this.s = s;
-	this.t = t;
+	this.s = s || 1;
+	this.t = t || 1;
 
  	this.initBuffers();
  };

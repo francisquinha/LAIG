@@ -53,12 +53,7 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    for (var i = 0; i < this.graph.materials.length ; i++) {
-        if (this.materials[i].id == "default") {
-            this.materials[i].apply();
-            break;
-        }
-    }
+	this.materials["default"].apply();
 };
 
 
@@ -90,7 +85,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	// Axis
 
-	this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
+	if (this.graph.initialsInformation.reference > 0) 
+		this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
 
 
     //Textures
@@ -160,7 +156,7 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 		//
-		this.setDefaultAppearance();
+		//this.setDefaultAppearance();
 		//
 
 		for(var i = 0 ; i < this.lights.length ; i++){
@@ -174,7 +170,7 @@ XMLscene.prototype.display = function () {
 			this.axis.display();
 		}
 
-		this.setDefaultAppearance();
+		//this.setDefaultAppearance();
 		
 	
 

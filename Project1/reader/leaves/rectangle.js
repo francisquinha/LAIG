@@ -5,18 +5,18 @@
  */
 
 //rectangle e uma subclasse de CGFobject
-function rectangle(scene, xbl, ybl, xtr, ytr, s, t) {
+function rectangle(scene, args, s, t) {
 
 	CGFobject.call(this,scene);
 	
-	this.xbl = xbl;
-	this.ybl = ybl;
-	this.xtr = xtr;
-	this.ytr = ytr;
+	this.x_left = args[0];
+	this.y_top = args[1];
+	this.x_right = args[2];
+	this.y_bottom = args[3];
 
 	// amplification factors
-	this.s = s;		
-	this.t = t;
+	this.s = s || 1;		
+	this.t = t || 1;
 
 	this.initBuffers();
 
@@ -28,10 +28,10 @@ rectangle.prototype.constructor=rectangle;
 
 rectangle.prototype.initBuffers = function () {
 	this.vertices = [
-		this.xbl, this.ybl,
-		this.xtr, this.ybl,
-		this.xbl, this.ytr, 
-		this.xtr, this.ytr
+		this.x_left, this.y_bottom,
+		this.x_right, this.y_bottom,
+		this.x_left, this.y_top, 
+		this.x_right, this.y_top
 	];
 
 	this.indices = [
@@ -50,9 +50,9 @@ rectangle.prototype.initBuffers = function () {
 
     this.texCoords = [    
 		0, 0,
-		this.xtr / this.s, 0,
-		0, this.ytr / this.t,
-		this.xtr / this.s, this.xtr / this.s
+		(this.x_right - this.x_left) / this.s, 0,
+		0, (this.y_top - this.y_bottom) / this.t,
+		(this.x_right - this.x_left) / this.s, (this.y_top - this.y_bottom) / this.t
 	];
 
 	this.initGLBuffers();
