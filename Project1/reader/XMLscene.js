@@ -19,8 +19,8 @@ XMLscene.prototype.init = function (application) {
 
     //
 
-	this.textures = [];
-    this.materials = [];
+	this.textures = new Map();
+    this.materials = new Map();
     this.leaves = [];
     this.nodes = [];
 	//
@@ -88,35 +88,34 @@ XMLscene.prototype.onGraphLoaded = function ()
 	if (this.graph.initialsInformation.reference > 0) 
 		this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
 
-
     //Textures
-	var i = 0;
-    for(var texture in this.graph.textures)
+	
+    for(var texture_id in this.graph.textures)
 	{
-    this.textures[i] = texture;
-	i++;
-	//console.log(texture);
+    this.textures[texture_id] = new CGFtexture(this, this.graph.textures[texture_id].file);
+    this.textures[texture_id].amplif_factor = this.graph.textures[texture_id].amplif_factor;
+    this.textures[texture_id].file = this.graph.textures[texture_id].file;
     }
     if(this.textures.length > 0)
 		this.enableTextures(true);
-console.log(this.textures[0]);
-    
-/*
+
+	//console.log(this.textures['yellow'].file);
+		
     // Materials
-    
-    var materials = this.graph.materials;
-    //console.log(materials.length);
-    for (i = 0 ; i < materials.length ; i++) {
-        temp = new addMaterial(this, materials[i].id);
-        temp.setShininess(materials[i].shininess);
-        temp.setSpecular(materials[i].specular.r, materials[i].specular.g, materials[i].specular.b, materials[i].specular.a);
-        temp.setDiffuse(materials[i].diffuse.r, materials[i].diffuse.g, materials[i].diffuse.b, materials[i].diffuse.a);
-        temp.setAmbient(materials[i].ambient.r, materials[i].ambient.g, materials[i].ambient.b, materials[i].ambient.a);
-        temp.setEmission(materials[i].emission.r, materials[i].emission.g, materials[i].emission.b, materials[i].emission.a);
-     
-        this.materials.push(temp);
+
+	var material;
+	for(var material_id in this.graph.materials)
+	{
+	material = this.graph.materials[material_id];
+	
+    this.materials[material_id] = new CGFappearance(this);
+    this.materials[material_id].setShininess(material.shininess);
+    this.materials[material_id].setSpecular(material.specular.r, material.specular.g, material.specular.b, material.specular.a);
+    this.materials[material_id].setDiffuse(material.diffuse.r, material.diffuse.g, material.diffuse.b, material.diffuse.a);
+    this.materials[material_id].setAmbient(material.ambient.r, material.ambient.g, material.ambient.b, material.ambient.a);
+    this.materials[material_id].setEmission(material.emission.r, material.emission.g, material.emission.b, material.emission.a);
     }
-*/
+	//console.log(this.materials['branco_brilhante']);
 
 /*
     // Leaves
@@ -170,18 +169,18 @@ XMLscene.prototype.display = function () {
 			this.axis.display();
 		}
 
-		//this.setDefaultAppearance();
-		
 	
 
 		 for (i = 0; i < this.nodes.length; i++) {
             var node = this.nodes[i];
+           
             this.pushMatrix();
             node.material.setTexture(node.texture);
             if (node.texture != null) {
                 node.primitive.updateTex(node.texture.amplif_factor.s, node.texture.amplif_factor.t);
             }
             node.material.apply();
+            
             this.multMatrix(node.matrix);
             node.primitive.display();
             this.popMatrix();
@@ -217,9 +216,10 @@ XMLscene.prototype.initialAxis = function() {
 XMLscene.prototype.processLeaves = function() {
     for (var i = 0; i < this.graph.leaves.length; i++) {
         var leaf = this.graph.leaves[i];
+        var primitive;
         switch (leaf.type) {
             case "rectangle":
-                var primitive = new rectangle(this, leaf.args);
+                primitive = new rectangle(this, leaf.args);
                 primitive.id = leaf.id;
                 this.leaves.push(primitive);
                 break;
@@ -301,21 +301,16 @@ XMLscene.prototype.getTexture = function(id) {
     return null;
 };
 //////////////////////////////////////////////////////////////
-function addMaterial(scene, id) {
+
+function createMaterial(scene, id) {
     CGFappearance.call(this, scene);
     this.id = id;
 }
-addMaterial.prototype = Object.create(CGFappearance.prototype);
-addMaterial.prototype.constructor = addMaterial;
+createMaterial.prototype = Object.create(CGFappearance.prototype);
+createMaterial.prototype.constructor = createMaterial;
+
 /////////////////////////////////////////////////////////////7
-function addTexture(scene, id, file, amplif_factor) {
-    CGFtexture.call(this, scene, file);
-    this.id = id;
-    this.amplif_factor = amplif_factor;
-}
-addTexture.prototype = Object.create(CGFtexture.prototype);
-addTexture.prototype.constructor = addTexture;
-/////////////////////////////////////////////////////////////7
+
 function GlobalNode(id) {
     this.id = id;
     this.material = null;

@@ -14,9 +14,9 @@ function MySceneGraph(filename, scene) {
 	 * If any error occurs, the reader calls onXMLError on this object, with an error message
 	 */
 	 
-	this.reader.open('scenes/'+filename, this);  
-
-	
+	this.path = "scenes/" + filename;
+	this.reader.open(this.path, this);
+	this.texture_path = this.path.substring(0, this.path.lastIndexOf("/")) + "/";	
 }
 
 
@@ -334,9 +334,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		currText["id"] = this.reader.getString(tag_texture[i],"id",true);
 
 		var path = tag_texture[i].getElementsByTagName("file"); // relative path to index file
-		var file = path[0];
-		currText["file"] = this.reader.getString(file,"path",true);
 
+		var file = path[0];
+
+		currText["file"] = this.texture_path + this.reader.getString(file,"path",true);
+	
 		var amplifactor = tag_texture[i].getElementsByTagName("amplif_factor");
 		var ampli_factor = amplifactor[0];
 		
@@ -505,7 +507,7 @@ MySceneGraph.prototype.parseScale = function(element) {
 
 MySceneGraph.prototype.parseLeaves = function(rootElement) {
 		
-	console.log("\tLEAVES");
+	console.log("\tLeaves");
 	
     var elems = rootElement.getElementsByTagName('LEAVES');
     if(elems == null)	return "Leaves element are missing.";
@@ -540,7 +542,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
 
 MySceneGraph.prototype.parseNodes= function(rootElement) {
 	
-	console.log("\tNODES");
+	console.log("\tNodes");
 
     var elems = rootElement.getElementsByTagName('NODES');
 
