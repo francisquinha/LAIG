@@ -312,6 +312,8 @@ XMLscene.prototype.processNode = function(node) {
 				mat4.scale(trf_matrix, trf_matrix, [transformation.sx, transformation.sy, transformation.sz]);
 				break;
 			case "rotation":
+				console.log('angle ' + transformation.angle);
+				console.log('rad ' + deg2rad(transformation.angle));
 				switch(transformation.axis) {
 					case "x":
 						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [1, 0, 0]);
@@ -323,6 +325,7 @@ XMLscene.prototype.processNode = function(node) {
 						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [0, 0, 1]);
 						break;
 				}
+				console.log(trf_matrix);
 				break;
 			case "translation":
 				mat4.translate(trf_matrix, trf_matrix, [transformation.x, transformation.y, transformation.z]);

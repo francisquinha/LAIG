@@ -3,7 +3,7 @@
 
 
 <INITIALS>
-    <frustum near="0" far="10"/>                      <!-- frustum planes -->
+    <frustum near="2" far="500"/>                      <!-- frustum planes -->
     <translation x="0" y="0" z="0"/>                 <!-- initial translate -->
     <rotation axis="x" angle="0"/>                  <!-- initial rotation 3 -->
     <rotation axis="y" angle="0"/>                  <!-- initial rotation 2 -->
@@ -46,7 +46,7 @@
         <specular r="1" g="1" b="1" a="1"/>            <!-- specular reflection -->
         <diffuse r="1" g="1" b="1" a="1"/>             <!-- diffuse reflection -->
         <ambient r="1" g="1" b="1" a="1"/>             <!-- ambient reflection -->
-        <emission r="1" g="1" b="1" a="1"/>            <!-- emission component -->
+        <emission r="0" g="0" b="0" a="0"/>            <!-- emission component -->
     </MATERIAL>
     <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
 </MATERIALS>
@@ -90,8 +90,8 @@
             <DESCENDANT id="cube1"/>        <!-- "ss" is the identifier of a node or of leaf -->
                                          	<!-- may be repeated as necessary. It can refer an -->
                                          	<!-- identifier of another node or leaf, later defined in the lsx file. -->
-			<DESCENDANT id="cube2"/>
-			<DESCENDANT id="cube3"/>
+			<!--<DESCENDANT id="cube2"/>
+			<DESCENDANT id="cube3"/>-->
         </DESCENDANTS>
 
     </NODE>
@@ -99,7 +99,7 @@
     <NODE id="cube1"> <!-- centrado na origem, material branco, textura world -->
         <MATERIAL id="branco"/>
         <TEXTURE id="world"/>
-        <SCALE sx="2" sy="2" sz="2"/>
+       	<!--<SCALE sx="2" sy="2" sz="2"/>-->
 		<DESCENDANTS>
             <DESCENDANT id="cube"/>
         </DESCENDANTS>
@@ -107,7 +107,7 @@
 	
     <NODE id="cube2"> <!-- no quadrante positivo, sem material, sem textura -->
         <MATERIAL id="branco"/>
-        <TEXTURE id="null"/>
+        <TEXTURE id="world"/>
         <TRANSLATION x="2" y="2" z="2"/>
         <SCALE sx="2" sy="2" sz="2"/>
 		<DESCENDANTS>
@@ -131,8 +131,8 @@
     </NODE>
 
     <NODE id="cube">
-        <MATERIAL id="null"/>
-        <TEXTURE id="null"/>
+        <MATERIAL id="branco"/>
+        <TEXTURE id="world"/>
 		<DESCENDANTS>
             <DESCENDANT id="face1"/>
             <DESCENDANT id="face2"/>
@@ -146,7 +146,7 @@
     <NODE id="face1"> <!-- face da frente do cubo -->
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente -->
+       <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente -->
 		<DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -156,7 +156,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="-90"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para cima -->
+        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para cima -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -166,7 +166,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="180"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para tras -->
+        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para tras -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -176,7 +176,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="90"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para baixo -->
+        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para baixo -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -186,7 +186,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="y" angle="90"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a direita -->
+        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para a direita -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -196,7 +196,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="y" angle="-90"/>
-        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a esquerda -->
+        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para a esquerda -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -213,7 +213,7 @@
 
     <NODE id="face32"> <!-- face de cima do cubo -->
         <MATERIAL id="null"/>
-        <TEXTURE id="clear"/>
+        <TEXTURE id="null"/>
         <ROTATION axis="x" angle="-90"/>
         <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para cima -->
         <DESCENDANTS>
@@ -243,7 +243,7 @@
 	
     <NODE id="face35"> <!-- face da direita do cubo -->
         <MATERIAL id="branco"/>
-        <TEXTURE id="clear"/>
+        <TEXTURE id="null"/>
         <ROTATION axis="y" angle="90"/>
         <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a direita -->
         <DESCENDANTS>
