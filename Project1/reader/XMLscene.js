@@ -54,16 +54,19 @@ XMLscene.prototype.initLights = function () {
 
 var i = 0;
 for(light in this.graph.lights){
+	var temp_id = this.graph.lights[light].id;
+ 	var temp = new CGFlight(this, i); 
 
-	this.lights[i].setPosition(this.graph.lights[light].position.x, this.graph.lights[light].position.y, this.graph.lights[light].position.z, this.graph.lights[light].position.w);
-	this.lights[i].setDiffuse(this.graph.lights[light].diffuse.r, this.graph.lights[light].diffuse.g, this.graph.lights[light].diffuse.b, this.graph.lights[light].diffuse.a);
-	this.lights[i].setAmbient(this.graph.lights[light].ambient.r, this.graph.lights[light].ambient.g, this.graph.lights[light].ambient.b, this.graph.lights[light].ambient.a);
-	this.lights[i].setSpecular(this.graph.lights[light].specular.r, this.graph.lights[light].specular.g, this.graph.lights[light].specular.b, this.graph.lights[light].specular.a);
-	this.lights[i].setVisible(true);
+	temp.setPosition(this.graph.lights[light].position.x, this.graph.lights[light].position.y, this.graph.lights[light].position.z, this.graph.lights[light].position.w);
+	temp.setDiffuse(this.graph.lights[light].diffuse.r, this.graph.lights[light].diffuse.g, this.graph.lights[light].diffuse.b, this.graph.lights[light].diffuse.a);
+	temp.setAmbient(this.graph.lights[light].ambient.r, this.graph.lights[light].ambient.g, this.graph.lights[light].ambient.b, this.graph.lights[light].ambient.a);
+	temp.setSpecular(this.graph.lights[light].specular.r, this.graph.lights[light].specular.g, this.graph.lights[light].specular.b, this.graph.lights[light].specular.a);
+	temp.setVisible(true);
 
 	if(this.graph.lights[light].enable){
-	this.lights[i].enable();
+	temp.enable();
 	}
+	this.lights[i] = temp;
  i++;
 }
     this.shader.unbind();
@@ -86,7 +89,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	// Lights
 
 	this.initLights();
-
+this.createBoxes();
 	// Frustum
     this.camera.near = this.graph.initialsInformation.frustum.near;
     this.camera.far = this.graph.initialsInformation.frustum.far;
@@ -442,3 +445,15 @@ function GlobalNode(id) {
 }
 
 */
+
+XMLscene.prototype.createBoxes = function () { 
+
+
+//var gui_lights = this.object.addFolder("Lights");
+//gui_lights.open();
+//gui_lights.add(this.scene, 'centerLight').name('Center light');
+
+console.log("Doing something..."); 
+
+}; 
+
