@@ -55,9 +55,14 @@ MyInterface.prototype.init = function(application) {
 
 var folder = this.gui.addFolder("Lights");
 folder.open();
+/*
+--------
+ Angela: comentei isto porque estava a dar erro 
+--------
 folder.add(this.scene, 'rightBoardLight').name("First").onChange(function(value){
 		this.object.createBoxes(value);
 	});
+*/
 
 //	lights.add(this.scene, 'rightBoardLight').name('Right board light');
 //	lights.add(this.scene, 'leftBoardLight').name('Left board light');

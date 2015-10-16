@@ -33,7 +33,7 @@
 
 <TEXTURES>
     <TEXTURE id="world">
-        <file path="resources/images/ball.png"/>      <!-- path to file -->
+        <file path="ball.png"/>      <!-- path to file -->
         <amplif_factor s="1" t="1"/>              	   <!-- x/s, y/t -->
     </TEXTURE>
     <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->   

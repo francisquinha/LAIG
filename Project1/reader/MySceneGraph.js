@@ -577,6 +577,8 @@ MySceneGraph.prototype.parseNode = function(element) {
 
     var node = {};
 
+    node['id'] =element.id;
+
     node['material'] = this.reader.getString(element.children[0], 'id', true);
     node['texture'] = this.reader.getString(element.children[1], 'id', true);
 

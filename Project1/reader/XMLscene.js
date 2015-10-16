@@ -3,6 +3,8 @@ var stackMatrix = [];
 var stackMaterial = [];
 var stackTexture = [];
 
+var trf_matrix = mat4.create();		// create matrix
+
 function deg2rad(degrees) {
 	return degrees * Math.PI / 180;
 }
@@ -18,6 +20,12 @@ function popMatrixStack() {
 	    throw "Invalid popMatrix!";
 	}
 	return stackMatrix.pop();
+}
+
+function checkMatrixStack() {
+	var matrix = popMatrixStack();
+	pushMatrixStack(matrix);
+	return matrix;
 }
 
 
@@ -54,6 +62,7 @@ XMLscene.prototype.initLights = function () {
 
 var i = 0;
 for(light in this.graph.lights){
+
 	var temp_id = this.graph.lights[light].id;
  	var temp = new CGFlight(this, i); 
 
@@ -89,7 +98,9 @@ XMLscene.prototype.onGraphLoaded = function ()
 	// Lights
 
 	this.initLights();
-this.createBoxes();
+
+	this.createBoxes();
+
 	// Frustum
     this.camera.near = this.graph.initialsInformation.frustum.near;
     this.camera.far = this.graph.initialsInformation.frustum.far;
@@ -198,11 +209,10 @@ XMLscene.prototype.display = function () {
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
 	    	if (node.primitive != undefined) {
-				console.log(node);
 				this.pushMatrix();
 				node.mater.setTexture(node.text);
 				node.mater.apply();
-				this.multMatrix(node.trf_matrix);
+				this.multMatrix(node.matrix);
 				node.primitive.display();
 				this.popMatrix();
 	    	}
@@ -265,11 +275,9 @@ XMLscene.prototype.processLeaf = function(leaf) {
 
 
 XMLscene.prototype.processNodes = function() {
-
-	var trf_matrix = mat4.create();		// create matrix
-	mat4.identity(trf_matrix); 			// set to identity
+	mat4.identity(trf_matrix); 		// set matrix to identity
 	pushMatrixStack(trf_matrix);	// place in stack
-//	console.log('push ' + trf_matrix);
+	console.log('push ' + trf_matrix);
 
 	var material = this.materials["default"];
 	stackMaterial.push(material);
@@ -293,8 +301,9 @@ XMLscene.prototype.processNodes = function() {
 
 XMLscene.prototype.processNode = function(node) {
 
-	var trf_matrix = popMatrixStack(); //stackMatrix[stackMatrix.length - 1];
-	pushMatrixStack(trf_matrix);
+//	var trf_matrix = popMatrixStack(); //stackMatrix[stackMatrix.length - 1];
+//	if (node.descendants.length > 1)
+//	pushMatrixStack(trf_matrix);
 //	console.log('trf_ini ' + trf_matrix);
 	for (j = node.transformations.length - 1; j >= 0 ; j--) {
 		var transformation = node.transformations[j];
@@ -320,9 +329,12 @@ XMLscene.prototype.processNode = function(node) {
 				break;
 		}
 	}
-	pushMatrixStack(trf_matrix);
-//	console.log('push ' + trf_matrix);
-
+	console.log(node);
+	console.log(trf_matrix);
+	if (node.descendants.length > 1) {
+		pushMatrixStack(trf_matrix);
+		console.log('push ' + trf_matrix);
+	}
 	if (node.material == "null")
 		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
 	else
@@ -346,17 +358,36 @@ XMLscene.prototype.processNode = function(node) {
 		if (new_node == undefined) {
 			leaf = this.graph.leaves[new_node_id];
 			node.primitive = this.processLeaf(leaf);
-			node.trf_matrix = popMatrixStack();
-//			console.log('pop ' + node.trf_matrix);
+			node.matrix = trf_matrix;
     		node.mater = stackMaterial.pop();
 			node.text = stackTexture.pop();
-		}
-		else this.processNode(new_node);
+			trf_matrix = checkMatrixStack();
+			console.log('check ' + trf_matrix);
+		}		
+		else this.processNode(new_node);		
 	}
-//	stackMatrix.pop();
-//	stackMaterial.pop();
-//	stackTexture.pop();
+	if (node.descendants.length > 1) {
+		var aux_matrix = popMatrixStack();
+		console.log('pop ' + aux_matrix);
+	}
+
+//		stackMatrix.pop();
+//		stackMaterial.pop();
+//		stackTexture.pop();	
 };
+
+
+
+XMLscene.prototype.createBoxes = function () { 
+
+
+//var gui_lights = this.object.addFolder("Lights");
+//gui_lights.open();
+//gui_lights.add(this.scene, 'centerLight').name('Center light');
+
+console.log("Doing something..."); 
+
+}; 
 
 
 
@@ -445,15 +476,3 @@ function GlobalNode(id) {
 }
 
 */
-
-XMLscene.prototype.createBoxes = function () { 
-
-
-//var gui_lights = this.object.addFolder("Lights");
-//gui_lights.open();
-//gui_lights.add(this.scene, 'centerLight').name('Center light');
-
-console.log("Doing something..."); 
-
-}; 
-

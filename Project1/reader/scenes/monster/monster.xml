@@ -4,7 +4,7 @@
 
 <INITIALS>
     <frustum near="2" far="500"/>
-    <translation x="-10" y="-10" z="-10"/>     
+    <translation x="0" y="0" z="0"/>     
     <rotation axis="x" angle="0"/>                 
     <rotation axis="y" angle="0"/>                 
     <rotation axis="z" angle="0"/>                   
@@ -162,8 +162,8 @@
     <NODE id="monster"> 
         <MATERIAL id="null"/>      			
         <TEXTURE id="null"/>        		
-        <TRANSLATION x="4" y="6" z="4"/>
-        <SCALE sx="2" sy="2" sz="2"/>
+<!--        <TRANSLATION x="4" y="6" z="4"/>
+        <SCALE sx="2" sy="2" sz="2"/>-->
         <DESCENDANTS>
             <DESCENDANT id="head"/>      
 			<DESCENDANT id="body"/>
