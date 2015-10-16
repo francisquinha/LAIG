@@ -36,9 +36,11 @@
 
 	var rad = (this.top - this.bottom) / this.stacks;
 	var rad_now = this.bottom;
+	var rad_then = rad_now + rad;
 
-	var z_now = 0;
 	var z = this.height / this.stacks;
+	var z_now = 0;
+	var z_then = z_now + z;
 
 	var tex_height = this.height / this.t;
 	var tex_length = 2 * Math.PI * (this.bottom + (this.top - this.bottom) / 2)  / this.s;
@@ -50,8 +52,6 @@
 		var ind_i = 0;
 
 		for (i = 0; i < this.slices; i++) {
-
-			//var tex_length_now = 2 * Math.PI * rad_now / this.s;
 
 			var x0 = rad_now * Math.cos(ang_now);
 			var y0 = rad_now * Math.sin(ang_now);
@@ -67,23 +67,19 @@
 			this.vertices.push(y1);
 			this.vertices.push(z_now); // vertice 1
 
-			rad_now += rad;
-			z_now += z;
-			//var tex_length_then = 2 * Math.PI * rad_now / this.s;
-
-			var x2 = rad_now * Math.cos(ang_now);
-			var y2 = rad_now * Math.sin(ang_now);
+			var x2 = rad_then * Math.cos(ang_now);
+			var y2 = rad_then * Math.sin(ang_now);
 
 			this.vertices.push(x2)
 			this.vertices.push(y2);
-			this.vertices.push(z_now); // vertice 2
+			this.vertices.push(z_then); // vertice 2
 
-			var x3 = rad_now * Math.cos(ang_then);
-			var y3 = rad_now * Math.sin(ang_then);
+			var x3 = rad_then * Math.cos(ang_then);
+			var y3 = rad_then * Math.sin(ang_then);
 
 			this.vertices.push(x3);
 			this.vertices.push(y3);
- 			this.vertices.push(z_now); // vertice 3
+ 			this.vertices.push(z_then); // vertice 3
 
  			ang_now += ang;
 			ang_then += ang;
@@ -128,6 +124,10 @@
 
 		}
 					
+		rad_now += rad;
+		rad_then += rad;
+		z_now += z;
+		z_then += z;
 		ind_j += aux_j;
 	
 	}

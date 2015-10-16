@@ -147,19 +147,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 */
     this.processNodes();
 
-    for (node_id in this.graph.nodes) {
-    	var node = this.graph.nodes[node_id];
-    	if (node.primitive != undefined) {
-			console.log(node);
-			this.pushMatrix();
-		//	node.mater.setTexture(node.text);
-			node.mater.apply();
-			this.multMatrix(node.trf_matrix);
-			node.primitive.display();
-			this.popMatrix();
-    	}
-    }
-
 };
 
 // Display
@@ -205,20 +192,18 @@ XMLscene.prototype.display = function () {
 
 	
 
-		 for (i = 0; i < this.nodes.length; i++) {
-            var node = this.nodes[i];
-           
-            this.pushMatrix();
-            node.material.setTexture(node.texture);
-            if (node.texture != null) {
-                node.primitive.updateTex(node.texture.amplif_factor.s, node.texture.amplif_factor.t);
-            }
-            node.material.apply();
-            
-            this.multMatrix(node.matrix);
-            node.primitive.display();
-            this.popMatrix();
-        }
+	    for (node_id in this.graph.nodes) {
+	    	var node = this.graph.nodes[node_id];
+	    	if (node.primitive != undefined) {
+				console.log(node);
+				this.pushMatrix();
+				node.mater.setTexture(node.text);
+				node.mater.apply();
+				this.multMatrix(node.trf_matrix);
+				node.primitive.display();
+				this.popMatrix();
+	    	}
+	    }
 	};	
 
     this.shader.unbind();
