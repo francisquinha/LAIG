@@ -119,8 +119,8 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
-            <DESCENDANT id="floor"/>
-            <DESCENDANT id="wall"/>
+            <!--<DESCENDANT id="floor"/>
+            <DESCENDANT id="wall"/>-->
             <DESCENDANT id="monster"/>
             <DESCENDANT id="moon"/>
         </DESCENDANTS>
@@ -162,8 +162,8 @@
     <NODE id="monster"> 
         <MATERIAL id="null"/>      			
         <TEXTURE id="null"/>        		
-<!--        <TRANSLATION x="4" y="6" z="4"/>
-        <SCALE sx="2" sy="2" sz="2"/>-->
+        <TRANSLATION x="4" y="6" z="4"/>
+        <SCALE sx="2" sy="2" sz="2"/>
         <DESCENDANTS>
             <DESCENDANT id="head"/>      
 			<DESCENDANT id="body"/>

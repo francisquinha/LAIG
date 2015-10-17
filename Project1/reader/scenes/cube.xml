@@ -146,7 +146,7 @@
     <NODE id="face1"> <!-- face da frente do cubo -->
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
-       <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente -->
+       	<TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente -->
 		<DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -156,7 +156,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="-90"/>
-        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para cima -->
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para cima -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -166,7 +166,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="180"/>
-        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para tras -->
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para tras -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -176,7 +176,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="x" angle="90"/>
-        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para baixo -->
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para baixo -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -186,7 +186,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="y" angle="90"/>
-        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para a direita -->
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a direita -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>
@@ -196,7 +196,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
         <ROTATION axis="y" angle="-90"/>
-        <!-- <TRANSLATION x="0" y="0" z="0.5"/>--> <!-- coloca na frente e depois roda para a esquerda -->
+        <TRANSLATION x="0" y="0" z="0.5"/> <!-- coloca na frente e depois roda para a esquerda -->
         <DESCENDANTS>
             <DESCENDANT id="square"/>
         </DESCENDANTS>

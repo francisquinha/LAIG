@@ -202,9 +202,7 @@ XMLscene.prototype.display = function () {
 		{
 			this.initialAxis();
 			this.axis.display();
-		}
-
-	
+		}	
 
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
@@ -288,6 +286,8 @@ XMLscene.prototype.processNodes = function() {
 	var root_id = this.graph.nodes['root'];
 	var root_node = this.graph.nodes[root_id];
 
+	console.log('root ' + root_node);
+
 	this.processNode(root_node);
 //	stackMatrix.pop();
 //	stackMaterial.pop();
@@ -299,21 +299,51 @@ XMLscene.prototype.processNodes = function() {
 	
 };
 
+XMLscene.prototype.preprocessNode = function(node) {
+	var transform = mat4.create();
+	mat4.identity(transform);
+	for (j = 0; j < node.transformations.length ; j++) {
+		var transformation = node.transformations[j];
+		switch (transformation.type) {
+			case "scale":
+				mat4.scale(transform, transform, [transformation.sx, transformation.sy, transformation.sz]);
+				break;
+			case "rotation":
+				switch(transformation.axis) {
+					case "x":
+						mat4.rotate(transform, transform, deg2rad(transformation.angle), [1, 0, 0]);
+						break;
+					case "y":
+						mat4.rotate(transform, transform, deg2rad(transformation.angle), [0, 1, 0]);
+						break;
+					case "z":
+						mat4.rotate(transform, transform, deg2rad(transformation.angle), [0, 0, 1]);
+						break;
+				}
+				break;
+			case "translation":
+				mat4.translate(transform, transform, [transformation.x, transformation.y, transformation.z]);
+				break;
+		}
+	}
+	node.transformation = transform;	
+}
+
+
 XMLscene.prototype.processNode = function(node) {
+	this.preprocessNode(node);
 
 //	var trf_matrix = popMatrixStack(); //stackMatrix[stackMatrix.length - 1];
 //	if (node.descendants.length > 1)
 //	pushMatrixStack(trf_matrix);
 //	console.log('trf_ini ' + trf_matrix);
-	for (j = node.transformations.length - 1; j >= 0 ; j--) {
+/*	for (j = node.transformations.length - 1; j >= 0 ; j--) {
 		var transformation = node.transformations[j];
 		switch (transformation.type) {
 			case "scale":
 				mat4.scale(trf_matrix, trf_matrix, [transformation.sx, transformation.sy, transformation.sz]);
 				break;
 			case "rotation":
-				console.log('angle ' + transformation.angle);
-				console.log('rad ' + deg2rad(transformation.angle));
 				switch(transformation.axis) {
 					case "x":
 						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [1, 0, 0]);
@@ -325,19 +355,21 @@ XMLscene.prototype.processNode = function(node) {
 						mat4.rotate(trf_matrix, trf_matrix, deg2rad(transformation.angle), [0, 0, 1]);
 						break;
 				}
-				console.log(trf_matrix);
 				break;
 			case "translation":
 				mat4.translate(trf_matrix, trf_matrix, [transformation.x, transformation.y, transformation.z]);
 				break;
 		}
 	}
+	*/
 	console.log(node);
-	console.log(trf_matrix);
-	if (node.descendants.length > 1) {
+	console.log('transformation ' + node.transformation);
+	mat4.multiply(trf_matrix, trf_matrix, node.transformation);
+	console.log('matrix ' + trf_matrix);
+//	if (node.descendants.length > 1) {
 		pushMatrixStack(trf_matrix);
 		console.log('push ' + trf_matrix);
-	}
+//	}
 	if (node.material == "null")
 		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
 	else
@@ -350,13 +382,16 @@ XMLscene.prototype.processNode = function(node) {
 	else
 		stackTexture.push(this.textures[node.texture]);
 	
-	//console.log(node.descendants);
 	var new_node_id;
 	var new_node;
 	var leaf;
 	for (var i in node.descendants) {
+//		console.log('child ' + i)
+//		if (i > 0) {
+			trf_matrix = checkMatrixStack();
+			console.log('check ' + trf_matrix);
+//		}
 		new_node_id = node.descendants[i];
-		//console.log(new_node_id)
 		new_node = this.graph.nodes[new_node_id];
 		if (new_node == undefined) {
 			leaf = this.graph.leaves[new_node_id];
@@ -364,17 +399,11 @@ XMLscene.prototype.processNode = function(node) {
 			node.matrix = trf_matrix;
     		node.mater = stackMaterial.pop();
 			node.text = stackTexture.pop();
-			trf_matrix = checkMatrixStack();
-			console.log('check ' + trf_matrix);
 		}		
 		else this.processNode(new_node);		
 	}
-	if (node.descendants.length > 1) {
-		var aux_matrix = popMatrixStack();
-		console.log('pop ' + aux_matrix);
-	}
-
-//		stackMatrix.pop();
+	var aux_matrix = popMatrixStack();
+	console.log('pop ' + aux_matrix);
 //		stackMaterial.pop();
 //		stackTexture.pop();	
 };

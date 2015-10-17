@@ -49,11 +49,11 @@ triangle.prototype.initBuffers = function() {
 
     // compute texCoords
 
-   	var a = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1));
-   	var b = sqrt((x2 - x0) * (x2 - x0) + (y2 - y0) * (y2 - y0) + (z2 - z0) * (z2 - z0));
-   	var c = sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0) + (z1 - z0) * (z1 - z0));
+   	var a = Math.sqrt((this.x2 - this.x1) * (this.x2 - this.x1) + (this.y2 - this.y1) * (this.y2 - this.y1) + (this.z2 - this.z1) * (this.z2 - this.z1));
+   	var b = Math.sqrt((this.x2 - this.x0) * (this.x2 - this.x0) + (this.y2 - this.y0) * (this.y2 - this.y0) + (this.z2 - this.z0) * (this.z2 - this.z0));
+   	var c = Math.sqrt((this.x1 - this.x0) * (this.x1 - this.x0) + (this.y1 - this.y0) * (this.y1 - this.y0) + (this.z1 - this.z0) * (this.z1 - this.z0));
    	var cos_beta = (a * a - b * b + c * c) / (2 * a * c);
-   	var sin_beta = sqrt(1 - cos_beta * cos_beta);
+   	var sin_beta = Math.sqrt(1 - cos_beta * cos_beta);
 
     this.texCoords = [
     	0, 0,

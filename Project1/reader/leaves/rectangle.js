@@ -38,8 +38,6 @@ rectangle.prototype.initBuffers = function () {
 		0, 1, 2, 
 		3, 2, 1,
     ];
-		
-	this.primitiveType=this.scene.gl.TRIANGLES;
 
     this.normals = [
     	0, 0, 1,
@@ -48,13 +46,21 @@ rectangle.prototype.initBuffers = function () {
         0, 0, 1
     ];
 
-    this.texCoords = [    
+/*    this.texCoords = [    
 		0, 0,
 		(this.x_right - this.x_left) / this.s, 0,
 		0, (this.y_top - this.y_bottom) / this.t,
 		(this.x_right - this.x_left) / this.s, (this.y_top - this.y_bottom) / this.t
+	];*/
+
+    this.texCoords = [    
+		0, 0,
+		this.s, 0,
+		0, this.t,
+		this.s, this.t
 	];
 
+ 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 	
 };
