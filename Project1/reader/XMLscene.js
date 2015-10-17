@@ -58,6 +58,9 @@ XMLscene.prototype.init = function (application) {
 
 XMLscene.prototype.initLights = function () {
 
+	this.lights = [];
+	this.lights_ids = []; // para cada id guarda-se a informação da lampada estar on/off 
+	
     this.shader.bind();
 
 var i = 0;
@@ -75,10 +78,14 @@ for(light in this.graph.lights){
 	if(this.graph.lights[light].enable){
 	temp.enable();
 	}
-	this.lights[i] = temp;
+	this.lights[i] = temp; // adiciona luz da CGF 
+	this.lights[i].id = temp_id;	
+	this.lights_ids[temp_id] = temp.enabled; 
  i++;
 }
     this.shader.unbind();
+
+    this.interface.create_gui_checkboxes();
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -99,7 +106,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.initLights();
 
-	this.createBoxes();
+	
 
 	// Frustum
     this.camera.near = this.graph.initialsInformation.frustum.near;
@@ -412,16 +419,16 @@ XMLscene.prototype.processNode = function(node) {
 
 
 
-XMLscene.prototype.createBoxes = function () { 
-
-
-//var gui_lights = this.object.addFolder("Lights");
-//gui_lights.open();
-//gui_lights.add(this.scene, 'centerLight').name('Center light');
-
-console.log("Doing something..."); 
-
-}; 
+XMLscene.prototype.changeLightProperty = function(id, turned_on) {
+    for (var i = 0; i < this.lights.length; ++i) 
+    {
+        if (id == this.lights[i].id) {
+            if(turned_on)
+            this.lights[i].enable();
+            else this.lights[i].disable();
+        }
+    }
+};
 
 
 

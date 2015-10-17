@@ -22,7 +22,8 @@ MyInterface.prototype.init = function(application) {
 	
 	// init GUI. For more information on the methods, check:
 	//  http://workshop.chromeexperiments.com/examples/gui
-	
+	application.interface = this;///////??????????????
+
 	this.gui = new dat.GUI();
 
 	// add a button:
@@ -53,8 +54,7 @@ MyInterface.prototype.init = function(application) {
 	
     //gui_lights.add(this.scene, 'centerLight').name('Center light');
 
-var folder = this.gui.addFolder("Lights");
-folder.open();
+
 /*
 --------
  Angela: comentei isto porque estava a dar erro 
@@ -93,6 +93,24 @@ folder.add(this.scene, 'rightBoardLight').name("First").onChange(function(value)
 	return true;
 };
 
+MyInterface.prototype.setScene = function(scene) {
+    this.scene = scene;
+    scene.interface = this;
+};
+
+
+MyInterface.prototype.create_gui_checkboxes = function() {
+    var lights_group = this.gui.addFolder("Lights");
+    lights_group.open();
+
+    var realScene = this;
+
+    for (enable_element in this.scene.lights_ids) {
+        lights_group.add(this.scene.lights_ids, enable_element).onChange(function(value) {
+            realScene.scene.changeLightProperty(this.property, value);
+        });
+    }
+};
 
 /**
  * processKeyboard
