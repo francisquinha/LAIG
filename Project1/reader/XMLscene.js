@@ -172,7 +172,11 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.textures[texture_id] = new CGFtexture(this, this.graph.textures[texture_id].file);
     this.textures[texture_id].amplif_factor = this.graph.textures[texture_id].amplif_factor;
     this.textures[texture_id].file = this.graph.textures[texture_id].file;
+
+    console.log(this.textures[texture_id].amplif_factor);
     }
+
+    
 	this.enableTextures(true);
 
 	//console.log(this.textures['yellow'].file);
@@ -191,15 +195,17 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.materials[material_id].setAmbient(material.ambient.r, material.ambient.g, material.ambient.b, material.ambient.a);
     this.materials[material_id].setEmission(material.emission.r, material.emission.g, material.emission.b, material.emission.a);
     }
-	//console.log(this.materials['branco_brilhante']);
 
-/*
-    // Leaves
+ /*   this.defaultMaterial = new CGFappearance(this);
+    this.materials["default"] = this.defaultMaterial;
+    this.defaultTexture = new CGFtexture(this, "scenes/monster/textures/blue.jpg");
+    this.defaultMaterial.setTexture(this.defaultTexture);
+   */ 
 
-    this.processLeaves();
+	//console.log(this.materials['branco_brilhante'].file);
 
     // Nodes
-*/
+
     this.processNodes();
 
 };
@@ -244,14 +250,18 @@ XMLscene.prototype.display = function () {
 			this.initialAxis();
 			this.axis.display();
 		}	
-
+		
+	
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
 	    	if (node.primitives != undefined) {
+	    		
 	    		for (i = 0; i < node.primitives.length; i++) {
 					this.pushMatrix();
-						this.multMatrix(node.matrices[i]);
 						node.materials[i].apply();
+						this.multMatrix(node.matrices[i]);
+						//console.log(node.materials[i]);
+						
 						node.primitives[i].display();
 					this.popMatrix();
 	    		}
@@ -469,14 +479,4 @@ XMLscene.prototype.changeLightProperty = function(id, turned_on) {
             break;
         }
     }
-};
-
-XMLscene.prototype.getTexture = function(id) {
-   if (id == null) return null;
-
-    
-    for (var i = 0; i < this.textures.length; i++)
-        if (id == this.textures[i].id) return this.textures[i];
-
-    return null;
 };
