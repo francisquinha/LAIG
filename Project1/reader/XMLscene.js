@@ -131,7 +131,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
 
     //Textures
-	
+	var texture = this.graph.textures[texture_id];
     for(var texture_id in this.graph.textures)
 	{
     this.textures[texture_id] = new CGFtexture(this, this.graph.textures[texture_id].file);
@@ -210,14 +210,29 @@ XMLscene.prototype.display = function () {
 			this.initialAxis();
 			this.axis.display();
 		}	
-
+var temp;
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
 	    	if (node.primitives != undefined) {
 	    		for (i = 0; i < node.primitives.length; i++) {
 					this.pushMatrix();
-						node.materials[i].apply();
-						console.log(node);
+						if (this.textures[node.texture] != null && this.materials[node.material] != null) {
+                			
+                				console.log(this.textures[node.texture].file);
+                			
+                				temp = this.materials[node.material];
+                				
+                				console.log(temp);
+                				
+                				temp.setTexture(this.textures[node.texture].file);
+                				
+                				//temp.apply();
+                			
+
+                				//this.cylinderAppearance.apply();
+								//this.cylinder.display();
+						}					
+						
 						this.multMatrix(node.matrices[i]);
 						node.primitives[i].display();
 					this.popMatrix();
@@ -417,103 +432,24 @@ XMLscene.prototype.processNode = function(node) {
 	stackTexture.pop();	
 };
 
-
-
 XMLscene.prototype.changeLightProperty = function(id, turned_on) {
-    for (var i = 0; i < this.lights.length; ++i) 
+    for (var i = 0; i < this.lights.length; i++) 
     {
         if (id == this.lights[i].id) {
             if(turned_on)
             this.lights[i].enable();
             else this.lights[i].disable();
+            break;
         }
     }
 };
 
-
-
-/*
-//////////////////////////////////////////////////////////////
-XMLscene.prototype.processNodes = function() {
-   var nodes_list = this.graph.nodes;
-   var root_node = this.graph.findNode(this.graph.root_id);
-   this.searchNode(root_node, root_node.material, root_node.texture, root_node.matrix);
-};
-//////////////////////////////////////////////////////////////
-XMLscene.prototype.searchNode = function(node, currMaterial, currTexture, currMatrix) {
-    var nextMat = node.material;
-    if (node.material == "null") nextMat = currMaterial;
-
-    var nextTex = node.texture;
-    if (node.texture == "null") nextTex = currTexture;
-    else if (node.texture == "clear") nextTex = null;
-
-    var nextMatrix = mat4.create();
-    mat4.multiply(nextMatrix, currMatrix, node.matrix);
-
-    for (var i = 0; i < node.descendants.length; i++) {
-        var nextNode = this.graph.findNode(node.descendants[i]);
-
-        if (nextNode == null) {
-            var temp = new GlobalNode(node.descendants[i]);
-            temp.material = this.getMaterial(nextMat);
-            temp.texture = this.getTexture(nextTex);
-            temp.matrix = nextMatrix;
-            temp.isLeaf = true;
-            for (var j = 0; j < this.leaves.length; j++) {
-                if (this.leaves[j].id == temp.id) {
-                    temp.primitive = this.leaves[j];
-                    break;
-                }
-            }
-            this.nodes.push(aux);
-            continue;
-        }
-
-        this.searchNode(nextNode, nextMat, nextTex, nextMatrix);
-    }
-};
-
-//////////////////////////////////////////////////////////////
-XMLscene.prototype.getMaterial = function(id) {
-    if (id == null) return null;
-
-    for (var i = 0; i < this.materials.length; i++)
-        if (id == this.materials[i].id) return this.materials[i];
-
-    return null;
-};
-//////////////////////////////////////////////////////////////
 XMLscene.prototype.getTexture = function(id) {
-    if (id == null) return null;
+   if (id == null) return null;
 
+    
     for (var i = 0; i < this.textures.length; i++)
         if (id == this.textures[i].id) return this.textures[i];
 
     return null;
 };
-//////////////////////////////////////////////////////////////
-function addMaterial(scene, id) {
-    CGFappearance.call(this, scene);
-    this.id = id;
-}
-addMaterial.prototype = Object.create(CGFappearance.prototype);
-addMaterial.prototype.constructor = addMaterial;
-/////////////////////////////////////////////////////////////7
-function addTexture(scene, id, file, amplif_factor) {
-    CGFtexture.call(this, scene, file);
-    this.id = id;
-    this.amplif_factor = amplif_factor;
-}
-addTexture.prototype = Object.create(CGFtexture.prototype);
-addTexture.prototype.constructor = addTexture;
-/////////////////////////////////////////////////////////////7
-function GlobalNode(id) {
-    this.id = id;
-    this.material = null;
-    this.texture = null;
-    this.matrix = null;
-    this.primitive = null;
-}
-
-*/
