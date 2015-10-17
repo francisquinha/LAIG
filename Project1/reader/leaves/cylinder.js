@@ -117,11 +117,15 @@
 			this.normals.push(0);
 
 			// coordenadas textura
-			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * j / this.stacks);
+/*			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * j / this.stacks);
 			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * j / this.stacks);
 			this.texCoords.push(tex_length * (1 - i / this.slices), tex_height * (j + 1) / this.stacks);
-			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * (j + 1) / this.stacks);
+			this.texCoords.push(tex_length * (1 - (i + 1) / this.slices), tex_height * (j + 1) / this.stacks);*/
 
+			this.texCoords.push(1 - i / this.slices, j / this.stacks);
+			this.texCoords.push(1 - (i + 1) / this.slices, j / this.stacks);
+			this.texCoords.push(1 - i / this.slices, (j + 1) / this.stacks);
+			this.texCoords.push(1 - (i + 1) / this.slices, (j + 1) / this.stacks);
 		}
 					
 		rad_now += rad;

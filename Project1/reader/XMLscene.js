@@ -28,6 +28,40 @@ function checkMatrixStack() {
 	return matrix;
 }
 
+function pushMaterialStack(someMaterial) {
+	stackMaterial.push(someMaterial);
+}
+
+function popMaterialStack() {
+	if (stackMatrix.length == 0) {
+	    throw "Invalid popMaterial!";
+	}
+	return stackMaterial.pop();
+}
+
+function checkMaterialStack() {
+	var material = stackMaterial.pop();
+	pushMaterialStack(material);
+	return material;
+}
+
+function pushTextureStack(someTexture) {
+	stackTexture.push(someTexture);
+}
+
+function popTextureStack() {
+	if (stackTexture.length == 0) {
+	    throw "Invalid popMatrix!";
+	}
+	return stackTexture.pop();
+}
+
+function checkTextureStack() {
+	var texture = popTextureStack();
+	pushTextureStack(texture);
+	return texture;
+}
+
 
 function XMLscene() {
     CGFscene.call(this);
@@ -53,6 +87,7 @@ XMLscene.prototype.init = function (application) {
     this.leaves = [];
     this.nodes = [];
 	//
+
 
 };
 
@@ -138,8 +173,7 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.textures[texture_id].amplif_factor = this.graph.textures[texture_id].amplif_factor;
     this.textures[texture_id].file = this.graph.textures[texture_id].file;
     }
-    if(this.textures.length > 0)
-		this.enableTextures(true);
+	this.enableTextures(true);
 
 	//console.log(this.textures['yellow'].file);
 		
@@ -210,37 +244,20 @@ XMLscene.prototype.display = function () {
 			this.initialAxis();
 			this.axis.display();
 		}	
-var temp;
+
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
 	    	if (node.primitives != undefined) {
 	    		for (i = 0; i < node.primitives.length; i++) {
 					this.pushMatrix();
-						if (this.textures[node.texture] != null && this.materials[node.material] != null) {
-                			
-                				console.log(this.textures[node.texture].file);
-                			
-                				temp = this.materials[node.material];
-                				
-                				console.log(temp);
-                				
-                				temp.setTexture(this.textures[node.texture].file);
-                				
-                				//temp.apply();
-                			
-
-                				//this.cylinderAppearance.apply();
-								//this.cylinder.display();
-						}					
-						
 						this.multMatrix(node.matrices[i]);
+						node.materials[i].apply();
 						node.primitives[i].display();
 					this.popMatrix();
-
 	    		}
 	    	}
 	    }
-	};	
+	}	
 
     this.shader.unbind();
 };
@@ -395,17 +412,21 @@ XMLscene.prototype.processNode = function(node) {
 		pushMatrixStack(trf_matrix);
 //		console.log('push ' + trf_matrix);
 //	}
-	if (node.material == "null")
-		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
+	if (node.material == "null") {
+		var material = checkMaterialStack();
+		pushMaterialStack(material);
+	}
 	else
-		stackMaterial.push(this.materials[node.material]);
+		pushMaterialStack(this.materials[node.material]);
 
-	if (node.texture == "null")
-		stackTexture.push(stackTexture[stackTexture.length - 1]);
+	if (node.texture == "null") {
+		var texture = checkTextureStack();
+		pushTextureStack(texture);
+	}
 	else if (node.texture == "clear")
-	 	stackTexture.push("clear");
+	 	pushTextureStack("clear");
 	else
-		stackTexture.push(this.textures[node.texture]);
+		pushTextureStack(this.textures[node.texture]);
 	
 	var new_node_id;
 	var new_node;
@@ -422,8 +443,14 @@ XMLscene.prototype.processNode = function(node) {
 			leaf = this.graph.leaves[new_node_id];
 			node.primitives.push(this.processLeaf(leaf));
 			node.matrices.push(trf_matrix);
-    		node.materials.push(stackMaterial[stackMaterial.length - 1]);
-			node.textures.push(stackTexture[stackTexture.length - 1]);
+			var material = checkMaterialStack();
+			var texture = checkTextureStack();
+			material.loadTexture(texture.file);
+			node.materials.push(material);
+//    		node.materials.push(stackMaterial[stackMaterial.length - 1]);
+//			node.textures.push(stackTexture[stackTexture.length - 1]);
+			console.log(node);
+			console.log(texture.file);
 		}		
 		else this.processNode(new_node);		
 	}
