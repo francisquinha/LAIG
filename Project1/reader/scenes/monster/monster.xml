@@ -4,14 +4,14 @@
 
 <INITIALS>
     <frustum near="2" far="500"/>
-    <translation x="0" y="0" z="0"/>     
+<!--    <translation x="0" y="0" z="0"/>     
     <rotation axis="x" angle="0"/>                 
     <rotation axis="y" angle="0"/>                 
-    <rotation axis="z" angle="0"/>                   
-<!--<translation x="-100" y="-40" z="-30"/>     
-    <rotation axis="x" angle="20"/>                 
-    <rotation axis="y" angle="40"/>                 
-    <rotation axis="z" angle="-25"/>    -->             
+    <rotation axis="z" angle="0"/> -->                  
+	<translation x="-100" y="-100" z="-100"/>     
+    <rotation axis="x" angle="0"/>                 
+    <rotation axis="y" angle="0"/>                 
+    <rotation axis="z" angle="0"/>          
     <scale sx="1" sy="1" sz="1"/>                   
     <reference length="5"/>                         
 </INITIALS>
@@ -119,7 +119,7 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
-            <!--<DESCENDANT id="floor"/>
+         <!--   <DESCENDANT id="floor"/>
             <DESCENDANT id="wall"/>-->
             <DESCENDANT id="monster"/>
             <DESCENDANT id="moon"/>

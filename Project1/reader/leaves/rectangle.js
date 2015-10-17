@@ -28,15 +28,15 @@ rectangle.prototype.constructor=rectangle;
 
 rectangle.prototype.initBuffers = function () {
 	this.vertices = [
-		this.x_left, this.y_bottom,
-		this.x_right, this.y_bottom,
-		this.x_left, this.y_top, 
-		this.x_right, this.y_top
+		this.x_left, this.y_bottom, 0,
+		this.x_right, this.y_bottom, 0,
+		this.x_left, this.y_top, 0,
+		this.x_right, this.y_top, 0
 	];
 
 	this.indices = [
 		0, 1, 2, 
-		3, 2, 1,
+		3, 2, 1
     ];
 
     this.normals = [

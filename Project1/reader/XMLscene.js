@@ -206,13 +206,16 @@ XMLscene.prototype.display = function () {
 
 	    for (node_id in this.graph.nodes) {
 	    	var node = this.graph.nodes[node_id];
-	    	if (node.primitive != undefined) {
-				this.pushMatrix();
-				node.mater.setTexture(node.text);
-				node.mater.apply();
-				this.multMatrix(node.matrix);
-				node.primitive.display();
-				this.popMatrix();
+	    	if (node.primitives != undefined) {
+	    		for (i = 0; i < node.primitives.length; i++) {
+					this.pushMatrix();
+						node.materials[i].apply();
+						console.log(node);
+						this.multMatrix(node.matrices[i]);
+						node.primitives[i].display();
+					this.popMatrix();
+
+	    		}
 	    	}
 	    }
 	};	
@@ -275,7 +278,7 @@ XMLscene.prototype.processLeaf = function(leaf) {
 XMLscene.prototype.processNodes = function() {
 	mat4.identity(trf_matrix); 		// set matrix to identity
 	pushMatrixStack(trf_matrix);	// place in stack
-	console.log('push ' + trf_matrix);
+	//console.log('push ' + trf_matrix);
 
 	var material = this.materials["default"];
 	stackMaterial.push(material);
@@ -286,7 +289,7 @@ XMLscene.prototype.processNodes = function() {
 	var root_id = this.graph.nodes['root'];
 	var root_node = this.graph.nodes[root_id];
 
-	console.log('root ' + root_node);
+	//console.log('root ' + root_node);
 
 	this.processNode(root_node);
 //	stackMatrix.pop();
@@ -326,7 +329,7 @@ XMLscene.prototype.preprocessNode = function(node) {
 				break;
 		}
 	}
-	node.transformation = transform;	
+	node.transformation = transform;
 }
 
 
@@ -362,13 +365,13 @@ XMLscene.prototype.processNode = function(node) {
 		}
 	}
 	*/
-	console.log(node);
-	console.log('transformation ' + node.transformation);
+//	console.log(node);
+//	console.log('transformation ' + node.transformation);
 	mat4.multiply(trf_matrix, trf_matrix, node.transformation);
-	console.log('matrix ' + trf_matrix);
+//	console.log('matrix ' + trf_matrix);
 //	if (node.descendants.length > 1) {
 		pushMatrixStack(trf_matrix);
-		console.log('push ' + trf_matrix);
+//		console.log('push ' + trf_matrix);
 //	}
 	if (node.material == "null")
 		stackMaterial.push(stackMaterial[stackMaterial.length - 1]);
@@ -387,25 +390,24 @@ XMLscene.prototype.processNode = function(node) {
 	var leaf;
 	for (var i in node.descendants) {
 //		console.log('child ' + i)
-//		if (i > 0) {
+		if (i > 0) {
 			trf_matrix = checkMatrixStack();
-			console.log('check ' + trf_matrix);
-//		}
+//			console.log('check ' + trf_matrix);
+		}
 		new_node_id = node.descendants[i];
 		new_node = this.graph.nodes[new_node_id];
 		if (new_node == undefined) {
 			leaf = this.graph.leaves[new_node_id];
-			node.primitive = this.processLeaf(leaf);
-			node.matrix = trf_matrix;
-    		node.mater = stackMaterial.pop();
-			node.text = stackTexture.pop();
+			node.primitives.push(this.processLeaf(leaf));
+			node.matrices.push(trf_matrix);
+    		node.materials.push(stackMaterial[stackMaterial.length - 1]);
+			node.textures.push(stackTexture[stackTexture.length - 1]);
 		}		
 		else this.processNode(new_node);		
 	}
-	var aux_matrix = popMatrixStack();
-	console.log('pop ' + aux_matrix);
-//		stackMaterial.pop();
-//		stackTexture.pop();	
+	popMatrixStack();
+	stackMaterial.pop();
+	stackTexture.pop();	
 };
 
 

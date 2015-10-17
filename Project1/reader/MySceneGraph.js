@@ -600,8 +600,12 @@ var i = 2; // item seguinte ao material e textura do no
          else break; // caso nao tenha transformacoes de qualquer tipo avança para o parse dos descendentes
     }      
 
-   node['transformations'] = transformations;
-   node['descendants'] = this.parseDescendants(element.children[i]);
+	node['transformations'] = transformations;
+	node['descendants'] = this.parseDescendants(element.children[i]);
+	node.primitives = [];
+	node.matrices = [];
+	node.materials = [];
+	node.textures = [];	
         
    return node;
 };
