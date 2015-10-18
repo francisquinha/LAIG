@@ -556,7 +556,8 @@ MySceneGraph.prototype.parseNodes= function(rootElement) {
 
     this.nodes = {};
 
-    this.nodes['root'] = elems[0].children[0].id;
+    this.nodes['root_id'] = elems[0].children[0].id;
+    console.log('root_id ' + this.nodes['root']);
     var nNodes = elems[0].children.length;
     for (var i = 1 ; i < nNodes ; i++)
     {

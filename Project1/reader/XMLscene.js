@@ -120,7 +120,7 @@ XMLscene.prototype.initLights = function () {
 	}
     this.shader.unbind();
 
-//    this.interface.create_gui_checkboxes();
+    this.interface.create_gui_checkboxes();
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -287,7 +287,7 @@ XMLscene.prototype.processNodes = function() {
 	stackMaterial.push("null");
 	stackTexture.push("null");
 
-	var root_id = this.graph.nodes['root'];
+	var root_id = this.graph.nodes['root_id'];
 	var root_node = this.graph.nodes[root_id];
 
 	this.processNode(root_node);

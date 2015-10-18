@@ -57,7 +57,7 @@
 <TEXTURES>
 	<TEXTURE id="textura-gelado">
         <file path="T02_G03_textures/boda-de-gelado.jpg" />                             <!-- path to file -->
-        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+        <amplif_factor s="3.14159265359 " t="3.14159265359 " />                <!-- x/s, y/t -->
     </TEXTURE>
 	<TEXTURE id="textura-cone-gelado">
         <file path="T02_G03_textures/cone-de-gelado.jpg" />                             
@@ -137,7 +137,7 @@
     </TEXTURE>
 	<TEXTURE id="textura-bola-basket">
         <file path="T02_G03_textures/bola-basket.jpg" />                             
-        <amplif_factor s="1" t="1" />                
+        <amplif_factor s="6.28318530718" t="3.14159265359" />                
     </TEXTURE>
 	<TEXTURE id="textura-banco">
         <file path="T02_G03_textures/banco.jpg" />                             
