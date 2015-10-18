@@ -28,10 +28,10 @@ rectangle.prototype.constructor=rectangle;
 
 rectangle.prototype.initBuffers = function () {
 	this.vertices = [
-		this.x_left, this.y_bottom, 0,
-		this.x_right, this.y_bottom, 0,
 		this.x_left, this.y_top, 0,
-		this.x_right, this.y_top, 0
+		this.x_left, this.y_bottom, 0,
+		this.x_right, this.y_top, 0,
+		this.x_right, this.y_bottom, 0,
 	];
 
 	this.indices = [
@@ -46,20 +46,20 @@ rectangle.prototype.initBuffers = function () {
         0, 0, 1
     ];
 
-/*    this.texCoords = [    
-		0, 0,
-		(this.x_right - this.x_left) / this.s, 0,
-		0, (this.y_top - this.y_bottom) / this.t,
-		(this.x_right - this.x_left) / this.s, (this.y_top - this.y_bottom) / this.t
-	];*/
-
     this.texCoords = [    
 		0, 0,
-		this.s, 0,
+		0, (this.y_top - this.y_bottom) / this.t,
+		(this.x_right - this.x_left) / this.s, 0,
+		(this.x_right - this.x_left) / this.s, (this.y_top - this.y_bottom) / this.t
+	];
+/*
+    this.texCoords = [    
+		0, 0,
 		0, this.t,
+		this.s, 0,
 		this.s, this.t
 	];
-
+*/
  	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 	
