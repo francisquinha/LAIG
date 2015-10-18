@@ -113,6 +113,9 @@ XMLscene.prototype.initLights = function () {
 		if(this.graph.lights[light].enable){
 			temp.enable();
 		}
+		else {
+			temp.disable();
+		}
 		this.lights[i] = temp; // adiciona luz da CGF 
 		this.lights[i].id = temp_id;	
 		this.lights_ids[temp_id] = temp.enabled; 
