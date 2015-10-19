@@ -147,8 +147,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 	// Frustum
     this.camera.near = this.graph.initialsInformation.frustum.near;
     this.camera.far = this.graph.initialsInformation.frustum.far;
-
-	//this.gl.clearColor(this.graph.illumina.background[0],this.graph.illumina.background[1],this.graph.illumina.background[2],this.graph.illumina.background[3]);
 	
     // Illumination
    
@@ -165,15 +163,17 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.axis = new CGFaxis(this, this.graph.initialsInformation.reference);
 
     //Textures
-    this.textures["null"] = new CGFtexture(this, 'texture.jpg');
-    this.textures["null"].amplif_factor = new Object;
+    this.textures["null"] = new CGFtexture(this, 'texture.png');
+    this.textures["null"].amplif_factor = new Object();
     this.textures["null"].amplif_factor.s = 1;
     this.textures["null"].amplif_factor.t = 1;
-    this.textures["null"].file = 'texture.jpg';
+    this.textures["null"].file = 'texture.png';
+
     for(var texture_id in this.graph.textures) {
-    	this.textures[texture_id] = new CGFtexture(this, this.graph.textures[texture_id].file);
+    	var path = this.graph.textures[texture_id].file;
+	    this.textures[texture_id] = new CGFtexture(this, path);
     	this.textures[texture_id].amplif_factor = this.graph.textures[texture_id].amplif_factor;
-    	this.textures[texture_id].file = this.graph.textures[texture_id].file;
+    	this.textures[texture_id].file = path;
 	}
 	this.enableTextures(true);
 
@@ -226,7 +226,9 @@ XMLscene.prototype.display = function () {
 					this.pushMatrix();
 						this.multMatrix(node.matrices[i]);
 						node.materials[i].apply();
-						node.primitives[i].display();
+						if (node.primitives[i] != undefined) {
+							node.primitives[i].display();						
+						}
 					this.popMatrix();
 	    		}
 	    	}
@@ -256,9 +258,15 @@ XMLscene.prototype.processLeaf = function(leaf) {
 	var t = 1;
 	var texture_id = checkTextureStack();
 	if (texture_id != "clear") {
-		
-		s = this.textures[texture_id].amplif_factor.s;
-		t = this.textures[texture_id].amplif_factor.t;
+		var texture = this.textures[texture_id];
+		if (texture == undefined) {
+			s = 1;
+			t = 1;
+		}
+		else {
+			s = texture.amplif_factor.s;
+			t = texture.amplif_factor.t;			
+		}
 	}
 
 	var primitive;
@@ -339,7 +347,11 @@ XMLscene.prototype.processNode = function(node) {
 	}
 	else {
 		var material_info = this.graph.materials[node.material];
-		pushMaterialStack(material_info);
+		if (material_info == undefined) {
+			console.log ('Warning: Material ' + node.material + ' is not defined!\n')
+			pushMaterialStack("null");
+		}
+		else pushMaterialStack(material_info);
 	}
 
 	if (node.texture == "null") {
@@ -351,7 +363,7 @@ XMLscene.prototype.processNode = function(node) {
 	else {
 		pushTextureStack(node.texture);
 	}
-	
+
 	var new_node_id;
 	var new_node;
 	var leaf;
@@ -363,26 +375,36 @@ XMLscene.prototype.processNode = function(node) {
 		new_node = this.graph.nodes[new_node_id];
 		if (new_node == undefined) {
 			leaf = this.graph.leaves[new_node_id];
-			node.primitives.push(this.processLeaf(leaf));
-			node.matrices.push(trf_matrix);
-			var material_info = checkMaterialStack();
-			var material;
-			if (material_info == "null") {
-				material = this.defaultMaterial;
+			if (leaf == undefined) {
+				console.log('Warning: Node ' + new_node_id + ' is not defined!\n')
 			}
 			else {
-				material = new CGFappearance(this);
-				material.setShininess(material_info.shininess);
-				material.setSpecular(material_info.specular.r, material_info.specular.g, material_info.specular.b, material_info.specular.a);
-				material.setDiffuse(material_info.diffuse.r, material_info.diffuse.g, material_info.diffuse.b, material_info.diffuse.a);
-				material.setAmbient(material_info.ambient.r, material_info.ambient.g, material_info.ambient.b, material_info.ambient.a);
-				material.setEmission(material_info.emission.r, material_info.emission.g, material_info.emission.b, material_info.emission.a);
+				node.primitives.push(this.processLeaf(leaf));
+				node.matrices.push(trf_matrix);
+				var material_info = checkMaterialStack();
+				var material;
+				if (material_info == "null") {
+					material = this.defaultMaterial;
+				}
+				else {
+					material = new CGFappearance(this);
+					material.setShininess(material_info.shininess);
+					material.setSpecular(material_info.specular.r, material_info.specular.g, material_info.specular.b, material_info.specular.a);
+					material.setDiffuse(material_info.diffuse.r, material_info.diffuse.g, material_info.diffuse.b, material_info.diffuse.a);
+					material.setAmbient(material_info.ambient.r, material_info.ambient.g, material_info.ambient.b, material_info.ambient.a);
+					material.setEmission(material_info.emission.r, material_info.emission.g, material_info.emission.b, material_info.emission.a);
+				}
+				var texture_id = checkTextureStack();
+				if (texture_id != "clear") {
+					var texture = this.textures[texture_id];
+					if (texture == undefined) {
+						console.log ('Warning: Texture ' + texture_id + ' is not defined!\n');
+						texture = this.textures["null"];
+					}
+					material.setTexture(texture);			
+				}
+				node.materials.push(material);					
 			}
-			var texture_id = checkTextureStack();
-			if (texture_id != "clear") {
-				material.setTexture(this.textures[texture_id]);			
-			}
-			node.materials.push(material);	
 		}		
 		else this.processNode(new_node);		
 	}

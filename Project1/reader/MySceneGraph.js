@@ -159,9 +159,9 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 
 	//verifica se os eixos colocados sao de facto o x, o y e o z e se estao pela ordem devida
 
-	if(this.reader.getString(elems[0],'axis',true) != "x") return "value of the first axis must be x.";
-	if(this.reader.getString(elems[1],'axis',true) != "y") return "value of the first axis must be y.";
-	if(this.reader.getString(elems[2],'axis',true) != "z") return "value of the first axis must be z.";
+	if(this.reader.getString(elems[0],'axis',true) != "x") console.log("Warning: value of the first rotation axis must be x!");
+	if(this.reader.getString(elems[1],'axis',true) != "y") console.log("Warning: value of the second rotation axis must be y!");
+	if(this.reader.getString(elems[2],'axis',true) != "z") console.log("Warning: value of the third rotation axis must be z!");
 
 	
 	//Scale
@@ -526,7 +526,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
 
     	arrangedArgsLeaf['type'] = this.reader.getString(leaf, 'type', true);
     	argsWithSpace = this.reader.getString(leaf, 'args', true);
-    	arrangedArgsLeaf['args'] = argsWithSpace.split(' ');
+    	arrangedArgsLeaf['args'] = argsWithSpace.trim().split(/\s+/);
     	
     	for(var j = 0; j < arrangedArgsLeaf['args'].length; j++){
         	arrangedArgsLeaf['args'][j] = parseFloat(arrangedArgsLeaf['args'][j]);
@@ -557,7 +557,6 @@ MySceneGraph.prototype.parseNodes= function(rootElement) {
     this.nodes = {};
 
     this.nodes['root_id'] = elems[0].children[0].id;
-    console.log('root_id ' + this.nodes['root']);
     var nNodes = elems[0].children.length;
     for (var i = 1 ; i < nNodes ; i++)
     {

@@ -4,7 +4,7 @@
 
 <INITIALS>
     <frustum near="0.1" far="500"/>
-    <translation x="-100" y="-120" z="-100"/>     
+    <translation x="-100" y="-140" z="-100"/>     
     <rotation axis="x" angle="0"/>                 
     <rotation axis="y" angle="0"/>                 
     <rotation axis="z" angle="0"/>               
@@ -29,7 +29,7 @@
     </LIGHT>
     <LIGHT id="moonlight">                          
         <enable value ="1"/>         				
-        <position x="-45" y="40" z="0" w="1"/>      
+        <position x="-65" y="65" z="20" w="1"/>      
         <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
         <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
         <specular r="0.2" g="0.2" b="0.2" a="1"/>   
@@ -140,7 +140,7 @@
         <TRANSLATION x="3.3" y="0" z="3.3"/>
         <ROTATION axis="y" angle="45"/>
         <ROTATION axis="x" angle="-90"/>
-        <SCALE sx="65" sy="80" sz="1"/>
+        <SCALE sx="100" sy="80" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
@@ -149,9 +149,9 @@
     <NODE id="wall">
         <MATERIAL id="branco"/>
         <TEXTURE id="blue"/>
-        <TRANSLATION x="-25" y="25" z="-25"/>
+        <TRANSLATION x="-25" y="37.5" z="-25"/>
         <ROTATION axis="y" angle="45"/>
-        <SCALE sx="65" sy="50" sz="1"/>
+        <SCALE sx="100" sy="75" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
@@ -160,7 +160,7 @@
     <NODE id="moon">
         <MATERIAL id="branco_brilhante"/>
         <TEXTURE id="moontext"/>
-        <TRANSLATION x="-45" y="40" z="0"/>
+        <TRANSLATION x="-65" y="65" z="20"/>
         <SCALE sx="3" sy="3" sz="3"/>
 		<DESCENDANTS>
             <DESCENDANT id="sphere"/>
@@ -178,7 +178,6 @@
 			<DESCENDANT id="legs"/>
 			<DESCENDANT id="arms"/>
         </DESCENDANTS>
-
     </NODE>
 	
 
