@@ -57,7 +57,7 @@
 <TEXTURES>
 	<TEXTURE id="textura-gelado">
         <file path="T02_G03_textures/boda-de-gelado.jpg" />                             <!-- path to file -->
-        <amplif_factor s="3.14159265359 " t="3.14159265359 " />                <!-- x/s, y/t -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
 	<TEXTURE id="textura-cone-gelado">
         <file path="T02_G03_textures/cone-de-gelado.jpg" />                             
@@ -137,7 +137,7 @@
     </TEXTURE>
 	<TEXTURE id="textura-bola-basket">
         <file path="T02_G03_textures/bola-basket.jpg" />                             
-        <amplif_factor s="6.28318530718" t="3.14159265359" />                
+        <amplif_factor s="1" t="1" />                
     </TEXTURE>
 	<TEXTURE id="textura-banco">
         <file path="T02_G03_textures/banco.jpg" />                             
@@ -240,10 +240,10 @@
 
 <LEAVES>
     <LEAF id="rectangulo" type="rectangle" args="0 1 1 0" />      <!-- 2D coordinates for left-top and right-bottom vertices. -->
-    <LEAF id="cone" type="cylinder" args="4 0 1 1 8" />    <!-- height, bottom radius, top radius, sections along height, parts per section -->
-    <LEAF id="bola" type="sphere" args="1 8 8" />            <!-- radius, parts along radius, parts per section -->
+    <LEAF id="cone" type="cylinder" args="4 0 1 1 40" />    <!-- height, bottom radius, top radius, sections along height, parts per section -->
+    <LEAF id="bola" type="sphere" args="1 40 40" />            <!-- radius, parts along radius, parts per section -->
 	<LEAF id="triangulo" type="triangle" args="5 0 -5 -5 0 -5 0 5 0" /> <!--coordinates of each vertex -->
-	<LEAF id="cilindro" type="cylinder" args="8 0.5 0.5 1 8" /> <!-- height, bottom radius, top radius, sections along height, parts per section -->
+	<LEAF id="cilindro" type="cylinder" args="8 0.5 0.5 1 40" /> <!-- height, bottom radius, top radius, sections along height, parts per section -->
 </LEAVES>
 
 <NODES>
