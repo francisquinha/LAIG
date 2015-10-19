@@ -36,6 +36,7 @@ main=function()
 //	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G03_v2/LAIG_TP1_LSX_T02_G03_v2.lsx";
 //	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G07_v1/LAIG_TP1_LSX_T02_G07_v1.lsx";
 //	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T04_G03_v1/LAIG_TP1_LSX_T04_G03_v1.lsx";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G12_v2/LAIG_TP1_LSX_T02_G12_v2.lsx";
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors

@@ -79,14 +79,6 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.defaultMaterial = new CGFappearance(this);
-	this.defaultMaterial.setShininess(1);
-	this.defaultMaterial.setSpecular(1, 1, 1, 1);
-	this.defaultMaterial.setDiffuse(1, 1, 1, 1);
-	this.defaultMaterial.setAmbient(1, 1, 1, 1);
-	this.defaultMaterial.setEmission(0, 0, 0, 1);
-	this.defaultMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
 	this.textures = new Map();
 
 };
@@ -384,7 +376,13 @@ XMLscene.prototype.processNode = function(node) {
 				var material_info = checkMaterialStack();
 				var material;
 				if (material_info == "null") {
-					material = this.defaultMaterial;
+					material = new CGFappearance(this);
+					material.setShininess(1);
+					material.setSpecular(1, 1, 1, 1);
+					material.setDiffuse(1, 1, 1, 1);
+					material.setAmbient(1, 1, 1, 1);
+					material.setEmission(0, 0, 0, 1);
+					material.setTextureWrap('REPEAT', 'REPEAT');
 				}
 				else {
 					material = new CGFappearance(this);
@@ -403,7 +401,8 @@ XMLscene.prototype.processNode = function(node) {
 					}
 					material.setTexture(texture);			
 				}
-				node.materials.push(material);					
+				node.materials.push(material);
+				console.log(node);				
 			}
 		}		
 		else this.processNode(new_node);		
