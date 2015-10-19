@@ -8,11 +8,7 @@ function MySceneGraph(filename, scene) {
 	// File reading 
 	this.reader = new CGFXMLreader();
 
-	/*
-	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
-	 * After the file is read, the reader calls onXMLReady on this object.
-	 * If any error occurs, the reader calls onXMLError on this object, with an error message
-	 */
+	// Path to textures
 	 
 	this.path = "scenes/" + filename;
 	this.reader.open(this.path, this);
@@ -101,16 +97,20 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	this.initialsInformation = {}; // guarda todos os parametros de initials
 	
 	var elems =  rootElement.getElementsByTagName('INITIALS');
-	if(elems == null) return "initials tag is missing.";
-	if(elems.length != 1) return "More than one initials tag.";
+
+	// elems =  rootElement.getElementsByTagName("*"); procura tudo dentro de uma tag qualquer, se nao soubermos qual é a próxima que vem porque falhou a leitura
+	if(elems.length == 0) {console.log("Warning: initial tag is missing or wrong name!"); elems =  rootElement.getElementsByTagName("*");} // tem e que terminar e acabar na mesma tag mal escrita
+	else if(elems.length != 1) return "Warning: More than one initials tag!"; 
 	var initials = elems[0]; 
 
-	
 	//Frustum
 	
-	elems = initials.getElementsByTagName('frustum');
-	if(elems == null) return "frustum tag is missing.";
-	if(elems.length != 1) return "More than one frustum tag.";
+	var elems = initials.getElementsByTagName('frustum');
+	if(elems.length == 0) {
+		console.log("Warning: frustum tag is missing or wrong name!");  
+
+	}
+	if(elems.length != 1) return "Warning: More than one frustum tag!";
 
 	var frustum = elems[0];
 
@@ -119,8 +119,8 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	this.initialsInformation.frustum['near'] = this.reader.getFloat(frustum,'near',true);
 	this.initialsInformation.frustum['far'] = this.reader.getFloat(frustum,'far',true);
 	
-	if(isNaN(this.initialsInformation.frustum['near'])) return "frustum near invalid. It must be a float.";
-	if(isNaN(this.initialsInformation.frustum['far'])) return "frustum far invalid. It must be a float.";
+	if(isNaN(this.initialsInformation.frustum['near'])){console.log("Warning: frustum near invalid. It must be a float.") ; this.initialsInformation.frustum['near'] = 0.1;}
+	if(isNaN(this.initialsInformation.frustum['far'])) {console.log("Warning: frustum far invalid. It must be a float.") ; this.initialsInformation.frustum['far'] = 500;}
 	
 	
 	//Translation
@@ -136,9 +136,9 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	this.initialsInformation.translate['y'] = this.reader.getFloat(translate,'y',true);
 	this.initialsInformation.translate['z'] = this.reader.getFloat(translate,'z',true);
 	
-	if(isNaN(this.initialsInformation.translate['x'])) return "value of translation in x is not a number.";
-	if(isNaN(this.initialsInformation.translate['y'])) return "value of translation in y is not a number.";
-	if(isNaN(this.initialsInformation.translate['z'])) return "value of translation in z is not a number.";
+	if(isNaN(this.initialsInformation.translate['x'])) {console.log("Warning: value of the translation axis must be a float!"); this.initialsInformation.translate['x'] = 0;}
+	if(isNaN(this.initialsInformation.translate['y'])) {console.log("Warning: value of the translation axis must be a float!"); this.initialsInformation.translate['y'] = 0;}
+	if(isNaN(this.initialsInformation.translate['z'])) {console.log("Warning: value of the translation axis must be a float!"); this.initialsInformation.translate['z'] = 0;}
 
 	
 	//Rotation
@@ -153,9 +153,12 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 		this.initialsInformation.rotation[this.reader.getString(elems[i],'axis',true)] = this.reader.getFloat(elems[i],'angle',true);
 	}
 	
-	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[0],'axis',true)])) return "value of angle rotation in x must be a float.";
-	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[1],'axis',true)])) return "value of angle rotation in y must be a float.";
-	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[2],'axis',true)])) return "value of angle rotation in z must be a float.";
+	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[0],'axis',true)])){
+		console.log("Warning: value of the rotation in x axis must be a float!"); this.initialsInformation.rotation['x'] = 0;} 
+	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[1],'axis',true)])) {
+		console.log("Warning: value of the rotation in y axis must be a float!"); this.initialsInformation.rotation['y'] = 0;} 
+	if(isNaN(this.initialsInformation.rotation[this.reader.getString(elems[2],'axis',true)])) {
+		console.log("Warning: value of the rotation in z axis must be a float!"); this.initialsInformation.rotation['z'] = 0;} 
 
 	//verifica se os eixos colocados sao de facto o x, o y e o z e se estao pela ordem devida
 
@@ -177,9 +180,9 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	this.initialsInformation.scale["sy"] = this.reader.getFloat(scale,'sy',true);
 	this.initialsInformation.scale["sz"] = this.reader.getFloat(scale,'sz',true);
 	
-	if(isNaN(this.initialsInformation.scale["sx"])) return "value of scale in x must be a float.";
-	if(isNaN(this.initialsInformation.scale["sy"])) return "value of scale in y must be a float.";
-	if(isNaN(this.initialsInformation.scale["sz"])) return "value of scale in z must be a float.";
+	if(isNaN(this.initialsInformation.scale["sx"])) {console.log("Warning: value of the scale in x axis must be a float!"); this.initialsInformation.scale['sx'] = 1;} 
+	if(isNaN(this.initialsInformation.scale["sy"])) {console.log("Warning: value of the scale in y axis must be a float!"); this.initialsInformation.scale['sy'] = 1;}
+	if(isNaN(this.initialsInformation.scale["sz"])) {console.log("Warning: value of the scale in z axis must be a float!"); this.initialsInformation.scale['sz'] = 1;}
 
 	//Reference
 
@@ -191,7 +194,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	var reference = elems[0];
 
 	this.initialsInformation.reference = this.reader.getFloat(reference,'length',true);
-	if(isNaN(this.initialsInformation.reference)) return "value of reference must be a float.";
+	if(isNaN(this.initialsInformation.reference)) {console.log("Warning: value of the reference axis must be a float!"); this.initialsInformation.reference = 5;}
 	
 	console.log(this.initialsInformation);
 };
@@ -216,30 +219,47 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 
 	//ambient
 	var ambients = illuminationElems.getElementsByTagName("ambient");
-	if(ambients == null) return "Ambient values are missing.";
-	if(ambients.length != 1) return "More than one ambient tag found or poorly written.";
-
+	if(ambients.length == 0) {
+	console.log("Warning: ambient tag does not exist!");
+	this.illumina.ambient = {};
+	this.illumina.ambient["r"] = 0.25;
+	this.illumina.ambient["g"] = 0.25;
+	this.illumina.ambient["b"] = 0.25;
+	this.illumina.ambient["a"] = 1;
+	}
+	else if(ambients.length != 1) return "More than one ambient tag found or poorly written.";
+	else
+	{
 	var ambient = ambients[0];
 	this.illumina.ambient = {};
 	this.illumina.ambient["r"] = this.reader.getFloat(ambient, "r", true);
 	this.illumina.ambient["g"] = this.reader.getFloat(ambient, "g", true);
 	this.illumina.ambient["b"] = this.reader.getFloat(ambient, "b", true);
 	this.illumina.ambient["a"] = this.reader.getFloat(ambient, "a", true);
-
+	}
 	//doubleside - ficou sem efeito
 	
 	//background
 	var backgrounds = illuminationElems.getElementsByTagName("background");
-	if(backgrounds == null) return "backgrounds values missing.";
-	if(backgrounds.length != 1) return "More than one backgrounds tag found or poorly written.";
 
+	if(backgrounds.length == 0)
+	{
+		console.log("Warning: ambient tag does not exist!");
+	this.illumina.background = {};
+	this.illumina.background["r"] = 0;
+	this.illumina.background["g"] = 0;
+	this.illumina.background["b"] = 0;
+	this.illumina.background["a"] = 1;
+	}
+	else if(backgrounds.length != 1) return "More than one backgrounds tag found or poorly written.";
+ 	else{
 	var background = backgrounds[0];
 	this.illumina.background = {};
 	this.illumina.background["r"] = this.reader.getFloat(background, "r", true);
 	this.illumina.background["g"] = this.reader.getFloat(background, "g", true);
 	this.illumina.background["b"] = this.reader.getFloat(background, "b", true);
 	this.illumina.background["a"] = this.reader.getFloat(background, "a", true);
-
+ 	}
 	console.log(this.illumina);
 }
 
@@ -250,13 +270,13 @@ MySceneGraph.prototype.parseIllumination = function(rootElement) {
 MySceneGraph.prototype.parseLights = function(rootElement) {
 	console.log("\tLights\n");
 	var lights = rootElement.getElementsByTagName("LIGHTS");
-	if(lights == null) return "light values are missing";
+	if(lights.length == 0) return "light values are missing";
 	if(lights.length != 1) return "More than one lights tag found or poorly written.";
 
 	var light = lights[0];
 	
 	var tempLight = light.getElementsByTagName("LIGHT");
-	if(tempLight == null) return "light values are missing.";
+	if(tempLight.length == 0) return "light values are missing.";
 	if(tempLight.length < 1) return "No lights.";
 
 	this.lights = {};
