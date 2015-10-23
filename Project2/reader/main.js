@@ -11,7 +11,7 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','leaves/triangle.js','leaves/rectangle.js','leaves/sphere.js', 'leaves/cylinder.js', 'MyInterface.js',
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','leaves/triangle.js','leaves/rectangle.js','leaves/sphere.js', 'leaves/cylinder.js','MyInterface.js',
 
 main=function()
 {
@@ -31,7 +31,12 @@ main=function()
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 	
-	var filename=getUrlVars()['file'] || "monster/monster.xml"; //"LAIG_TP1_LSX_T02_G07_v1/LAIG_TP1_LSX_T02_G07_v1.lsx";// ;
+	var filename=getUrlVars()['file'] || "monster/monster.xml";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T01_G03_v2/LAIG_TP1_LSX_T01_G03_v2.lsx";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G03_v2/LAIG_TP1_LSX_T02_G03_v2.lsx";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G07_v1/LAIG_TP1_LSX_T02_G07_v1.lsx";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T04_G03_v1/LAIG_TP1_LSX_T04_G03_v1.lsx";
+//	var filename=getUrlVars()['file'] || "LAIG_TP1_LSX_T02_G12_v2/LAIG_TP1_LSX_T02_G12_v2.lsx";
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors

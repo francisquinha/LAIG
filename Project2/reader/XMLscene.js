@@ -79,14 +79,6 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.defaultMaterial = new CGFappearance(this);
-	this.defaultMaterial.setShininess(1);
-	this.defaultMaterial.setSpecular(1, 1, 1, 1);
-	this.defaultMaterial.setDiffuse(1, 1, 1, 1);
-	this.defaultMaterial.setAmbient(1, 1, 1, 1);
-	this.defaultMaterial.setEmission(0, 0, 0, 1);
-	this.defaultMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
 	this.textures = new Map();
 
 };
@@ -348,7 +340,7 @@ XMLscene.prototype.processNode = function(node) {
 	else {
 		var material_info = this.graph.materials[node.material];
 		if (material_info == undefined) {
-			console.log ('Warning: Material ' + node.material + ' is not defined!\n')
+			console.log('Warning: Material ' + node.material + ' is not defined!\n')
 			pushMaterialStack("null");
 		}
 		else pushMaterialStack(material_info);
@@ -376,7 +368,7 @@ XMLscene.prototype.processNode = function(node) {
 		if (new_node == undefined) {
 			leaf = this.graph.leaves[new_node_id];
 			if (leaf == undefined) {
-				console.log('Warning: Node ' + new_node_id + ' is not defined!\n')
+				console.warn('Warning: Node ' + new_node_id + ' is not defined!\n')
 			}
 			else {
 				node.primitives.push(this.processLeaf(leaf));
@@ -384,7 +376,13 @@ XMLscene.prototype.processNode = function(node) {
 				var material_info = checkMaterialStack();
 				var material;
 				if (material_info == "null") {
-					material = this.defaultMaterial;
+					material = new CGFappearance(this);
+					material.setShininess(1);
+					material.setSpecular(1, 1, 1, 1);
+					material.setDiffuse(1, 1, 1, 1);
+					material.setAmbient(1, 1, 1, 1);
+					material.setEmission(0, 0, 0, 1);
+					material.setTextureWrap('REPEAT', 'REPEAT');
 				}
 				else {
 					material = new CGFappearance(this);
@@ -398,12 +396,13 @@ XMLscene.prototype.processNode = function(node) {
 				if (texture_id != "clear") {
 					var texture = this.textures[texture_id];
 					if (texture == undefined) {
-						console.log ('Warning: Texture ' + texture_id + ' is not defined!\n');
+						console.warn('Warning: Texture ' + texture_id + ' is not defined!\n');
 						texture = this.textures["null"];
 					}
 					material.setTexture(texture);			
 				}
-				node.materials.push(material);					
+				node.materials.push(material);
+				console.log(node);				
 			}
 		}		
 		else this.processNode(new_node);		
