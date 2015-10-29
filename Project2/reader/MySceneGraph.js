@@ -283,39 +283,38 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 	var animations = all_animations.getElementsByTagName("ANIMATION");
 	if(animations.length == 0) console.warn("No animations");
 	
-	var currAnimation = {};
-	
-	var currControlPoints = [];
 	for(var i = 0 ; i < animations.length ; i++){
-		
+		var currAnimation = {};
+		var currControlPoints = [];
+
+		currAnimation["id"]	= this.reader.getString(animations[i],"id",true);
+		currAnimation["span"] = this.reader.getFloat(animations[i],"span",true);
 		currAnimation["type"] = this.reader.getString(animations[i],"type",true);
 
 		if(currAnimation["type"] == "linear")
 		{
-			currAnimation["id"]	= this.reader.getString(animations[i],"id",true);
-			currAnimation["span"] = parseInt(this.reader.getString(animations[i],"span",true));
 			var all_control_points = animations[i].getElementsByTagName("controlpoint");
+		
 			for(var j = 0 ; j < all_control_points.length ; j++)
 			{
 				var coord_x = this.reader.getFloat(all_control_points[j], "xx", true);
 				var coord_y = this.reader.getFloat(all_control_points[j], "yy", true);
 				var coord_z = this.reader.getFloat(all_control_points[j], "zz", true);
-
+	//console.log("coord_x=" + coord_x + ",coord_y=" + coord_y + ",coord_z=" + coord_z);
 				if(isNaN(coord_x) || isNaN(coord_y) || isNaN(coord_z))
 	                console.warn("xx = " + coord_x + ", yy = " + coord_y + ", zz = " + coord_z + ", at least one of those axis has no number!");
 				
-				currControlPoints["xx"] = coord_x;
-				currControlPoints["yy"] = coord_y;
-				currControlPoints["zz"] = coord_z;
-
-				currAnimation["control_points"] = currControlPoints;
+				var ctrlPoint = {};
+				ctrlPoint["xx"] = coord_x;
+				ctrlPoint["yy"] = coord_y;
+				ctrlPoint["zz"] = coord_z;
+						
+				currControlPoints[j] = ctrlPoint;
 			}
+			currAnimation["control_points"] = currControlPoints;
 		}
-		else if(currAnimation["type"] == "circular")
-			{
-				currAnimation["id"]	= this.reader.getString(animations[i],"id",true);
-				currAnimation["span"] = parseInt(this.reader.getString(animations[i],"span",true));
-				
+		else if(currAnimation["type"] == "circular"){
+			
 				var coords = this.reader.getString(animations[i],"center",true);
 				currAnimation["center"]	= coords.trim().split(/\s+/);
 				
@@ -327,6 +326,7 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				currAnimation["startang"] = parseFloat(this.reader.getString(animations[i],"startang",true));		
 				currAnimation["rotang"]	= parseFloat(this.reader.getString(animations[i],"rotang",true));		
 			}
+			else console.error(currAnimation['type'] + " doesn't exist!");
 
 		this.animations[currAnimation["id"]] = currAnimation;
 	}
@@ -705,46 +705,48 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
  */
 
 MySceneGraph.prototype.parseNodes= function(rootElement) {
-	
 	console.log("\tNodes");
-
     var elems = rootElement.getElementsByTagName('NODES');
-
     if (elems.length == 0) {
         return "NODES tag is missing.";
     }
-
     if (elems.length != 1) {
         return "More than one NODES tag found.";
     }
-
     this.nodes = {};
 
     this.nodes['root_id'] = elems[0].children[0].id;
     var nNodes = elems[0].children.length;
+    
     for (var i = 1 ; i < nNodes ; i++)
     {
         var element = elems[0].children[i];
-
         this.nodes[element.id] = this.parseNode(element);
     }
-	 
-	console.log(this.nodes);
 
+	console.log(this.nodes);
 };
 
 MySceneGraph.prototype.parseNode = function(element) {
 
     var node = {};
 
-    node['id'] =element.id;
+    node['id'] = element.id;
 
-    node['material'] = this.reader.getString(element.children[0], 'id', true);
-    node['texture'] = this.reader.getString(element.children[1], 'id', true);
+var j = 0;
+var existAnimation = element.getElementsByTagName('ANIMATION');
+if(existAnimation.length != 0) {
+	console.log(element.id + " has animation!");
+	node['animation'] = this.reader.getString(element.children[j], 'id', true);
+	j += 1;
+}
+
+    node['material'] = this.reader.getString(element.children[j], 'id', true);
+    node['texture'] = this.reader.getString(element.children[j+1], 'id', true);
 
     var transformations = []; // guardado em array, numero de transformacoes e variavel
 
-var i = 2; // item seguinte ao material e textura do no
+var i = j + 2; // item seguinte ao material e textura do no
 
     for( ; i < element.children.length ; i++){
      
@@ -767,7 +769,7 @@ var i = 2; // item seguinte ao material e textura do no
 	node.materials = [];
 	node.textures = [];	
         
-   return node;
+	return node;
 };
 
 MySceneGraph.prototype.parseDescendants = function(element) {
@@ -780,7 +782,6 @@ MySceneGraph.prototype.parseDescendants = function(element) {
     
     return descendants;
 };
-
 
 /*
  * Callback to be executed on any read error

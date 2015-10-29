@@ -170,8 +170,9 @@
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
     </NODE>
-
+<!-- animacao neste no -->
     <NODE id="moon">
+    	<ANIMATION id="line1"/>
         <MATERIAL id="branco_brilhante"/>
         <TEXTURE id="moontext"/>
         <TRANSLATION x="-65" y="65" z="20"/>

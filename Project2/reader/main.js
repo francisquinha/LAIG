@@ -11,8 +11,17 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','leaves/triangle.js','leaves/rectangle.js','leaves/sphere.js', 'leaves/cylinder.js','MyInterface.js',
-
+serialInclude(['../lib/CGF.js', 
+					'XMLscene.js', 
+					'MySceneGraph.js',
+					'leaves/triangle.js',
+					'leaves/rectangle.js',
+					'leaves/sphere.js',
+					'leaves/cylinder.js',
+					'MyInterface.js',
+					'Animation.js',
+					'LinearAnimation.js',
+					'CircularAnimation.js',
 main=function()
 {
 	// Standard application, scene and interface setup
