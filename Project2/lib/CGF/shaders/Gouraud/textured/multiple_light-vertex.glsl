@@ -31,10 +31,8 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform bool uLightEnabled;
-uniform bool uLightModelTwoSided;
-
-
+uniform bool uLightEnabled;	// not being used
+uniform bool uLightModelTwoSided;	// not being used
 
 #define NUMBER_OF_LIGHTS 8
 
