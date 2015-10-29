@@ -734,19 +734,23 @@ MySceneGraph.prototype.parseNode = function(element) {
     node['id'] = element.id;
 
 var j = 0;
+var tempAnimations = [];
 var existAnimation = element.getElementsByTagName('ANIMATION');
-if(existAnimation.length != 0) {
-	console.log(element.id + " has animation!");
-	node['animation'] = this.reader.getString(element.children[j], 'id', true);
-	j += 1;
+
+for( ; j < existAnimation.length ; j++)
+{
+	tempAnimations[j] = existAnimation[j];
 }
+
+if(tempAnimations.length != 0)
+	node['animation'] = tempAnimations;
 
     node['material'] = this.reader.getString(element.children[j], 'id', true);
     node['texture'] = this.reader.getString(element.children[j+1], 'id', true);
 
     var transformations = []; // guardado em array, numero de transformacoes e variavel
 
-var i = j + 2; // item seguinte ao material e textura do no
+var i = j + 2; // item seguinte as animacoes, material e textura do no
 
     for( ; i < element.children.length ; i++){
      
