@@ -3,13 +3,15 @@
 
 
 <INITIALS>
+   <!-- <frustum near="0.1" far="500"/>
+    <translation x="-100" y="-140" z="-100"/>     -->
     <frustum near="0.1" far="500"/>
-    <translation x="-100" y="-140" z="-100"/>     
+    <translation x="0" y="0" z="0"/>  
     <rotation axis="x" angle="0"/>                 
     <rotation axis="y" angle="0"/>                 
     <rotation axis="z" angle="0"/>               
     <scale sx="1" sy="1" sz="1"/>                 
-    <reference length="0"/>                         
+    <reference length="5"/>                         
 </INITIALS>
 
 
@@ -124,30 +126,34 @@
     <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
     <LEAF id="sphere" type="sphere" args="1 16 16"/>
 	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
+	<LEAF id="plane" type="plane" args="10"/>
+<!--	<LEAF id="patch" type="patch" args=""/> -->
+
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
         <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
         <!-- sphere: radius, parts along radius, parts per section -->
         <!-- triangle: coordinates of each vertex -->
+        <!-- plane: number of divisions -->
+        <!-- patch:  -->
 </LEAVES>
 
 
 <NODES>
 
-    <ROOT id="scene"/>
-                      
+    <ROOT id="scene"/>          
 
     <NODE id="scene">
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
-            <DESCENDANT id="floor"/>
+          <!--  <DESCENDANT id="floor"/>
             <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
-            <DESCENDANT id="moon"/>
+            <DESCENDANT id="moon"/>-->
         </DESCENDANTS>
     </NODE>
-    
+ 
     <NODE id="floor">
         <MATERIAL id="branco"/>
         <TEXTURE id="bluefloor"/>
