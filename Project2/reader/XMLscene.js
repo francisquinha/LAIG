@@ -1,65 +1,6 @@
 
-var stackMatrix = [];
-var stackMaterial = [];
-var stackTexture = [];
-
-var trf_matrix = mat4.create();		// create matrix
-
 function deg2rad(degrees) {
 	return degrees * Math.PI / 180;
-}
-
-function pushMatrixStack(someMatrix) {
-	var copy = mat4.create();
-	mat4.copy(copy, someMatrix);
-	stackMatrix.push(copy);
-}
-
-function popMatrixStack() {
-	if (stackMatrix.length == 0) {
-	    throw "Invalid popMatrix!";
-	}
-	return stackMatrix.pop();
-}
-
-function checkMatrixStack() {
-	var matrix = popMatrixStack();
-	pushMatrixStack(matrix);
-	return matrix;
-}
-
-function pushMaterialStack(someMaterial) {
-	stackMaterial.push(someMaterial);
-}
-
-function popMaterialStack() {
-	if (stackMatrix.length == 0) {
-	    throw "Invalid popMaterial!";
-	}
-	return stackMaterial.pop();
-}
-
-function checkMaterialStack() {
-	var material = stackMaterial.pop();
-	pushMaterialStack(material);
-	return material;
-}
-
-function pushTextureStack(someTexture) {
-	stackTexture.push(someTexture);
-}
-
-function popTextureStack() {
-	if (stackTexture.length == 0) {
-	    throw "Invalid popMatrix!";
-	}
-	return stackTexture.pop();
-}
-
-function checkTextureStack() {
-	var texture = popTextureStack();
-	pushTextureStack(texture);
-	return texture;
 }
 
 function XMLscene() {
@@ -88,8 +29,6 @@ XMLscene.prototype.initLights = function () {
 	this.lights = [];
 	this.lights_ids = []; // para cada id guarda-se a informação da lampada estar on/off 
 	
-   // this.shader.bind();
-
 	var i = 0;
 	for(light in this.graph.lights){
 
@@ -113,7 +52,6 @@ XMLscene.prototype.initLights = function () {
 		this.lights_ids[temp_id] = temp.enabled; 
  		i++;
 	}
-    //this.shader.unbind();
 
     this.interface.create_gui_checkboxes();
 };
@@ -170,7 +108,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.enableTextures(true);
 
 	// Nodes
-    this.processNodes();
+	var root_node = this.graph.nodes[this.graph.nodes['root_id']];
+	this.processNode(root_node);
 
 };
 
@@ -178,7 +117,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
- //   this.shader.bind;
 	
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -211,23 +149,11 @@ XMLscene.prototype.display = function () {
 			this.axis.display();
 		}	
 
-	    for (node_id in this.graph.nodes) {
-	    	var node = this.graph.nodes[node_id];
-	    	if (node.primitives != undefined) {
-	    		for (i = 0; i < node.primitives.length; i++) {
-					this.pushMatrix();
-						this.multMatrix(node.matrices[i]);
-						node.materials[i].apply();
-						if (node.primitives[i] != undefined) {
-							node.primitives[i].display();						
-						}
-					this.popMatrix();
-	    		}
-	    	}
-	    }
+		var root_node = this.graph.nodes[this.graph.nodes['root_id']];
+		this.displayNode(root_node);
+
 	}	
 
-  // this.shader.unbind;
 };
 
 XMLscene.prototype.initialTransform = function() {
@@ -243,9 +169,53 @@ XMLscene.prototype.initialTransform = function() {
     this.scale(s.sx, s.sy, s.sz);
 };
 
+XMLscene.prototype.displayNode = function(node) {
+	this.pushMatrix();
+	this.applyTransformations(node);
+	if (node.primitives != undefined) {
+		for (i = 0; i < node.primitives.length; i++) {
+			node.materials[i].apply();
+			if (node.primitives[i] != undefined)
+				node.primitives[i].display();
+	  	}
+	}
+	for (var i in node.descendants) {
+		new_node_id = node.descendants[i];
+		new_node = this.graph.nodes[new_node_id];
+		if (new_node != undefined)
+			this.displayNode(new_node);
+	}
+	this.popMatrix();
+};
 
-XMLscene.prototype.processLeaf = function(leaf) {
-	
+XMLscene.prototype.applyTransformations = function(node) {
+	for (j = 0; j < node.transformations.length ; j++) {
+		var transformation = node.transformations[j];
+		switch (transformation.type) {
+			case "scale":
+				this.scale(transformation.sx, transformation.sy, transformation.sz);
+				break;
+			case "rotation":
+				switch(transformation.axis) {
+					case "x":
+						this.rotate(deg2rad(transformation.angle), 1, 0, 0);
+						break;
+					case "y":
+						this.rotate(deg2rad(transformation.angle), 0, 1, 0);
+						break;
+					case "z":
+						this.rotate(deg2rad(transformation.angle), 0, 0, 1);
+						break;
+				}
+				break;
+			case "translation":
+				this.translate(transformation.x, transformation.y, transformation.z);
+				break;
+		}
+	}
+}
+
+XMLscene.prototype.displayLeaf = function(leaf) {
 	var s = 1;
 	var t = 1;
 	var texture_id = checkTextureStack();
@@ -260,9 +230,7 @@ XMLscene.prototype.processLeaf = function(leaf) {
 			t = texture.amplif_factor.t;			
 		}
 	}
-
 	var primitive;
-
 	switch (leaf.type) {
 		case "rectangle":
 			primitive = new rectangle(this, leaf.args, s, t);
@@ -277,92 +245,42 @@ XMLscene.prototype.processLeaf = function(leaf) {
 			primitive = new triangle(this, leaf.args, s, t);
 			break;
 	}
-
-	return primitive;
-	   
-};
-
-
-XMLscene.prototype.processNodes = function() {
-	mat4.identity(trf_matrix); 		// set matrix to identity
-	pushMatrixStack(trf_matrix);	// place in stack
-
-	stackMaterial.push("null");
-	stackTexture.push("null");
-
-	var root_id = this.graph.nodes['root_id'];
-	var root_node = this.graph.nodes[root_id];
-
-	this.processNode(root_node);
-
-};
-
-XMLscene.prototype.preprocessNode = function(node) {
-	var transform = mat4.create();
-	mat4.identity(transform);
-	for (j = 0; j < node.transformations.length ; j++) {
-		var transformation = node.transformations[j];
-		switch (transformation.type) {
-			case "scale":
-				mat4.scale(transform, transform, [transformation.sx, transformation.sy, transformation.sz]);
-				break;
-			case "rotation":
-				switch(transformation.axis) {
-					case "x":
-						mat4.rotate(transform, transform, deg2rad(transformation.angle), [1, 0, 0]);
-						break;
-					case "y":
-						mat4.rotate(transform, transform, deg2rad(transformation.angle), [0, 1, 0]);
-						break;
-					case "z":
-						mat4.rotate(transform, transform, deg2rad(transformation.angle), [0, 0, 1]);
-						break;
-				}
-				break;
-			case "translation":
-				mat4.translate(transform, transform, [transformation.x, transformation.y, transformation.z]);
-				break;
-		}
-	}
-	node.transformation = transform;
+	primitive.display();
 }
 
+XMLscene.prototype.processLeaf = function(leaf, texture_id) {
+	var s = 1;
+	var t = 1;
+	if (texture_id != "clear") {
+		var texture = this.textures[texture_id];
+		if (texture != undefined) {
+			s = texture.amplif_factor.s;
+			t = texture.amplif_factor.t;			
+		}
+	}
+	var primitive;
+	switch (leaf.type) {
+		case "rectangle":
+			primitive = new rectangle(this, leaf.args, s, t);
+			break;
+		case "cylinder":
+			primitive = new cylinder(this, leaf.args, s, t);
+			break;
+		case "sphere":
+			primitive = new sphere(this, leaf.args, s, t);
+			break;
+		case "triangle":
+			primitive = new triangle(this, leaf.args, s, t);
+			break;
+	}
+	return primitive;  
+};
 
 XMLscene.prototype.processNode = function(node) {
-	this.preprocessNode(node);
-	mat4.multiply(trf_matrix, trf_matrix, node.transformation);
-	pushMatrixStack(trf_matrix);
-	
-	if (node.material == "null") {
-		var material = checkMaterialStack();
-		pushMaterialStack(material);
-	}
-	else {
-		var material_info = this.graph.materials[node.material];
-		if (material_info == undefined) {
-			console.log('Warning: Material ' + node.material + ' is not defined!\n')
-			pushMaterialStack("null");
-		}
-		else pushMaterialStack(material_info);
-	}
-
-	if (node.texture == "null") {
-		var texture = checkTextureStack();
-		pushTextureStack(texture);
-	}
-	else if (node.texture == "clear")
-	 	pushTextureStack("clear");
-	else {
-		pushTextureStack(node.texture);
-	}
-
 	var new_node_id;
 	var new_node;
 	var leaf;
 	for (var i in node.descendants) {
-		if (i > 0) {
-			trf_matrix = checkMatrixStack();
-		}
 		new_node_id = node.descendants[i];
 		new_node = this.graph.nodes[new_node_id];
 		if (new_node == undefined) {
@@ -371,9 +289,8 @@ XMLscene.prototype.processNode = function(node) {
 				console.warn('Warning: Node ' + new_node_id + ' is not defined!\n')
 			}
 			else {
-				node.primitives.push(this.processLeaf(leaf));
-				node.matrices.push(trf_matrix);
-				var material_info = checkMaterialStack();
+				node.primitives.push(this.processLeaf(leaf, node.texture));
+				var material_info = this.graph.materials[node.material];
 				var material;
 				if (material_info == "null") {
 					material = new CGFappearance(this);
@@ -392,7 +309,7 @@ XMLscene.prototype.processNode = function(node) {
 					material.setAmbient(material_info.ambient.r, material_info.ambient.g, material_info.ambient.b, material_info.ambient.a);
 					material.setEmission(material_info.emission.r, material_info.emission.g, material_info.emission.b, material_info.emission.a);
 				}
-				var texture_id = checkTextureStack();
+				var texture_id = node.texture;
 				if (texture_id != "clear") {
 					var texture = this.textures[texture_id];
 					if (texture == undefined) {
@@ -405,17 +322,20 @@ XMLscene.prototype.processNode = function(node) {
 				console.log(node);				
 			}
 		}		
-		else this.processNode(new_node);		
+		else {
+			if (new_node.material == "null")
+				new_node.material = node.material;
+			if (new_node.texture == "null") 				
+				new_node.texture = node.texture;
+			this.processNode(new_node);
+		}		
 	}
-	popMatrixStack();
-	stackMaterial.pop();
-	stackTexture.pop();	
 };
 
 XMLscene.prototype.changeLightProperty = function(id, turned_on) {
     for (var i = 0; i < this.lights.length; i++) 
     {
-        if (id == this.lights[i].id) {
+        if (id == this.lights[i].ident) {
             if(turned_on)
             this.lights[i].enable();
             else this.lights[i].disable();
