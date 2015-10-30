@@ -88,7 +88,7 @@ XMLscene.prototype.initLights = function () {
 	this.lights = [];
 	this.lights_ids = []; // para cada id guarda-se a informação da lampada estar on/off 
 	
-    this.shader.bind();
+   // this.shader.bind();
 
 	var i = 0;
 	for(light in this.graph.lights){
@@ -109,11 +109,11 @@ XMLscene.prototype.initLights = function () {
 			temp.disable();
 		}
 		this.lights[i] = temp; // adiciona luz da CGF 
-		this.lights[i].id = temp_id;	
+		this.lights[i].ident = temp_id;	
 		this.lights_ids[temp_id] = temp.enabled; 
  		i++;
 	}
-    this.shader.unbind();
+    //this.shader.unbind();
 
     this.interface.create_gui_checkboxes();
 };
@@ -178,7 +178,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
-    this.shader.bind();
+ //   this.shader.bind;
 	
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -227,7 +227,7 @@ XMLscene.prototype.display = function () {
 	    }
 	}	
 
-    this.shader.unbind();
+  // this.shader.unbind;
 };
 
 XMLscene.prototype.initialTransform = function() {
