@@ -291,8 +291,10 @@ XMLscene.prototype.processNode = function(node) {
 			else {
 				node.primitives.push(this.processLeaf(leaf, node.texture));
 				var material_info = this.graph.materials[node.material];
+				console.log(material_info);
 				var material;
-				if (material_info == "null") {
+				if (node.material == "null" || material_info == undefined) {
+					console.warn('Warning: Material ' + node.material + ' is not defined!\n');
 					material = new CGFappearance(this);
 					material.setShininess(1);
 					material.setSpecular(1, 1, 1, 1);
@@ -312,7 +314,7 @@ XMLscene.prototype.processNode = function(node) {
 				var texture_id = node.texture;
 				if (texture_id != "clear") {
 					var texture = this.textures[texture_id];
-					if (texture == undefined) {
+					if (texture_id == "null" || texture == undefined) {
 						console.warn('Warning: Texture ' + texture_id + ' is not defined!\n');
 						texture = this.textures["null"];
 					}
