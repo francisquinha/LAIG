@@ -4,26 +4,32 @@
 
 <INITIALS>
     <frustum near="0.1" far="500"/>
-    <translation x="-100" y="-140" z="-100"/>
-    <frustum near="0.1" far="500"/>
-    <translation x="0" y="0" z="0"/>  
+    <translation x="-30" y="-30" z="-30"/>
     <rotation axis="x" angle="0"/>                 
     <rotation axis="y" angle="0"/>                 
     <rotation axis="z" angle="0"/>               
     <scale sx="1" sy="1" sz="1"/>                 
-    <reference length="0"/>                         
+    <reference length="10"/>                         
 </INITIALS>
 
 
 <ANIMATIONS>
- 		<ANIMATION id="line1" span="30" type="linear">
+ 		<ANIMATION id="square1" span="8" type="linear">
  			<controlpoint xx="0" yy="0" zz="0"/> 			
- 			<controlpoint xx="1" yy="1" zz="2"/> 	
- 			<controlpoint xx="2" yy="1" zz="2"/> 					
- 			<controlpoint xx="3" yy="1" zz="2"/> 			
+ 			<controlpoint xx="10" yy="0" zz="0"/> 	
+ 			<controlpoint xx="10" yy="0" zz="10"/> 					
+ 			<controlpoint xx="0" yy="0" zz="10"/> 			
+ 			<controlpoint xx="0" yy="0" zz="0"/> 			
  		</ANIMATION>
-
-		<ANIMATION id="circle1" span="10" type="circular" center="10 10 10" radius="5" startang="40" rotang="20"/>
+ 		<ANIMATION id="square2" span="8" type="linear">
+ 			<controlpoint xx="0" yy="0" zz="0"/> 			
+ 			<controlpoint xx="10" yy="0" zz="10"/> 	
+ 			<controlpoint xx="-10" yy="0" zz="10"/> 					
+ 			<controlpoint xx="-10" yy="0" zz="-10"/> 			
+ 			<controlpoint xx="10" yy="0" zz="-10"/> 			
+ 			<controlpoint xx="10" yy="0" zz="10"/> 			
+ 		</ANIMATION>
+		<ANIMATION id="circle1" span="8" type="circular" center="5 0 10" radius="5" startang="0" rotang="360"/>
 		<ANIMATION id="circle2" span="10" type="circular" center="10 10 10" radius="5" startang="40" rotang="20"/>
  		
 </ANIMATIONS>
@@ -36,19 +42,12 @@
 
 
 <LIGHTS>
-    <LIGHT id="headlight">                          
+    <LIGHT id="light">                          
         <enable value ="1"/>         				
-        <position x="5.6" y="18.4" z="5.6" w="1"/>   
-        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
-        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
-        <specular r="0.2" g="0.2" b="0.2" a="1"/>   
-    </LIGHT>
-    <LIGHT id="moonlight">                          
-        <enable value ="1"/>         				
-        <position x="-65" y="65" z="20" w="1"/>      
-        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
-        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
-        <specular r="0.2" g="0.2" b="0.2" a="1"/>   
+        <position x="10" y="10" z="10" w="1"/>   
+        <ambient r="0.6" g="0.6" b="0.6" a="1"/>    
+        <diffuse r="0.6" g="0.6" b="0." a="1"/>  	
+        <specular r="0.3" g="0.3" b="0.3" a="1"/>   
     </LIGHT>
 </LIGHTS>
 
@@ -147,55 +146,18 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
-            <DESCENDANT id="floor"/>
-            <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
-            <DESCENDANT id="moon"/>
         </DESCENDANTS>
     </NODE>
  
-    <NODE id="floor">
-        <MATERIAL id="branco"/>
-        <TEXTURE id="bluefloor"/>
-        <TRANSLATION x="3.3" y="0" z="3.3"/>
-        <ROTATION axis="y" angle="45"/>
-        <ROTATION axis="x" angle="-90"/>
-        <SCALE sx="100" sy="80" sz="1"/>
-		<DESCENDANTS>
-            <DESCENDANT id="rectangle"/>
-        </DESCENDANTS>
-    </NODE>
-
-    <NODE id="wall">
-        <MATERIAL id="branco"/>
-        <TEXTURE id="blue"/>
-        <TRANSLATION x="-25" y="37.5" z="-25"/>
-        <ROTATION axis="y" angle="45"/>
-        <SCALE sx="100" sy="75" sz="1"/>
-		<DESCENDANTS>
-            <DESCENDANT id="rectangle"/>
-        </DESCENDANTS>
-    </NODE>
-
-<!-- animacao neste no -->
-
-    <NODE id="moon">
-    	<ANIMATION id="line1"/>
-    	<ANIMATION id="circle1"/>
-        <MATERIAL id="branco_brilhante"/>
-        <TEXTURE id="moontext"/>
-        <TRANSLATION x="-65" y="65" z="20"/>
-        <SCALE sx="3" sy="3" sz="3"/>
-		<DESCENDANTS>
-            <DESCENDANT id="sphere"/>
-        </DESCENDANTS>
-    </NODE>
-
     <NODE id="monster"> 
+    	<ANIMATION id="square1"/>
+    	<ANIMATION id="square2"/>
+    	<ANIMATION id="circle1"/>
         <MATERIAL id="null"/>      			
         <TEXTURE id="null"/>        		
-        <TRANSLATION x="4" y="6" z="4"/>
-        <SCALE sx="2" sy="2" sz="2"/>
+        <SCALE sx="0.5" sy="0.5" sz="0.5"/>
+        <TRANSLATION x="0" y="1.5" z="0"/>
         <DESCENDANTS>
             <DESCENDANT id="head"/>
 			<DESCENDANT id="body"/>
@@ -204,7 +166,6 @@
         </DESCENDANTS>
     </NODE>
 	
-
     <NODE id="head">
         <MATERIAL id="branco"/>
         <TEXTURE id="null"/>

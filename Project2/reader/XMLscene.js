@@ -21,60 +21,12 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 
 	this.textures = new Map();
-	
-	//inicio ex2
-	//this.plane = new Plane(this,10);
-	this.texture = null;
-   	this.appearance = null;
-   	this.surfaces = [];
-   	this.translations = [];
+	this.animation_nodes = [];
 
-	this.appearance = new CGFappearance(this);
-	this.appearance.setAmbient(0.3, 0.3, 0.3, 1);
-	this.appearance.setDiffuse(0.7, 0.7, 0.7, 1);
-	this.appearance.setSpecular(0.0, 0.0, 0.0, 1);	
-	this.appearance.setShininess(120);
-	this.texture = new CGFtexture(this, "scenes/monster/textures/texture.jpg");
-	this.appearance.setTexture(this.texture);
-	this.appearance.setTextureWrap ('REPEAT', 'REPEAT');
-	
-	this.surfaces = [];
-
-	this.makeSurface("0", 1, // degree on U: 2 control vertexes U
-					 1, // degree on V: 2 control vertexes on V
-					[0, 0, 1, 1], // knots for U
-					[0, 0, 1, 1], // knots for V
-					[	// U = 0
-						[ // V = 0..1;
-							 vec4.fromValues ( -0.5,  0.0, 0.5, 1 ),
-							 vec4.fromValues ( -0.5,  0.0, -0.5, 1 )
-							
-						],
-						// U = 1
-						[ // V = 0..1
-							 vec4.fromValues ( 0.5, 0.0, 0.5, 1 ),
-							 vec4.fromValues ( 0.5, 0.0, -0.5, 1 )							 
-						]
-					], // translation of surface 
-					[0,0,0]);
-
-	//fim ex2
-
+	this.setUpdatePeriod(20);
 
 };
 
-XMLscene.prototype.makeSurface = function (id, degree1, degree2, knots1, knots2, controlvertexes, translation) {
-		
-	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
-	getSurfacePoint = function(u, v) {
-		return nurbsSurface.getPoint(u, v);
-	};
-
-	var obj = new CGFnurbsObject(this, getSurfacePoint, 20, 20 );
-	this.surfaces.push(obj);	
-	this.translations.push(translation);
-
-}
 
 XMLscene.prototype.initLights = function () {
 
@@ -188,20 +140,6 @@ XMLscene.prototype.display = function () {
 	// only get executed after the graph has loaded correctly.
 	// This is one possible way to do it
 
-	//inicio ex2
-
-	//this.plane.display();
-
-	this.appearance.apply();
-	for (i =0; i<this.surfaces.length; i++) {
-		this.pushMatrix();
-		this.translate(this.translations[i][0], this.translations[i][1], this.translations[i][2]);
-		this.surfaces[i].display();
-		this.popMatrix();
-	}
-	
-	//fim ex2
-
 	if (this.graph.loadedOk) {	
 
 		this.initialTransform();
@@ -238,13 +176,16 @@ XMLscene.prototype.initialTransform = function() {
 XMLscene.prototype.displayNode = function(node) {
 	this.pushMatrix();
 	this.applyTransformations(node);
+	if (node.animations != undefined) {
+		this.applyAnimations(node);
+	}
 	if (node.primitives != undefined) {
 		for (i = 0; i < node.primitives.length; i++) {
 			node.materials[i].apply();
 			if (node.primitives[i] != undefined)
 				node.primitives[i].display();
 	  	}
-	}
+	}i
 	for (var i in node.descendants) {
 		new_node_id = node.descendants[i];
 		new_node = this.graph.nodes[new_node_id];
@@ -281,43 +222,13 @@ XMLscene.prototype.applyTransformations = function(node) {
 	}
 }
 
-XMLscene.prototype.displayLeaf = function(leaf) {
-	var s = 1;
-	var t = 1;
-	var texture_id = checkTextureStack();
-	if (texture_id != "clear") {
-		var texture = this.textures[texture_id];
-		if (texture == undefined) {
-			s = 1;
-			t = 1;
-		}
-		else {
-			s = texture.amplif_factor.s;
-			t = texture.amplif_factor.t;			
-		}
-	}
-	var primitive;
-	switch (leaf.type) {
-		case "rectangle":
-			primitive = new rectangle(this, leaf.args, s, t);
-			break;
-		case "cylinder":
-			primitive = new cylinder(this, leaf.args, s, t);
-			break;
-		case "sphere":
-			primitive = new sphere(this, leaf.args, s, t);
-			break;
-		case "triangle":
-			primitive = new triangle(this, leaf.args, s, t);
-			break;
-		case "plane":
-			primitive = new Plane(this, leaf.args, s, t);
-			break;
-		case "patch":
-			primitive = new Patch(this, leaf.args, s, t);
-			break;
-	}
-	primitive.display();
+XMLscene.prototype.applyAnimations = function(node) {
+	var animation;
+	if (node.current_anim < node.animations.length)
+		animation = node.animations[node.current_anim];
+	else
+		animation = node.animations[node.animations.length - 1];
+	animation.apply();
 }
 
 XMLscene.prototype.processLeaf = function(leaf, texture_id) {
@@ -401,6 +312,25 @@ XMLscene.prototype.processNode = function(node) {
 				new_node.material = node.material;
 			if (new_node.texture == "null") 				
 				new_node.texture = node.texture;
+			if (new_node.animation_ids != undefined) {
+				new_node.animations = [];
+				new_node.current_anim = 0;
+				for (j = 0; j < new_node.animation_ids.length ; j++) {
+					var animation_id = new_node.animation_ids[j];
+					var animation_stuff = this.graph.animations[animation_id];
+					var animation;
+					switch (animation_stuff.type) {
+						case "linear":
+							animation = new LinearAnimation(this, animation_stuff.span, animation_stuff.control_points);
+							break;
+						case "circular":
+							animation = new CircularAnimation(this, animation_stuff.span, animation_stuff.radius, animation_stuff.center, animation_stuff.startang, animation_stuff.rotang);
+							break;
+					}
+					new_node.animations.push(animation);
+				}
+				this.animation_nodes.push(new_node);
+			}
 			this.processNode(new_node);
 		}		
 	}
@@ -415,5 +345,17 @@ XMLscene.prototype.changeLightProperty = function(id, turned_on) {
             else this.lights[i].disable();
             break;
         }
+    }
+};
+
+XMLscene.prototype.update = function(time) {
+    for (var i = 0; i < this.animation_nodes.length; i++) {
+    	var node = this.animation_nodes[i];
+    	if (node.current_anim < node.animations.length) {
+			var animation = node.animations[node.current_anim];
+    		if (animation.update(time) == 1) {
+    			this.animation_nodes[i].current_anim++;
+    		}	
+    	}
     }
 };

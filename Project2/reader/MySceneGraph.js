@@ -739,11 +739,11 @@ var existAnimation = element.getElementsByTagName('ANIMATION');
 
 for( ; j < existAnimation.length ; j++)
 {
-	tempAnimations[j] = existAnimation[j];
+	tempAnimations[j] = existAnimation[j].id;
 }
 
 if(tempAnimations.length != 0)
-	node['animation'] = tempAnimations;
+	node['animation_ids'] = tempAnimations;
 
     node['material'] = this.reader.getString(element.children[j], 'id', true);
     node['texture'] = this.reader.getString(element.children[j+1], 'id', true);
