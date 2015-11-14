@@ -222,7 +222,6 @@
         <DESCENDANTS>
             <DESCENDANT id="patch1"/>
             <DESCENDANT id="patch2"/>
-            <DESCENDANT id="nurb"/>
         </DESCENDANTS>
     </NODE>
 

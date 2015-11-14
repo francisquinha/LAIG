@@ -126,9 +126,69 @@
     <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
     <LEAF id="sphere" type="sphere" args="1 16 16"/>
 	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
-	<LEAF id="plane" type="plane" args="10"/>
-<!--	<LEAF id="patch" type="patch" args=""/> -->
+	<!-- Nova primitiva: plano, gerado por NURBS
+		ex: <plane parts=”5” /> um plano de dimensões 1 x 1 unidades assente em XZ, centrado na origem e com a face visível apontando para +Y com divisão em cinco partes por eixo -->
+	<LEAF id="plane1" type="plane" parts="10"/>
 
+	<!-- Nova primitiva: patch, gerada por NURBS parâmetros: order: ordem, pode ser 1,2,3 
+														partsU: divisão em partes no domínio U a ser usada para o cálculo da superficie
+														partsV: divisão em partes no domínio V a ser usada para cálculo da superficie
+														o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
+	
+	<LEAF id="patch1" type="patch" order="3" partsU="20" partsV="20">           
+            <controlpoint x="-0.5" y="0" z="-0.5" />
+			<controlpoint x="-0.5" y="0" z="-0.25" />
+			<controlpoint x="-0.5" y="0" z="0.25" />
+			<controlpoint x="-0.5" y="0" z="0.5" />
+			<controlpoint x="-0.25" y="0" z="-0.5" />
+			<controlpoint x="-0.25" y="1" z="-0.25" />
+			<controlpoint x="-0.25" y="1" z="0.25" />
+			<controlpoint x="-0.25" y="0" z="0.5" />
+			<controlpoint x="0.25" y="0" z="-0.5" />
+			<controlpoint x="0.25" y="1" z="-0.25" />
+			<controlpoint x="0.25" y="1" z="0.25" />
+			<controlpoint x="0.25" y="0" z="0.5" />
+			<controlpoint x="0.5" y="0" z="-0.5" />
+			<controlpoint x="0.5" y="0" z="-0.25" />
+			<controlpoint x="0.5" y="0" z="0.25" />
+			<controlpoint x="0.5" y="0" z="0.5" />
+
+			<!--<controlpoint x="0" y="0" z="0" />
+            <controlpoint x="8" y="2" z="2" />
+            <controlpoint x="2" y="2" z="2" />
+            <controlpoint x="3" y="-1.5" z="0" />
+            <controlpoint x="4" y="-2.0" z="2" />
+            <controlpoint x="5" y="2" z="2" />
+            <controlpoint x="6" y="-1.5" z="0" />
+            <controlpoint x="7" y="-2.0" z="2" />
+            <controlpoint x="8" y="2" z="2" />-->
+        </LEAF>
+
+	<LEAF id="patch2" type="patch" order="3" partsU="20" partsV="20">           
+            <controlpoint x="-0.5" y="0" z="-0.5" />
+			<controlpoint x="-0.5" y="0" z="-0.25" />
+			<controlpoint x="-0.5" y="0" z="0.25" />
+			<controlpoint x="-0.5" y="0" z="0.5" />
+			<controlpoint x="-0.25" y="0" z="-0.5" />
+			<controlpoint x="-0.25" y="-1" z="-0.25" />
+			<controlpoint x="-0.25" y="-1" z="0.25" />
+			<controlpoint x="-0.25" y="0" z="0.5" />
+			<controlpoint x="0.25" y="0" z="-0.5" />
+			<controlpoint x="0.25" y="-1" z="-0.25" />
+			<controlpoint x="0.25" y="-1" z="0.25" />
+			<controlpoint x="0.25" y="0" z="0.5" />
+			<controlpoint x="0.5" y="0" z="-0.5" />
+			<controlpoint x="0.5" y="0" z="-0.25" />
+			<controlpoint x="0.5" y="0" z="0.25" />
+			<controlpoint x="0.5" y="0" z="0.5" />
+        </LEAF>
+	<!-- Nova primitiva: terreno baseado em shaders
+		parâmetros:
+		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
+		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
+	
+	<LEAF id="elevterrain" type="terrain" texture="textures/terrainmap.jpg" heightmap="textures/heightmap.jpg" />
+	    
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
         <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
@@ -136,6 +196,7 @@
         <!-- triangle: coordinates of each vertex -->
         <!-- plane: number of divisions -->
         <!-- patch:  -->
+
 </LEAVES>
 
 
@@ -151,6 +212,25 @@
             <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
             <DESCENDANT id="moon"/>
+            <DESCENDANT id="nurb"/>
+            <DESCENDANT id="flyingvehicle"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="flyingvehicle">
+         <MATERIAL id="branco"/>
+        <TEXTURE id="yellow"/>
+        <DESCENDANTS>
+            <DESCENDANT id="patch1"/>
+            <DESCENDANT id="patch2"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="nurb">
+         <MATERIAL id="branco"/>
+        <TEXTURE id="bluefloor"/>
+        <DESCENDANTS>
+            <DESCENDANT id="plane1"/>
         </DESCENDANTS>
     </NODE>
  
