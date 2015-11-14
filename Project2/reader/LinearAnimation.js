@@ -23,22 +23,29 @@ LinearAnimation.prototype.init = function () {
         var y = this.control_points[i + 1]["yy"] - this.control_points[i]["yy"];
         var z = this.control_points[i + 1]["zz"] - this.control_points[i]["zz"];
         var line_length = Math.sqrt(x*x + y*y + z*z);
-        var angle;
-        if (x == 0 && z > 0) angle = - Math.PI/4;
-        else if (x == 0 && z < 0) angle = 3 * Math.PI/4;
-        else if (z == 0 && x > 0 ) angle = Math.PI/4;
-        else if (z == 0 && x < 0 ) angle = - 3 * Math.PI/4;
-        else angle = Math.PI/4 - Math.atan(z / x);
-        this.lines.push({'deltaX': x, 'deltaY': y, 'deltaZ': z, 'length': line_length, 'angle': angle});
+        this.lines.push({'deltaX': x, 'deltaY': y, 'deltaZ': z, 'length': line_length});
         this.length += line_length;
     }
     this.velocity = this.length / this.span;
+    var normal = vec3.fromValues(0, 1, 0);
+    var vector1 = vec3.fromValues(1, 0, 1);    
+    var v1_size = Math.sqrt(2);
     for(var i = 0 ; i < nr_control_points - 1 ; i++) {
         this.lines[i].time = this.lines[i].length * this.span / this.length;
         this.lines[i].velX = this.lines[i].deltaX / this.lines[i].time;
         this.lines[i].velY = this.lines[i].deltaY / this.lines[i].time;
         this.lines[i].velZ = this.lines[i].deltaZ / this.lines[i].time;
-    } 
+        var vector2 = vec3.fromValues(this.lines[i].deltaX, 0, this.lines[i].deltaZ);
+        var v2_size = this.lines[i].length;
+        var cross = vec3.create();
+        vec3.cross(cross, vector1, vector2);
+        console.log(cross);
+        var angle = Math.acos(vec3.dot(vector1, vector2) / (v1_size * v2_size));
+        console.log(angle);
+        if (vec3.dot(normal, cross) < 0) angle *= -1;
+        console.log(angle);
+        this.lines[i].angle = angle;
+    }
     this.line = -1;
     this.angle = this.lines[0].angle;
     this.deltaX = 0;
@@ -64,8 +71,7 @@ LinearAnimation.prototype.update = function (time) {
             this.deltaY = this.control_points[this.line]["yy"];
             this.deltaZ = this.control_points[this.line]["zz"];
             if (this.line < this.lines.length)
-                this.angle = this.lines[this.line].angle;                           
-            /*else this.angle = this.lines[0].angle;*/
+                this.angle = this.lines[this.line].angle;
         }
         else {
             var dT = (time - this.lastT) / 1000;

@@ -29,6 +29,13 @@
  			<controlpoint xx="10" yy="0" zz="-10"/> 			
  			<controlpoint xx="10" yy="0" zz="10"/> 			
  		</ANIMATION>
+ 		<ANIMATION id="paralelo1" span="8" type="linear">
+ 			<controlpoint xx="0" yy="0" zz="0"/> 			
+ 			<controlpoint xx="9" yy="0" zz="3"/> 	
+ 			<controlpoint xx="3" yy="0" zz="6"/> 					
+ 			<controlpoint xx="-6" yy="0" zz="3"/> 			
+ 			<controlpoint xx="0" yy="0" zz="0"/> 			
+ 		</ANIMATION>
 		<ANIMATION id="circle1" span="8" type="circular" center="5 0 10" radius="5" startang="0" rotang="360"/>
 		<ANIMATION id="circle2" span="10" type="circular" center="10 10 10" radius="5" startang="40" rotang="20"/>
  		
@@ -152,6 +159,7 @@
  
     <NODE id="monster"> 
     	<ANIMATION id="square1"/>
+    	<ANIMATION id="paralelo1"/>
     	<ANIMATION id="square2"/>
     	<ANIMATION id="circle1"/>
         <MATERIAL id="null"/>      			
