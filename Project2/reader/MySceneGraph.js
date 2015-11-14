@@ -689,16 +689,66 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
     	var argsWithSpace;
 
     	arrangedArgsLeaf['type'] = this.reader.getString(leaf, 'type', true);
+		if(arrangedArgsLeaf['type'] == "plane")
+		{
+			arrangedArgsLeaf['args'] = parseInt(this.reader.getString(leaf, 'parts', true));
+		}
+		else if(arrangedArgsLeaf['type'] == "patch"){
+			    var temp = [];
+                var order = this.reader.getInteger(leaf, 'order');   
+                if (order < 1 || order > 3) return "Invalid order (1,2,3)";
+                temp[0] = order;
+                //arrangedArgsLeaf['args'] = parseInt(order);
+
+                var leafPartsU = this.reader.getInteger(leaf, 'partsU');
+                var leafPartsV = this.reader.getInteger(leaf, 'partsV');
+              temp[1] = leafPartsU;
+              temp[2] = leafPartsV;
+              //  arrangedArgsLeaf['partsU'] = leafPartsU;
+               // arrangedArgsLeaf['partsV'] = leafPartsV;
+                
+                var updatedControlPoints = [];
+                var reader_controlPoints = leaf.getElementsByTagName('controlpoint');
+                for (var k = 0 ; k < reader_controlPoints.length ; k++) {
+                    var tempControlPoint = [];
+                    tempControlPoint[0] = this.reader.getFloat(reader_controlPoints[k], 'x');
+                    tempControlPoint[1] = this.reader.getFloat(reader_controlPoints[k], 'y');
+                    tempControlPoint[2] = this.reader.getFloat(reader_controlPoints[k], 'z');
+                    tempControlPoint[3] = 1;
+                    updatedControlPoints.push(tempControlPoint);
+                }
+                if (updatedControlPoints.length != (order + 1)*(order + 1)) {console.error(updatedControlPoints.length + " is an incorrect number of control points");}
+				else {
+					temp[3] = updatedControlPoints;//arrangedArgsLeaf['control_points']
+					
+					arrangedArgsLeaf['args'] = temp;
+				}
+		}
+		else if(arrangedArgsLeaf['type'] == "terrain"){
+                var texture, heightmap;
+                
+                texture = this.texture_path + this.reader.getString(leaf, 'texture');
+                heightmap = this.texture_path + this.reader.getString(leaf, 'heightmap');
+                var temp = []; 
+                temp[0] = texture;
+                temp[1] = heightmap;
+                arrangedArgsLeaf['args'] = temp;
+                //console.log(arrangedArgsLeaf['args']);
+		}
+		else
+		{
     	argsWithSpace = this.reader.getString(leaf, 'args', true);
     	arrangedArgsLeaf['args'] = argsWithSpace.trim().split(/\s+/);
-    	
     	for(var j = 0; j < arrangedArgsLeaf['args'].length; j++){
         	arrangedArgsLeaf['args'][j] = parseFloat(arrangedArgsLeaf['args'][j]);
     	}
-    	this.leaves[leaf.id] = arrangedArgsLeaf;
+		}
+		this.leaves[leaf.id] = arrangedArgsLeaf;
+		
     }
 	console.log(this.leaves);	
 };
+
 
 /*
  * Methods that parses Nodes
