@@ -255,6 +255,16 @@ XMLscene.prototype.processLeaf = function(leaf, texture_id) {
 		case "triangle":
 			primitive = new triangle(this, leaf.args, s, t);
 			break;
+		case "plane":		
+			primitive = new plane(this, leaf.args);
+			break;
+		case "patch":		
+			primitive = new patch(this, leaf.args);
+			break;
+		case "terrain":		
+			console.log(leaf.args);
+			//primitive = new terrain(this, leaf.args);
+			break;
 	}
 	return primitive;  
 };
