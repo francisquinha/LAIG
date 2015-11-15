@@ -17,7 +17,7 @@ function terrain(scene, args) {
     this.materialTerrain.setTexture(this.textureTerrain);
     this.materialTerrain.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.terrainShader = new CGFshader(scene.gl, "scenes/monster/shaders/terrainShader.vert", "scenes/monster/shaders/terrainShader.frag");
+    this.terrainShader = new CGFshader(scene.gl, "scenes/monster/shaders/texture1.vert", "scenes/monster/shaders/texture2.frag");
     this.terrainShader.setUniformsValues({uSampler2: 1});
     this.terrainShader.setUniformsValues({multiplier: 0.5});
     
