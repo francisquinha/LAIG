@@ -283,7 +283,6 @@ XMLscene.prototype.processNode = function(node) {
 			else {
 				node.primitives.push(this.processLeaf(leaf, node.texture));
 				var material_info = this.graph.materials[node.material];
-				//console.log(material_info);
 				var material;
 				if (node.material == "null" || material_info == undefined) {
 					console.warn('Warning: Material ' + node.material + ' is not defined!\n');
@@ -313,7 +312,6 @@ XMLscene.prototype.processNode = function(node) {
 					material.setTexture(texture);			
 				}
 				node.materials.push(material);
-				//console.log(node);				
 			}
 		}		
 		else {
@@ -334,6 +332,9 @@ XMLscene.prototype.processNode = function(node) {
 							break;
 						case "circular":
 							animation = new CircularAnimation(this, animation_stuff.span, animation_stuff.radius, animation_stuff.center, animation_stuff.startang, animation_stuff.rotang);
+							break;
+						case "circularAxis":
+							animation = new CircularAxisAnimation(this, animation_stuff.span, animation_stuff.radius, animation_stuff.center, animation_stuff.startang, animation_stuff.rotang, animation_stuff.axis);
 							break;
 					}
 					new_node.animations.push(animation);

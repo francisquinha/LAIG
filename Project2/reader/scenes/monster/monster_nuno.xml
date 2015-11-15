@@ -96,6 +96,18 @@
         <file path="textures/moon.jpg"/>      
         <amplif_factor s="6.28318530718" t="3.14159265359"/>          
     </TEXTURE>
+    <TEXTURE id="ufometal">
+        <file path="textures/ufometal.jpg"/>      
+        <amplif_factor s="1" t="1"/>          
+    </TEXTURE>
+    <TEXTURE id="ufometaltop">
+        <file path="textures/ufometaltop.jpg"/>      
+        <amplif_factor s="1" t="1"/>          
+    </TEXTURE>
+    <TEXTURE id="ufolight">
+        <file path="textures/ufolight.jpg"/>      
+        <amplif_factor s="6.28318530718" t="1"/>          
+    </TEXTURE>
 </TEXTURES>
 
 
@@ -135,22 +147,22 @@
 														o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
 	
 	<LEAF id="patch1" type="patch" order="3" partsU="20" partsV="20">           
-            <controlpoint x="-0.5" y="0" z="-0.5" />
-			<controlpoint x="-0.5" y="0" z="-0.25" />
-			<controlpoint x="-0.5" y="0" z="0.25" />
-			<controlpoint x="-0.5" y="0" z="0.5" />
-			<controlpoint x="-0.25" y="0" z="-0.5" />
-			<controlpoint x="-0.25" y="1" z="-0.25" />
-			<controlpoint x="-0.25" y="1" z="0.25" />
-			<controlpoint x="-0.25" y="0" z="0.5" />
-			<controlpoint x="0.25" y="0" z="-0.5" />
-			<controlpoint x="0.25" y="1" z="-0.25" />
-			<controlpoint x="0.25" y="1" z="0.25" />
-			<controlpoint x="0.25" y="0" z="0.5" />
-			<controlpoint x="0.5" y="0" z="-0.5" />
-			<controlpoint x="0.5" y="0" z="-0.25" />
-			<controlpoint x="0.5" y="0" z="0.25" />
-			<controlpoint x="0.5" y="0" z="0.5" />
+            <controlpoint x="-0.5" y="0" z="-0.5" w="1"/>
+			<controlpoint x="-0.5" y="0" z="-0.25" w="1"/>
+			<controlpoint x="-0.5" y="0" z="0.25" w="1"/>
+			<controlpoint x="-0.5" y="0" z="0.5" w="1"/>
+			<controlpoint x="-0.25" y="0" z="-0.5" w="1"/>
+			<controlpoint x="-0.25" y="1" z="-0.25" w="1"/>
+			<controlpoint x="-0.25" y="1" z="0.25" w="1"/>
+			<controlpoint x="-0.25" y="0" z="0.5" w="1"/>
+			<controlpoint x="0.25" y="0" z="-0.5" w="1"/>
+			<controlpoint x="0.25" y="1" z="-0.25" w="1"/>
+			<controlpoint x="0.25" y="1" z="0.25" w="1"/>
+			<controlpoint x="0.25" y="0" z="0.5" w="1"/>
+			<controlpoint x="0.5" y="0" z="-0.5" w="1"/>
+			<controlpoint x="0.5" y="0" z="-0.25" w="1"/>
+			<controlpoint x="0.5" y="0" z="0.25" w="1"/>
+			<controlpoint x="0.5" y="0" z="0.5" w="1"/>
 
 			<!--<controlpoint x="0" y="0" z="0" />
             <controlpoint x="8" y="2" z="2" />
@@ -164,29 +176,87 @@
         </LEAF>
 
 	<LEAF id="patch2" type="patch" order="3" partsU="20" partsV="20">           
-            <controlpoint x="-0.5" y="0" z="-0.5" />
-			<controlpoint x="-0.5" y="0" z="-0.25" />
-			<controlpoint x="-0.5" y="0" z="0.25" />
-			<controlpoint x="-0.5" y="0" z="0.5" />
-			<controlpoint x="-0.25" y="0" z="-0.5" />
-			<controlpoint x="-0.25" y="-1" z="-0.25" />
-			<controlpoint x="-0.25" y="-1" z="0.25" />
-			<controlpoint x="-0.25" y="0" z="0.5" />
-			<controlpoint x="0.25" y="0" z="-0.5" />
-			<controlpoint x="0.25" y="-1" z="-0.25" />
-			<controlpoint x="0.25" y="-1" z="0.25" />
-			<controlpoint x="0.25" y="0" z="0.5" />
-			<controlpoint x="0.5" y="0" z="-0.5" />
-			<controlpoint x="0.5" y="0" z="-0.25" />
-			<controlpoint x="0.5" y="0" z="0.25" />
-			<controlpoint x="0.5" y="0" z="0.5" />
-        </LEAF>
+            <controlpoint x="-0.5" y="0" z="-0.5" w="1"/>
+			<controlpoint x="-0.5" y="0" z="-0.25" w="1"/>
+			<controlpoint x="-0.5" y="0" z="0.25" w="1"/>
+			<controlpoint x="-0.5" y="0" z="0.5" w="1"/>
+			<controlpoint x="-0.25" y="0" z="-0.5" w="1"/>
+			<controlpoint x="-0.25" y="-1" z="-0.25" w="1"/>
+			<controlpoint x="-0.25" y="-1" z="0.25" w="1"/>
+			<controlpoint x="-0.25" y="0" z="0.5" w="1"/>
+			<controlpoint x="0.25" y="0" z="-0.5" w="1"/>
+			<controlpoint x="0.25" y="-1" z="-0.25" w="1"/>
+			<controlpoint x="0.25" y="-1" z="0.25" w="1"/>
+			<controlpoint x="0.25" y="0" z="0.5" w="1"/>
+			<controlpoint x="0.5" y="0" z="-0.5" w="1"/>
+			<controlpoint x="0.5" y="0" z="-0.25" w="1"/>
+			<controlpoint x="0.5" y="0" z="0.25" w="1"/>
+			<controlpoint x="0.5" y="0" z="0.5" w="1"/>
+    </LEAF>
+
+	<LEAF id="hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-4" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-4" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-4" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-4" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
+	<LEAF id="flat_hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-1" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-1" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-1" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-1" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
+	<LEAF id="super_flat_hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+		<controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-0.3" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-0.3" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-0.3" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-0.3" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
 	<!-- Nova primitiva: terreno baseado em shaders
 		parâmetros:
 		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
 		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
 	
-	<LEAF id="elevterrain" type="terrain" texture="textures/terrain.jpg" heightmap="textures/terrainmap.jpg" />
+	<LEAF id="elevterrain" type="terrain" texture="textures/terrainmap.jpg" heightmap="textures/heightmap.jpg" />
 	    
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
@@ -210,40 +280,74 @@
           <!--  <DESCENDANT id="floor"/>
             <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
-            <DESCENDANT id="moon"/>
-            <DESCENDANT id="nurb"/>
-       -->
-            <DESCENDANT id="terrain"/>
-            <DESCENDANT id="flyingvehicle"/>
+            <DESCENDANT id="moon"/>-->
+            <DESCENDANT id="ovni"/>
         </DESCENDANTS>
     </NODE>
 
-  <NODE id="terrain">
-         <MATERIAL id="branco"/>
-        <TEXTURE id="pattern2"/>
+  	<NODE id="ovni">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="null"/>
         <DESCENDANTS>
-            <DESCENDANT id="elevterrain"/>
-        </DESCENDANTS>
-    </NODE>
-    
-  <NODE id="flyingvehicle">
-         <MATERIAL id="branco"/>
-        <TEXTURE id="yellow"/>
-        <DESCENDANTS>
-            <DESCENDANT id="patch1"/>
-            <DESCENDANT id="patch2"/>
-            <DESCENDANT id="plane1"/>
+            <DESCENDANT id="flat_top"/>
+            <DESCENDANT id="flat_bottom"/>
+            <DESCENDANT id="middle"/>            
+           	<DESCENDANT id="round_top"/>
+            <DESCENDANT id="round_bottom"/>
         </DESCENDANTS>
     </NODE>
 
-    <NODE id="nurb">
-         <MATERIAL id="branco"/>
-        <TEXTURE id="bluefloor"/>
+    <NODE id="flat_top">
+        <MATERIAL id="null"/>
+        <TEXTURE id="ufometaltop"/>
+        <TRANSLATION x="0" y="0.05" z="0"/>
+        <ROTATION axis="z" angle="180"/>
         <DESCENDANTS>
-            <DESCENDANT id="plane1"/>
+            <DESCENDANT id="flat_hemisphere"/>
         </DESCENDANTS>
     </NODE>
  
+    <NODE id="flat_bottom">
+        <MATERIAL id="null"/>
+        <TEXTURE id="ufometal"/>
+        <TRANSLATION x="0" y="-0.05" z="0"/>
+        <DESCENDANTS>
+            <DESCENDANT id="super_flat_hemisphere"/>
+        </DESCENDANTS>
+    </NODE>uf
+
+    <NODE id="middle">
+        <MATERIAL id="branco_brilhante"/>
+        <TEXTURE id="ufolight"/>
+        <TRANSLATION x="0" y="0.05" z="0"/>
+        <ROTATION axis="x" angle="90"/>
+        <SCALE sx="1" sy="1" sz="0.1"/>
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="round_top">
+        <MATERIAL id="branco_brilhante"/>
+        <TEXTURE id="ufolight"/>
+        <TRANSLATION x="0" y="0.05" z="0"/>
+        <ROTATION axis="z" angle="180"/>
+        <SCALE sx="0.5" sy="0.5" sz="0.5"/>
+        <DESCENDANTS>
+            <DESCENDANT id="hemisphere"/>
+        </DESCENDANTS>
+    </NODE>
+ 
+    <NODE id="round_bottom">
+        <MATERIAL id="branco_brilhante"/>
+        <TEXTURE id="ufolight"/>
+        <TRANSLATION x="0" y="-0.1" z="0"/>
+        <SCALE sx="0.4" sy="0.4" sz="0.4"/>
+        <DESCENDANTS>
+            <DESCENDANT id="flat_hemisphere"/>
+        </DESCENDANTS>
+    </NODE>
+
     <NODE id="floor">
         <MATERIAL id="branco"/>
         <TEXTURE id="bluefloor"/>
@@ -267,11 +371,7 @@
         </DESCENDANTS>
     </NODE>
 
-<!-- animacao neste no -->
-
     <NODE id="moon">
-    	<ANIMATION id="line1"/>
-    	<ANIMATION id="circle1"/>
         <MATERIAL id="branco_brilhante"/>
         <TEXTURE id="moontext"/>
         <TRANSLATION x="-65" y="65" z="20"/>

@@ -39,11 +39,8 @@ LinearAnimation.prototype.init = function () {
         var v2_size = this.lines[i].length;
         var cross = vec3.create();
         vec3.cross(cross, vector1, vector2);
-        console.log(cross);
         var angle = Math.acos(vec3.dot(vector1, vector2) / (v1_size * v2_size));
-        console.log(angle);
         if (vec3.dot(normal, cross) < 0) angle *= -1;
-        console.log(angle);
         this.lines[i].angle = angle;
     }
     this.line = -1;

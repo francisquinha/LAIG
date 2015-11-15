@@ -326,6 +326,25 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				currAnimation["startang"] = parseFloat(this.reader.getString(animations[i],"startang",true));		
 				currAnimation["rotang"]	= parseFloat(this.reader.getString(animations[i],"rotang",true));		
 			}
+		else if(currAnimation["type"] == "circularAxis"){
+			
+				var coords = this.reader.getString(animations[i],"center",true);
+				currAnimation["center"]	= coords.trim().split(/\s+/);
+				
+				for(var j = 0 ; j < currAnimation['center'].length ; j++){
+        		currAnimation['center'][j] = parseFloat(currAnimation['center'][j]);
+				}
+				
+				currAnimation["radius"]	= parseFloat(this.reader.getString(animations[i],"radius",true));
+				currAnimation["startang"] = parseFloat(this.reader.getString(animations[i],"startang",true));		
+				currAnimation["rotang"]	= parseFloat(this.reader.getString(animations[i],"rotang",true));		
+
+				coords = this.reader.getString(animations[i],"axis",true);
+				currAnimation["axis"]	= coords.trim().split(/\s+/);
+				for(var j = 0 ; j < currAnimation['axis'].length ; j++){
+        		currAnimation['axis'][j] = parseFloat(currAnimation['axis'][j]);
+				}
+			}
 			else console.error(currAnimation['type'] + " doesn't exist!");
 
 		this.animations[currAnimation["id"]] = currAnimation;
@@ -696,7 +715,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
 		else if(arrangedArgsLeaf['type'] == "patch"){
 			    var temp = [];
                 var order = this.reader.getInteger(leaf, 'order');   
-                if (order < 1 || order > 3) return "Invalid order (1,2,3)";
+                if (order < 1 || order > 5) return "Invalid order, must be 1,2 or 3";
                 temp[0] = order;
                 //arrangedArgsLeaf['args'] = parseInt(order);
 
@@ -714,7 +733,7 @@ MySceneGraph.prototype.parseLeaves = function(rootElement) {
                     tempControlPoint[0] = this.reader.getFloat(reader_controlPoints[k], 'x');
                     tempControlPoint[1] = this.reader.getFloat(reader_controlPoints[k], 'y');
                     tempControlPoint[2] = this.reader.getFloat(reader_controlPoints[k], 'z');
-                    tempControlPoint[3] = 1;
+                    tempControlPoint[3] = this.reader.getFloat(reader_controlPoints[k], 'w');
                     updatedControlPoints.push(tempControlPoint);
                 }
                 if (updatedControlPoints.length != (order + 1)*(order + 1)) {console.error(updatedControlPoints.length + " is an incorrect number of control points");}
