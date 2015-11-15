@@ -75,7 +75,7 @@ plane.prototype.makeSurface = function (id, degree1, degree2, knots1, knots2, co
 
 plane.prototype.display = function () 
 {	
-	this.appearance.apply();
+	//this.appearance.apply();
 
 	for (i = 0; i < this.surfaces.length ; i++) {
 		this.scene.pushMatrix();

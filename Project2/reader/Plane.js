@@ -14,7 +14,7 @@ function Plane(scene, nrDivs) {
       	
 	this.patchLength = 1.0 / nrDivs;
 	   	
-   	this.surfaces = [];
+   	this.surface = null;
    	this.translations = [];
 
 	this.appearance = new CGFappearance(this.scene);
@@ -69,21 +69,25 @@ Plane.prototype.makeSurface = function (id, degree1, degree2, knots1, knots2, co
 	return nurbsSurface.getPoint(u, v);
 	};
 
-	var obj = new CGFnurbsObject(this.scene, getSurfacePoint, this.nrDivs, this.nrDivs);
-	this.surfaces.push(obj);	
-	this.translations.push(translation);
+	this.surface = new CGFnurbsObject(this.scene, getSurfacePoint, this.nrDivs, this.nrDivs);
+	//var obj = new CGFnurbsObject(this.scene, getSurfacePoint, this.nrDivs, this.nrDivs);
+	//this.surfaces.push(obj);	
+	this.translations.push(translation[0]);
+	this.translations.push(translation[1]);
+	this.translations.push(translation[2]);
 }
 
 Plane.prototype.display = function () 
 {	
-	this.appearance.apply();
+	//this.appearance.apply();
 
-	for (i = 0; i < this.surfaces.length ; i++) {
+	//for (i = 0; i < this.surfaces.length ; i++) {
 		this.scene.pushMatrix();
 	
-		this.scene.translate(this.translations[i][0], this.translations[i][1], this.translations[i][2]);
+		this.scene.translate(this.translations[0], this.translations[1], this.translations[2]);
 		this.scene.rotate(-Math.PI/2,1,0,0);
-		this.surfaces[i].display();
+		this.surface.display();
+	//	this.surfaces[i].display();
 		this.scene.popMatrix();
-	}
+	//}
 }

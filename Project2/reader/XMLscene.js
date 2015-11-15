@@ -262,8 +262,7 @@ XMLscene.prototype.processLeaf = function(leaf, texture_id) {
 			primitive = new patch(this, leaf.args);
 			break;
 		case "terrain":		
-			console.log(leaf.args);
-			//primitive = new terrain(this, leaf.args);
+			primitive = new terrain(this, leaf.args);
 			break;
 	}
 	return primitive;  
@@ -284,7 +283,7 @@ XMLscene.prototype.processNode = function(node) {
 			else {
 				node.primitives.push(this.processLeaf(leaf, node.texture));
 				var material_info = this.graph.materials[node.material];
-				console.log(material_info);
+				//console.log(material_info);
 				var material;
 				if (node.material == "null" || material_info == undefined) {
 					console.warn('Warning: Material ' + node.material + ' is not defined!\n');
@@ -314,7 +313,7 @@ XMLscene.prototype.processNode = function(node) {
 					material.setTexture(texture);			
 				}
 				node.materials.push(material);
-				console.log(node);				
+				//console.log(node);				
 			}
 		}		
 		else {
