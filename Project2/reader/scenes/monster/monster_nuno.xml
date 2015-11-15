@@ -256,7 +256,7 @@
 		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
 		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
 	
-	<LEAF id="elevterrain" type="terrain" texture="textures/terrainmap.jpg" heightmap="textures/heightmap.jpg" />
+	<LEAF id="elevterrain" type="terrain" texture="textures/terrain.jpg" heightmap="textures/heightmap.jpg" />
 	    
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
@@ -280,11 +280,20 @@
           <!--  <DESCENDANT id="floor"/>
             <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
-            <DESCENDANT id="moon"/>-->
-            <DESCENDANT id="ovni"/>
+            <DESCENDANT id="moon"/>
+            <DESCENDANT id="ovni"/>-->
+            <DESCENDANT id="myterrain"/>
         </DESCENDANTS>
     </NODE>
 
+<NODE id="myterrain">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="yellow"/>
+        <DESCENDANTS>
+            <DESCENDANT id="elevterrain"/>
+        </DESCENDANTS>
+    </NODE>
+    
   	<NODE id="ovni">
         <MATERIAL id="branco"/>
         <TEXTURE id="null"/>

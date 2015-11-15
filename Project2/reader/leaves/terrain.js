@@ -15,11 +15,11 @@ function terrain(scene, args) {
     this.textureTerrain = new CGFtexture(scene, this.args[0]);
     this.heightmapTerrain = new CGFtexture(scene, this.args[1]);
     this.materialTerrain.setTexture(this.textureTerrain);
-    this.materialTerrain.setTextureWrap('REPEAT', 'REPEAT');
+    //this.materialTerrain.setTextureWrap('REPEAT', 'REPEAT'); // parece-me desnecessario
 
-    this.terrainShader = new CGFshader(scene.gl, "scenes/monster/shaders/texture1.vert", "scenes/monster/shaders/texture2.frag");
-    this.terrainShader.setUniformsValues({uSampler2: 1});
-    this.terrainShader.setUniformsValues({multiplier: 0.5});
+    this.myShader = new CGFshader(scene.gl, "scenes/monster/shaders/myShader.vert", "scenes/monster/shaders/myShader.frag");
+    this.myShader.setUniformsValues({uSampler2: 1});
+    this.myShader.setUniformsValues({scale: 0.2});
     
     this.plane = new Plane(scene, 200);
  }
@@ -29,7 +29,7 @@ terrain.prototype.constructor = terrain;
  
 terrain.prototype.display = function() {
     this.materialTerrain.apply();
-    this.scene.setActiveShader(this.terrainShader);
+    this.scene.setActiveShader(this.myShader);
 
     this.scene.pushMatrix();
     

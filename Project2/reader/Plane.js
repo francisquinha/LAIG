@@ -6,7 +6,6 @@
 function Plane(scene, nrDivs) {
    	CGFobject.call(this,scene);
     
-    
 	// nrDivs = 1 if not provided
 	nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
 
@@ -26,20 +25,20 @@ function Plane(scene, nrDivs) {
 	this.appearance.setTexture(this.texture);
 	this.appearance.setTextureWrap ('REPEAT', 'REPEAT');
 	
-	 this.makeSurface("0", 1, // degree on U: 2 control vertexes U
+	this.makeSurface("0", 1, // degree on U: 2 control vertexes U
                                          1, // degree on V: 2 control vertexes on V
                                         [0, 0, 1, 1], // knots for U
                                         [0, 0, 1, 1], // knots for V
                                         [       // U = 0
                                                 [ // V = 0..1;
-                                                         [-0.5, -0.5, 0.0, 1 ],
-                                                         [-0.5,  0.5, 0.0, 1 ]
+                                                         [-0.5, 0.0, 0.5, 1 ],
+                                                         [-0.5,  0.0, -0.5, 1 ]
                                                        
                                                 ],
                                                 // U = 1
                                                 [ // V = 0..1
-                                                         [ 0.5, -0.5, 0.0, 1 ],
-                                                         [ 0.5,  0.5, 0.0, 1 ]                                                   
+                                                         [ 0.5, 0.0, 0.5, 1 ],
+                                                         [ 0.5,  0.0, -0.5, 1 ]                                                   
                                                 ]
                                         ],
 					  //translation of surface 
@@ -85,7 +84,7 @@ Plane.prototype.display = function ()
 		this.scene.pushMatrix();
 	
 		this.scene.translate(this.translations[0], this.translations[1], this.translations[2]);
-		this.scene.rotate(-Math.PI/2,1,0,0);
+		//this.scene.rotate(-Math.PI/2,1,0,0);
 		this.surface.display();
 	//	this.surfaces[i].display();
 		this.scene.popMatrix();
