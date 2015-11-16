@@ -16,15 +16,15 @@
 <ANIMATIONS>
  		<ANIMATION id="helloline" span="8" type="linear">
  			<controlpoint xx="0" yy="0" zz="0"/> 			
- 			<controlpoint xx="0" yy="0" zz="-10"/> 	
- 			<controlpoint xx="5" yy="0" zz="-15"/> 	
+ 			<controlpoint xx="0" yy="-5" zz="-15"/> 	
  			<controlpoint xx="10" yy="0" zz="-10"/> 	
- 			<controlpoint xx="5" yy="0" zz="-5"/> 	
- 			<controlpoint xx="10" yy="0" zz="0"/> 	
+ 			<controlpoint xx="0" yy="0" zz="-5"/> 	
+ 			<controlpoint xx="6.5" yy="0" zz="3"/> 	
  		</ANIMATION>
-		<ANIMATION id="mooncircle" span="8" type="circularAxis" center="-5 0 0" radius="5" startang="0" rotang="-360" axis = "0 1 0"/> 		
-		<ANIMATION id="what" span="8" type="circularAxis" center="0 0 0" radius="0" startang="0" rotang="35" axis = "-1 0 1"/> 		
-		<ANIMATION id="nothing" span="8" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
+		<ANIMATION id="earthcircle" span="8" type="circularAxis" center="-5 0 0" radius="5" startang="0" rotang="-360" axis = "0 1 0"/> 		
+		<ANIMATION id="what" span="4" type="circularAxis" center="0 0 0" radius="0" startang="0" rotang="35" axis = "-1 0 1"/> 		
+		<ANIMATION id="nothing_ini" span="2" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
+		<ANIMATION id="nothing_head" span="16" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
 </ANIMATIONS>
 
 
@@ -42,9 +42,9 @@
         <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
         <specular r="0.2" g="0.2" b="0.2" a="1"/>   
     </LIGHT>
-    <LIGHT id="moonlight">                          
+    <LIGHT id="sunlight">                          
         <enable value ="1"/>         				
-        <position x="-65" y="50" z="20" w="1"/>      
+        <position x="100" y="100" z="100" w="1"/>      
         <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
         <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
         <specular r="0.2" g="0.2" b="0.2" a="1"/>   
@@ -85,16 +85,16 @@
         <file path="textures/pattern2.png"/>  
         <amplif_factor s="6.28318530718" t="3.14159265359"/>          
     </TEXTURE>
-    <TEXTURE id="blue">
-        <file path="textures/blue.jpg"/>      
+    <TEXTURE id="stars">
+        <file path="textures/stars.jpg"/>      
         <amplif_factor s="2" t="1"/>          
     </TEXTURE>
-    <TEXTURE id="bluefloor">
-        <file path="textures/floor.jpg"/>     
-        <amplif_factor s="1" t="1"/>          
+    <TEXTURE id="earthtext">
+        <file path="textures/earth.jpg"/>      
+        <amplif_factor s="6.28318530718" t="3.14159265359"/>          
     </TEXTURE>
     <TEXTURE id="moontext">
-        <file path="textures/moon.jpg"/>      
+        <file path="textures/moon_color.jpg"/>      
         <amplif_factor s="6.28318530718" t="3.14159265359"/>          
     </TEXTURE>
     <TEXTURE id="ufometal">
@@ -137,12 +137,11 @@
     <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
     <LEAF id="sphere" type="sphere" args="1 16 16"/>
 	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
+
 	<!-- Nova primitiva: patch, gerada por NURBS parâmetros: order: ordem, pode ser 1,2,3 
 														partsU: divisão em partes no domínio U a ser usada para o cálculo da superficie
 														partsV: divisão em partes no domínio V a ser usada para cálculo da superficie
 														o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
-	<LEAF id="plane1" type="plane" parts="10"/>
-
 	<LEAF id="hemisphere" type="patch" order="3" partsU="20" partsV="20">           
         <controlpoint x="0" y="0" z="1" w="1"/>
         <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
@@ -208,16 +207,8 @@
 		parâmetros:
 		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
 		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
-	<LEAF id="elevterrain" type="terrain" texture="textures/terrainmap.jpg" heightmap="textures/heightmap.jpg" />
+	<LEAF id="elevterrain" type="terrain" texture="textures/moon_color.jpg" heightmap="textures/moon_height.png" />
 		    
-    <!-- Parameters of the above primitives: -->
-        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
-        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
-        <!-- sphere: radius, parts along radius, parts per section -->
-        <!-- triangle: coordinates of each vertex -->
-        <!-- plane: number of divisions -->
-        <!-- patch:  -->
-	    
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
         <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
@@ -237,20 +228,32 @@
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
 		<DESCENDANTS>
-            <DESCENDANT id="floor"/>
-            <DESCENDANT id="wall"/>
             <DESCENDANT id="monster"/>
-            <DESCENDANT id="moon"/>
+            <DESCENDANT id="earth"/>
             <DESCENDANT id="ufo"/>
+            <DESCENDANT id="moon"/>
+            <DESCENDANT id="sky"/>
+        </DESCENDANTS>
+    </NODE>
+
+	<NODE id="moon">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="moontext"/>
+        <TRANSLATION x="25" y="0" z="25"/>
+        <ROTATION axis="y" angle="-45"/>
+        <SCALE sx="240" sy="1" sz="240"/>
+        <DESCENDANTS>
+            <DESCENDANT id="elevterrain"/>
         </DESCENDANTS>
     </NODE>
 
   	<NODE id="ufo">
-    	<ANIMATION id="mooncircle"/>
+    	<ANIMATION id="nothing_ini"/>
+    	<ANIMATION id="earthcircle"/>
     	<ANIMATION id="helloline"/>
         <MATERIAL id="branco"/>
         <TEXTURE id="null"/>
-        <TRANSLATION x="-40" y="50" z="20"/>
+        <TRANSLATION x="-20" y="50" z="0"/>
         <SCALE sx="6" sy="6" sz="6"/>
         <DESCENDANTS>
             <DESCENDANT id="flat_top"/>
@@ -312,34 +315,23 @@
         </DESCENDANTS>
     </NODE>
  
-    <NODE id="floor">
+    <NODE id="sky">
         <MATERIAL id="branco"/>
-        <TEXTURE id="bluefloor"/>
-        <TRANSLATION x="3.3" y="0" z="3.3"/>
+        <TEXTURE id="stars"/>
+        <TRANSLATION x="-60" y="0" z="-60"/>
         <ROTATION axis="y" angle="45"/>
-        <ROTATION axis="x" angle="-90"/>
-        <SCALE sx="120" sy="110" sz="1"/>
+        <SCALE sx="120" sy="120" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
         </DESCENDANTS>
     </NODE>
 
-    <NODE id="wall">
+    <NODE id="earth">
         <MATERIAL id="branco"/>
-        <TEXTURE id="blue"/>
-        <TRANSLATION x="-50" y="37.5" z="-50"/>
-        <ROTATION axis="y" angle="45"/>
-        <SCALE sx="120" sy="110" sz="1"/>
-		<DESCENDANTS>
-            <DESCENDANT id="rectangle"/>
-        </DESCENDANTS>
-    </NODE>
-
-    <NODE id="moon">
-        <MATERIAL id="branco_brilhante"/>
-        <TEXTURE id="moontext"/>
-        <TRANSLATION x="-65" y="50" z="20"/>
-        <SCALE sx="4" sy="4" sz="4"/>
+        <TEXTURE id="earthtext"/>
+        <TRANSLATION x="-50" y="50" z="0"/>
+        <ROTATION axis="y" angle="160"/>
+        <SCALE sx="6" sy="6" sz="6"/>
 		<DESCENDANTS>
             <DESCENDANT id="sphere"/>
         </DESCENDANTS>
@@ -359,7 +351,8 @@
     </NODE>
 
     <NODE id="head">
-    	<ANIMATION id="nothing"/>
+    	<ANIMATION id="nothing_ini"/>
+    	<ANIMATION id="nothing_head"/>
     	<ANIMATION id="what"/>
         <MATERIAL id="branco"/>
         <TEXTURE id="null"/>
