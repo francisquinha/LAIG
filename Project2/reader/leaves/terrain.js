@@ -19,7 +19,7 @@ function terrain(scene, args) {
 
     this.myShader = new CGFshader(scene.gl, "scenes/monster/shaders/myShader.vert", "scenes/monster/shaders/myShader.frag");
     this.myShader.setUniformsValues({uSampler2: 1});
-    this.myShader.setUniformsValues({scale: 0.2});
+    this.myShader.setUniformsValues({scale: 0.5});
     
     this.plane = new Plane(scene, 200);
  }
