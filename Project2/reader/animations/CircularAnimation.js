@@ -1,8 +1,8 @@
 /**
- * CircularAxisAnimation
+ * CircularAnimation
  * @constructor
  */
-function CircularAxisAnimation(scene, span, radius, center, startAng, rotAng, axis) {
+function CircularAnimation(scene, span, radius, center, startAng, rotAng) {
     Animation.call(this, scene, span);
 
     this.radius = radius;
@@ -11,9 +11,6 @@ function CircularAxisAnimation(scene, span, radius, center, startAng, rotAng, ax
     this.centerZ = center[2];
     this.startAng = startAng * Math.PI / 180;
     this.rotAng = rotAng * Math.PI / 180;
-    this.axisX = axis[0];
-    this.axisY = axis[1];
-    this.axisZ = axis[2];
 
     this.deltaAngle = this.rotAng / this.span;
     this.startT = 0;
@@ -22,10 +19,7 @@ function CircularAxisAnimation(scene, span, radius, center, startAng, rotAng, ax
     this.angle = this.startAng;
 }
 
-CircularAxisAnimation.prototype = Object.create(Animation.prototype);
-CircularAxisAnimation.prototype.constructor = CircularAnimation;
-
-CircularAxisAnimation.prototype.update = function (time) {
+CircularAnimation.prototype.update = function (time) {
     if (this.start == -1) {
         this.start = 0;
         this.startT = time;
@@ -44,8 +38,8 @@ CircularAxisAnimation.prototype.update = function (time) {
     }
 };
 
-CircularAxisAnimation.prototype.apply = function () {
+CircularAnimation.prototype.apply = function () {
 	this.scene.translate(this.centerX, this.centerY, this.centerZ);
-	this.scene.rotate(this.angle, this.axisX, this.axisY, this.axisZ);
+	this.scene.rotate(this.angle, 0, 0, 1);
 	this.scene.translate(this.radius, 0, 0);	
 }

@@ -11,9 +11,6 @@ function LinearAnimation(scene, span, control_points) {
     this.init();
 }
 
-//LinearAnimation.prototype = Object.create(Animation.prototype);
-LinearAnimation.prototype.constructor = LinearAnimation;
-
 LinearAnimation.prototype.init = function () {
     var nr_control_points = this.control_points.length;
     this.length = 0;
@@ -26,7 +23,6 @@ LinearAnimation.prototype.init = function () {
         this.lines.push({'deltaX': x, 'deltaY': y, 'deltaZ': z, 'length': line_length});
         this.length += line_length;
     }
-    this.velocity = this.length / this.span;
     var normal = vec3.fromValues(0, 1, 0);
     var vector1 = vec3.fromValues(1, 0, 1);    
     var v1_size = Math.sqrt(2);
