@@ -22,6 +22,8 @@
  			<controlpoint xx="6.5" yy="0" zz="3"/> 	
  		</ANIMATION>
 		<ANIMATION id="earthcircle" span="8" type="circularAxis" center="-5 0 0" radius="5" startang="0" rotang="-360" axis = "0 1 0"/> 		
+		<ANIMATION id="earthrotation" span="100" type="circular" center="0 0 0" radius="0" startang="0" rotang="360"/> 		
+		<ANIMATION id="earthrevolution" span="100" type="circular" center="10 0 0" radius="-10" startang="0" rotang="20"/> 		
 		<ANIMATION id="what" span="4" type="circularAxis" center="0 0 0" radius="0" startang="0" rotang="35" axis = "-1 0 1"/> 		
 		<ANIMATION id="nothing_ini" span="2" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
 		<ANIMATION id="nothing_head" span="16" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
@@ -207,7 +209,7 @@
 		parâmetros:
 		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
 		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
-	<LEAF id="elevterrain" type="terrain" texture="textures/moon_color.jpg" heightmap="textures/moon_height2.png" />
+	<LEAF id="elevterrain" type="terrain" texture="textures/moon_color.jpg" heightmap="textures/moon_height_high.png" />
 		    
     <!-- Parameters of the above primitives: -->
         <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
@@ -327,11 +329,23 @@
     </NODE>
 
     <NODE id="earth">
+    	<ANIMATION id="nothing_ini"/>
+    	<ANIMATION id="earthrotation"/>
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <TRANSLATION x="-50" y="50" z="0"/>
+        <SCALE sx="6" sy="6" sz="6"/>
+		<DESCENDANTS>
+            <DESCENDANT id="earth_sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="earth_sphere">
+    	<ANIMATION id="nothing_ini"/>
+    	<ANIMATION id="earthrevolution"/>
         <MATERIAL id="branco"/>
         <TEXTURE id="earthtext"/>
-        <TRANSLATION x="-50" y="50" z="0"/>
-        <ROTATION axis="y" angle="160"/>
-        <SCALE sx="6" sy="6" sz="6"/>
+        <ROTATION axis="x" angle="90"/>
 		<DESCENDANTS>
             <DESCENDANT id="sphere"/>
         </DESCENDANTS>
