@@ -26,7 +26,6 @@ serialInclude(['../lib/CGF.js',
 				'leaves/plane.js',
 				'leaves/patch.js',
 				'leaves/terrain.js',
-				'Plane.js',
 main=function()
 {
 	// Standard application, scene and interface setup
