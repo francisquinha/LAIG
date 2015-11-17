@@ -31,21 +31,17 @@ function patch(scene, args) {
 patch.prototype.getControlPoints = function(arrayPoints) {
     var arrangedArrayPoints = [];
     var index;
+    for (var orderU = 0 ; orderU <= this.order ; orderU++) {
 
-    //for (var orderU = 0 ; orderU <= this.order ; orderU++) {
         var vPoints = [];
-        for (var orderV = 0 ; orderV < ((this.order+1)*(this.order+1)) ; orderV++) {
-            //index = orderU * (this.order + 1) + orderV;
-            vPoints.push(arrayPoints[orderV]);//index]);
-            
-            if(((orderV+1) % 4) == 0)
-                {
-                    arrangedArrayPoints.push(vPoints);
-                    var vPoints = [];
-                }
+        for (var orderV = 0 ; orderV <= this.order ; orderV++) {
+            index = orderU * (this.order + 1) + orderV;
+            vPoints.push(arrayPoints[index]);
         }
-    //}
-    return arrangedArrayPoints;
+        arrangedArrayPoints.push(vPoints);     
+    }
+        arrangedArrayPoints.push(vPoints);
+   return arrangedArrayPoints;
 };
 
 patch.prototype.getKnots = function() {
