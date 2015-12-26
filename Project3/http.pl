@@ -56,11 +56,6 @@ processString([_Par=Val], R):-
 :- abolish(newLoad/1).
 :- dynamic(newLoad/1).
 
-translateCardinal(0, n).
-translateCardinal(1, e).
-translateCardinal(2, s).
-translateCardinal(3, w).
-
 setupGameHTTP(NewLoad, ComputerHuman, LoadFile, Name1, Name2, EasyHard1, EasyHard2, Player, Distribution, Board, GameOver, Message) :-
         (NewLoad == 0 ->
          ((ComputerHuman == 0 ->
@@ -98,6 +93,32 @@ startGameHTTP(Player, Distribution, Board, GameOver, Message) :-
         atom_concat(HalfMessage, ' / 2 - ', AlmostMessage) , 
         atom_concat(AlmostMessage, Name2, Message).
 
+setupStartGameHTTP(NewLoad, ComputerHuman, LoadFile, Name1, Name2, EasyHard1, EasyHard2, Player, Distribution, Board, GameOver, Message) :-
+        reset ,
+        (NewLoad == 0 ->
+         ((ComputerHuman == 0 ->
+           (maybeRandom -> 
+            (assert(player(1, Name1, 1)) , assert(player(2, Name2, 1))) ; 
+            (assert(player(1, Name2, 1)) , assert(player(2, Name1, 1)))) ;
+           (ComputerHuman == 1 ->
+            (maybeRandom -> 
+             (assert(player(1, Name1, 1)) , assert(player(2, Name2, EasyHard2))) ; 
+             (assert(player(1, Name2, EasyHard2)) , assert(player(2, Name1, 1)))) ;
+            (maybeRandom -> 
+             (assert(player(1, Name1, EasyHard1)) , assert(player(2, Name2, EasyHard2))) ; 
+             (assert(player(1, Name2, EasyHard2)) , assert(player(2, Name1, EasyHard1)))))) ,
+          playGameHTTP) ;
+         reconsult(LoadFile)) ,
+        turn(Player) ,
+        getDistribution(Distribution) ,
+        getBoard(Board) ,
+        getGameOver(GameOver) ,
+        player(1, Name1, _) ,
+        player(2, Name2, _) ,
+        atom_concat('1 - ', Name1, HalfMessage) , 
+        atom_concat(HalfMessage, ' / 2 - ', AlmostMessage) , 
+        atom_concat(AlmostMessage, Name2, Message).
+
 saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
         atom_concat(SaveFile, '.pl', Spl) , 
         atom_concat('saves/', Spl, SSpl) ,
@@ -120,9 +141,21 @@ saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
 
 reset :-
         abolish(loadFile/1) ,
+        dynamic(loadFile/1) ,
         abolish(newLoad/1) ,
-        reconsult('plog/main.pl').
-
+        dynamic(newLoad/1) ,
+        abolish(player/3) ,
+        dynamic(player/3) ,
+        abolish(piece/4) ,
+        dynamic(piece/4) ,
+        abolish(halfPiece/6) ,
+        dynamic(halfPiece/6) ,
+        abolish(lastPlay/4) ,
+        dynamic(lastPlay/4) ,
+        abolish(turn/1) ,
+        dynamic(turn/1) ,
+        abolish(position/2) ,
+        dynamic(position/2).
 
 playGameHTTP :-                             
         distributePieces(0, 0, 0, 0) ,
