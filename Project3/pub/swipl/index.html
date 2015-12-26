@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Dominup</title>
+	</head>
+	<body>
+		<h1>Welcome to Dominup!!!</h1>
+		
+		<div id="content">
+			<div id="params">
+				<input type="button" onClick="location.href='new_game.html';" value="New Game" />
+				<input type="button" onClick="location.href='load_game.html';" value="Load Game"/>
+			</div>
+		</div>		
+		<script type="text/javascript">
+			window.onload = startup;
+			function startup() {
+				localStorage.removeItem('done');
+			}
+
+		</script>
+	</body>
+</html>

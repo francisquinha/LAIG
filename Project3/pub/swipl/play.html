@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Dominup</title>
+	</head>
+	<body>
+		<h2>Play</h2>
+		
+		<div id="content">
+			<div id="params">
+				Player: <input type="text" id="player"/> 
+				<br>
+				Piece Number 1: <input type="text" id="number1"/> 
+				<br>
+				Piece Number 2: <input type="text" id="number2"/> 
+				<br>
+				Row: <input type="text" id="row"/> 
+				<br>
+				Column: <input type="text" id="column"/> 
+				<br>
+				Cardinal: <input type="text" id="cardinal"/> 
+				<br>
+				<input type="button" onClick="makeRequest();" value="Play"/>
+		</div>	
+		<div id="reply"></div>
+
+		<script type="text/javascript">
+			
+			window.onload = startup;
+	
+			function postGameRequest(requestString, onSuccess, onError)
+			{
+				var request = new XMLHttpRequest();
+				request.open('POST', '../../game', true);
+
+				request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+				request.onerror = onError || function(){console.log("Error waiting for response");};
+
+				request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+				request.send('requestString='+encodeURIComponent(requestString));			
+			}
+
+			function makeRequest()
+			{
+				// Get Parameter Values
+				var v_player = document.querySelector("#player").value;
+				var v_number1 = document.querySelector("#number1").value;
+				var v_number2 = document.querySelector("#number2").value;
+				var v_row = document.querySelector("#row").value;
+				var v_column = document.querySelector("#column").value;
+				var v_cardinal = document.querySelector("#cardinal").value;
+				
+				// Compose Request String
+				var requestString = '[playHTTP,' + v_player + ',' + v_number1 + ',' + v_number2 + ',' 
+				+ v_row + ',' + v_column + ',' + v_cardinal + ']';
+				console.log(requestString);
+				postGameRequest(requestString, handleReply, handleError);
+			}
+			
+			//Handle the JSON Reply
+			function handleReply(data){
+				console.log(data.target.response);								response=JSON.parse(data.target.response);
+				document.querySelector("#reply").innerHTML=response.message;		// Access message and show
+				document.querySelector("#player").value=response.player;
+			}
+
+			function handleError(data){
+				console.log(data.target.response);
+			}
+			
+			function startup() {
+				if (!localStorage['done']) {
+					localStorage['done'] = 'yes';
+					postGameRequest('[startGameHTTP]', handleReply, handleError);
+     			}
+			}
+
+		</script>
+	</body>
+</html>
