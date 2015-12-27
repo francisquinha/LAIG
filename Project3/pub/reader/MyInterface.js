@@ -136,14 +136,20 @@ MyInterface.prototype.showLoadFile = function(){
 
 MyInterface.prototype.showNamePlayer = function(number){
 	
-	this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
+	if(number == 1){
+		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
 	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
    		console.log(newValue); 		
 	});
 	this.nPlayer1.open();
+	}
 	
-	
-	if(number == 2){
+	else if(number == 2){
+		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
+	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
+   		console.log(newValue); 		
+	});
+	this.nPlayer1.open();
 		this.nPlayer2 = this.newGameMenu.addFolder('Choose namePlayer2');
 		this.nPlayer2.add(this.scene, 'namePlayer2').name("Name P2").onFinishChange(function(newValue) {
 	   		console.log(newValue); 		

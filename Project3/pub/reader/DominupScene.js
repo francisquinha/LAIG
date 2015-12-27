@@ -53,14 +53,15 @@ DominupScene.prototype.saveGame = function (){
 };
 
 DominupScene.prototype.newGame = function(){
-  	this.turn = 'player1'; //TODO change to player name
+  	this.turn = 'player1'; 
 	this.initGamePieces();
 	this.initGameSurface();
 	this.initGamePlayers();
 };
 
 DominupScene.prototype.endGame = function(winner){
-  console.log(winner); // TODO show in MessageBoard
+  this.message.showString('Congratulations ' + winner);
+  console.log(winner); 
   this.myInterface.hideGameMenu();
 };
 
@@ -187,11 +188,8 @@ DominupScene.prototype.updateGameState = function(){
 		case 'TYPE':
 			this.load_file = 'saves/file1.pl';
 			if(this.gameType == this.gameTypes[1]){
+				this.myInterface.showNamePlayer(2); 		
 				this.state = 'NAMES';
-				this.myInterface.showNamePlayer(2);
-				//this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
-	        	//this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
-   	     		
 			}
 			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
@@ -204,10 +202,11 @@ DominupScene.prototype.updateGameState = function(){
 			}
 			break;
 
-			case 'NAMES':
+		case 'NAMES':
+			//this.myInterface.showNamePlayer(2); 		
 			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
         	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
-			this.startGame();
+			//this.startGame();
 			break;
 
 		case 'LEVELP1':
@@ -216,7 +215,7 @@ DominupScene.prototype.updateGameState = function(){
           		if (this.gameLevel == this.gameLevels[1]) level = 1;
           		else level = 2;
 				if(this.gameType == this.gameTypes[2]){
-          			this.players['player1'] = new Player(this, 'player1', 0, 'Player');
+          			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
           			this.players['player2'] = new Player(this, 'player2', level, 'Computer');
           			this.startGame();
 				}
@@ -321,7 +320,7 @@ DominupScene.prototype.initGame = function () {
 	// game players names
 	this.namePlayer1 = 'nameP1';
 	this.namePlayer2 = 'nameP2';
-	
+
 	this.initGameEnvironments();
   	this.initGameLooks();
 };
