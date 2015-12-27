@@ -60,7 +60,8 @@
 			
 			//Handle the JSON Reply
 			function handleReply(data){
-				console.log(data.target.response);								response=JSON.parse(data.target.response);
+				console.log(data.target.response);								
+				response=JSON.parse(data.target.response);
 				document.querySelector("#reply").innerHTML=response.message;		// Access message and show
 				document.querySelector("#player").value=response.player;
 			}

@@ -4,7 +4,7 @@
  */
 function Player(scene, id, level, name){
 	this.scene = scene;
-	if(name == 'undefined') this.name = 'Computer';
+	this.name = name;
 	this.human = (level == undefined);
 	this.level = level;
 	this.playerId = id;

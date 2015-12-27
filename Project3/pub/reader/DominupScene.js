@@ -55,7 +55,7 @@ DominupScene.prototype.newGame = function(){
   	this.turn = 'player1'; //TODO change to player name
 	this.initGamePieces();
 	this.initGameSurface();
-	this.initGamePlayers();
+//	this.initGamePlayers();
 };
 
 DominupScene.prototype.endGame = function(winner){
@@ -82,6 +82,28 @@ DominupScene.prototype.postGameRequest = function(requestString, onSuccess, onEr
 
 DominupScene.prototype.handleReply = function(data){
 	console.log(data.target.response);
+	var response = JSON.parse(data.target.response);
+	var message = response.message;
+	var player_order = message.split(" / ");
+	var id1 = player_order[0].split(" - ")[1];
+	console.log(id1);
+	var id2 = player_order[1].split(" - ")[1];
+	console.log(id2);
+	var distribution = response.distribution.split("[")[1].split("]")[0].split(",");
+	console.log(distribution);
+	var pieces1;
+	var pieces2;
+	var check;
+	console.log(this.players);
+	if (id1 == this.players['player1'].playerId) check = "1";
+	else check = "2";
+	for (var i = 0; i < 36; i++) {
+		if (distribution[i] == check)
+			pieces1.push(i);
+		else pieces2.push(i);
+	}
+	this.players['player1'].setPieces(pieces1);
+	this.players['player2'].setPieces(pieces2);
 }
 
 DominupScene.prototype.handleError = function(data){
@@ -107,48 +129,50 @@ DominupScene.prototype.startGame = function(){
 };
 
 DominupScene.prototype.updateGameState = function(){
-	var easy_hard1;
-	var easy_hard2;
   	switch(this.state){
 		case 'TYPE':
 			if(this.gameType == this.gameTypes[1]){
-			
-			this.players['player1'] = new Player(this, 'player1');
-        	this.players['player2'] = new Player(this, 'player2');
-        	this.setupStartRequest(0, 0, 'saves/angie_hard.pl', 'Player1', 'Player2', 0, 0);
-        	this.startGame();
+				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
+	        	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
+   	     		this.setupStartRequest(0, 0, 'saves/angie_hard.pl', this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
+   	     		this.startGame();
 			}
-			else if(this.gameType == this.gameTypes[2] || this.gameType == this.gameTypes[3]){
-				
+			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
-				this.myInterface.showLevelPlayer('player1');
+				this.myInterface.showLevelPlayer('Computer');
+			}
+			else if(this.gameType == this.gameTypes[3]){
+				this.state = 'LEVELP1';
+				this.myInterface.showLevelPlayer('Computer 1');
 			}
 			break;
 
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
+          		var level;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
 				if(this.gameType == this.gameTypes[2]){
-          			this.players['player1'] = new Player(this, 'player1');
-          			this.players['player2'] = new Player(this, 'player2', this.level);
-          			if (this.level == 'Easy') easy_hard1 = 1; //this is not working!!!
-          			else easy_hard1 = 2;
-    	    		this.setupStartRequest(0, 1, 'saves/angie_hard.pl', 'Player', 'Computer', 0, easy_hard1);
+          			this.players['player1'] = new Player(this, 'player1', 0, 'Player');
+          			this.players['player2'] = new Player(this, 'player2', level, 'Computer');
+    	    		this.setupStartRequest(0, 1, 'saves/angie_hard.pl', this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
           			this.startGame();
 				}
 				else{
-					this.players['player1'] = new Player(this, 'player1', this.level);
+					this.players['player1'] = new Player(this, 'player1', level, 'Compute1');
 					this.state='LEVELP2';
-					this.myInterface.showLevelPlayer('player2');
+					this.myInterface.showLevelPlayer('Computer 2');
 				}
 			}
 			break;
 		
 		case 'LEVELP2':
 			if(this.gameLevel != this.gameLevels[0]){
-          		if (this.level == 'Easy') easy_hard2 = 1; //this is not working!!!
-          		else easy_hard2 = 2;
-		        this.players['player2'] = new Player(this, 'player2', this.level);
-    	    	this.setupStartRequest(0, 2, 'saves/angie_hard.pl', 'Compute1', 'Compute2', easy_hard1, easy_hard2);
+          		var level;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
+		        this.players['player2'] = new Player(this, 'player2', level, 'Compute2');
+    	    	this.setupStartRequest(0, 2, 'saves/angie_hard.pl', this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
 				this.startGame();
 			}
 			break;
@@ -210,7 +234,6 @@ DominupScene.prototype.initGame = function () {
   	// game levels
 	this.gameLevels = ['(select one level)', 'Easy', 'Hard'];
 	this.gameLevel = this.gameLevels[0];
-
 	this.initGameEnvironments();
   	this.initGameLooks();
 };
