@@ -28,7 +28,7 @@ MyInterface.prototype.createMainMenu = function() {
 	// New game
 	this.startGameMenu = this.mainMenu.addFolder("New/Load Game");
 	this.startGameMenu.add(this, 'newGame').name("New Game");
-	this.startGameMenu.add(this.scene, 'loadGame').name("Load Game");
+	this.startGameMenu.add(this, 'loadGame').name("Load Game");
 
 	// Game settings
 	this.gameSettings = this.mainMenu.addFolder("Game Configurations");
@@ -55,6 +55,30 @@ MyInterface.prototype.newGame = function() {
 	this.newGameFolder = this.newGameMenu.addFolder("Start New Game");
 	this.newGameFolder.add(this.scene, 'gameType', this.scene.gameTypes).name("Game Type");
 	this.newGameFolder.open();
+	
+	/*if(this.scene.gameType == this.scene.gameTypes[1]){
+		this.requestNamePlayer(2);
+	}
+	else if(this.scene.gameType == this.scene.gameTypes[2]){
+		this.requestNamePlayer(1);
+	}
+	*/
+};
+
+MyInterface.prototype.loadGame = function() {
+	
+	if(this.gameMenu != undefined){
+		this.scene.state = 'LOAD_GAME';
+		this.gameMenu.destroy();
+	}
+
+	//TODO Avoid additional gui load games
+	
+	this.newGameMenu = new dat.GUI();
+	this.newGameFolder = this.newGameMenu.addFolder("Load Game");
+	this.newGameFolder.add(this.scene, 'loadFile', this.scene.loadFiles).name("Load File");
+	this.newGameFolder.open();
+	this.scene.loadGame();
 	
 	/*if(this.scene.gameType == this.scene.gameTypes[1]){
 		this.requestNamePlayer(2);
@@ -122,4 +146,9 @@ MyInterface.prototype.showLevelPlayer = function(namePlayer){
 	this.gameLevel = this.newGameMenu.addFolder('Choose Level for ' + namePlayer);
 	this.gameLevel.add(this.scene, 'gameLevel', this.scene.gameLevels).name("Game Level");
 	this.gameLevel.open();
+};
+
+MyInterface.prototype.showLoadFile = function(){
+	this.loadFile = this.loadGameMenu.addFolder('Choose file');
+	this.loadFile.open();
 };

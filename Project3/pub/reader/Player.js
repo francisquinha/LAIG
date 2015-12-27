@@ -5,7 +5,7 @@
 function Player(scene, id, level, name){
 	this.scene = scene;
 	this.name = name;
-	this.human = (level == undefined);
+	this.human = (level == 0);
 	this.level = level;
 	this.playerId = id;
 	this.pieces = [];

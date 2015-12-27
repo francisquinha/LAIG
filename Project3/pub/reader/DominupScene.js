@@ -44,7 +44,8 @@ DominupScene.prototype.initLights = function () {
 };
 
 DominupScene.prototype.loadGame = function(){
-  console.log('load game');
+	this.initGame();
+	this.state = 'LOAD';
 };
 
 DominupScene.prototype.saveGame = function (){
@@ -80,7 +81,7 @@ DominupScene.prototype.postGameRequest = function(requestString, onSuccess, onEr
 	request.send('requestString='+encodeURIComponent(requestString));			
 }
 
-DominupScene.prototype.handleReply = function(data){
+DominupScene.prototype.handleSetupStartReply = function(data){
 	console.log(data.target.response);
 	var response = JSON.parse(data.target.response);
 	var message = response.message;
@@ -104,6 +105,34 @@ DominupScene.prototype.handleReply = function(data){
 	myScene.players['player2'].setPieces(pieces2);
 }
 
+DominupScene.prototype.handleLoadReply = function(data){
+	console.log(data.target.response);
+	var response = JSON.parse(data.target.response);
+	var message = response.message;
+	var player_order = message.split(" / ");
+	var name1 = player_order[0].split(" - ")[1];
+	var name2 = player_order[1].split(" - ")[1];
+	var level1 = parseInt(player_order[0].split(" - ")[2]) - 1;
+	var level2 = parseInt(player_order[1].split(" - ")[2]) - 1;
+	var distribution = response.distribution.split("[")[1].split("]")[0].split(",");
+	var pieces1 = [];
+	var pieces2 = [];
+	myScene.players['player1'].name = name1;
+	myScene.players['player2'].name = name2;
+	myScene.players['player1'].level = level1;
+	myScene.players['player2'].level = level2;
+	console.log(myScene.players);
+	var i = 0;
+	for (id in myScene.pieces) {
+		if (distribution[i] == "1")
+			pieces1.push(id);
+		else pieces2.push(id);
+		i++;
+	}
+	myScene.players['player1'].setPieces(pieces1);
+	myScene.players['player2'].setPieces(pieces2);
+}
+
 DominupScene.prototype.handleError = function(data){
 	console.log(data.target.response);
 }
@@ -111,7 +140,13 @@ DominupScene.prototype.handleError = function(data){
 DominupScene.prototype.setupStartRequest = function(new_load, computer_human, load_file, name1, name2, easy_hard1, easy_hard2) {
 	var requestString = '[setupStartGameHTTP,' + new_load + ',' + computer_human + ',"' + load_file + '","' + name1 + '","' + name2 + '",' + easy_hard1 + ',' + easy_hard2 + ']';
 	console.log(requestString);
-	this.postGameRequest(requestString, this.handleReply, this.handleError);
+	this.postGameRequest(requestString, this.handleSetupStartReply, this.handleError);
+}
+
+DominupScene.prototype.loadRequest = function(new_load, computer_human, load_file, name1, name2, easy_hard1, easy_hard2) {
+	var requestString = '[setupStartGameHTTP,' + new_load + ',' + computer_human + ',"' + load_file + '","' + name1 + '","' + name2 + '",' + easy_hard1 + ',' + easy_hard2 + ']';
+	console.log(requestString);
+	this.postGameRequest(requestString, this.handleLoadReply, this.handleError);
 }
 
 DominupScene.prototype.playRequest = function(player, number1, number2, row, column, cardinal) {
@@ -128,7 +163,29 @@ DominupScene.prototype.startGame = function(){
 
 DominupScene.prototype.updateGameState = function(){
   	switch(this.state){
+  		case 'LOAD':
+  			if (this.loadFile != this.loadFiles[0]) {  			
+  				if (this.loadFile == this.loadFiles[1]) {
+  					this.load_file = 'saves/file1.pl';
+   	     			this.startGame();
+  				}
+  				else if (this.loadFile == this.loadFiles[2]) {
+  					this.load_file = 'saves/file2.pl';
+   	     			this.startGame();
+  				}
+  				else if (this.loadFile == this.loadFiles[3]) {
+  					this.load_file = 'saves/file3.pl';
+   	     			this.startGame();
+  				}
+  				else if (this.loadFile == this.loadFiles[4]) {
+  					this.load_file = 'saves/file4.pl';
+   	     			this.startGame();
+  				}
+				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
+	        	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
+  			}
 		case 'TYPE':
+			this.load_file = 'saves/file1.pl';
 			if(this.gameType == this.gameTypes[1]){
 				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
 	        	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
@@ -143,7 +200,6 @@ DominupScene.prototype.updateGameState = function(){
 				this.myInterface.showLevelPlayer('Computer 1');
 			}
 			break;
-
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
@@ -175,13 +231,24 @@ DominupScene.prototype.updateGameState = function(){
     	case 'START':
       		this.newGame();
       		var game_type;
-      		if (this.gameType == this.gameTypes[1])
+      		var new_load;
+      		if (this.gameType == this.gameTypes[1]) {
       			game_type = 0;
-      		else if(this.gameType == this.gameTypes[2])
+      			new_load = 0;
+      		}
+      		else if (this.gameType == this.gameTypes[2]) {
       			game_type = 1;
-      		else
+      			new_load = 0;
+      		}
+      		else if (this.gameType == this.gameTypes[3]) {
       			game_type = 2;
-   	     	this.setupStartRequest(0, game_type, 'saves/angie_hard.pl', this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
+      			new_load = 0;
+      		}
+      		else new_load = 1;
+      		if (new_load == 0)
+	   	     	this.setupStartRequest(0, game_type, this.load_file, this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
+	   	    else 
+	   	    	this.loadRequest(1, 0, this.load_file, 'p1', 'p2', 0, 0);
       		break;
     	
     	case 'PLAY':
@@ -233,6 +300,9 @@ DominupScene.prototype.initGame = function () {
   	// types of game
 	this.gameTypes = ['(select one type)', 'Human vs Human', 'Human vs Computer', 'Computer vs Computer'];
 	this.gameType = this.gameTypes[0];
+
+	this.loadFiles = ['(choose load file)', 'File 1', 'File 2', 'File 3', 'File 4'];
+	this.loadFile = this.loadFiles[0];
 
   	// game levels
 	this.gameLevels = ['(select one level)', 'Easy', 'Hard'];

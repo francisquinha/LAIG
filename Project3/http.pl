@@ -113,11 +113,15 @@ setupStartGameHTTP(NewLoad, ComputerHuman, LoadFile, Name1, Name2, EasyHard1, Ea
         getDistribution(Distribution) ,
         getBoard(Board) ,
         getGameOver(GameOver) ,
-        player(1, PName1, _) ,
-        player(2, PName2, _) ,
-        atom_concat('1 - ', PName1, HalfMessage) , 
-        atom_concat(HalfMessage, ' / 2 - ', AlmostMessage) , 
-        atom_concat(AlmostMessage, PName2, Message).
+        player(1, PName1, Type1) ,
+        player(2, PName2, Type2) ,
+        atom_concat('1 - ', PName1, Message1) ,
+        atom_concat(Message1, ' - ', Message2) ,
+        atom_concat(Message2, Type1, Message3) ,
+        atom_concat(Message3, ' / 2 - ', Message4) ,
+        atom_concat(Message4, PName2, Message5) ,
+        atom_concat(Message5, ' - ', Message6) ,
+        atom_concat(Message6, Type2, Message).
 
 saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
         atom_concat(SaveFile, '.pl', Spl) , 
