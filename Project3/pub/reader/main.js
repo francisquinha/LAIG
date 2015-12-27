@@ -39,7 +39,7 @@ main=function()
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
     var myInterface = new MyInterface();
-    var myScene = new DominupScene();
+    myScene = new DominupScene();
 
     app.init();
     app.setScene(myScene);
