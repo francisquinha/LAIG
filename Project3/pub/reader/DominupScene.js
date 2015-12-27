@@ -458,7 +458,7 @@ DominupScene.prototype.initGameLooks = function () {
 		for(var j = 0 ; j < 8 ; j++)
 			 this.textures[look][j] = new CGFtexture(this, 'textures/' + look + '_' + j + '.png');
 
-   		this.textures[look]['gameSurface'] = new CGFtexture(this, 'textures/' + look + 'gameSurface.jpg');
+   		this.textures[look]['gameSurface'] = new CGFtexture(this, 'textures/' + look + 'gameSurface.png');
 
 		this.materials[look] = new CGFappearance(this);
 		this.materials[look].setAmbient( this.lookMaterials[look]['ambient'][0],
