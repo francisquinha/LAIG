@@ -411,7 +411,7 @@ DominupScene.prototype.updateLights = function() {
 }
 
 DominupScene.prototype.initGameLooks = function () {
-	this.gameLooks = ['default', 'color_def'];//, 'other2'];
+	this.gameLooks = ['default', 'colored'];//, 'other2'];
 	this.gameLook = this.gameLooks[0];
 
 	this.lookMaterials = [];
@@ -421,12 +421,12 @@ DominupScene.prototype.initGameLooks = function () {
 	this.lookMaterials['default']['specular'] = [.5,.5,.5,.5];
 	this.lookMaterials['default']['emission'] = [.5,.5,.5,.5];
 	this.lookMaterials['default']['shininess'] = 1;
-	this.lookMaterials['color_def'] = [];
-	this.lookMaterials['color_def']['ambient'] = [.5,.5,.5,.5];
-	this.lookMaterials['color_def']['diffuse'] = [.5,.5,.5,.5];
-	this.lookMaterials['color_def']['specular'] = [.5,.5,.5,.5];
-	this.lookMaterials['color_def']['emission'] = [.5,.5,.5,.5];
-	this.lookMaterials['color_def']['shininess'] = 1;
+	this.lookMaterials['colored'] = [];
+	this.lookMaterials['colored']['ambient'] = [.5,.5,.5,.5];
+	this.lookMaterials['colored']['diffuse'] = [.5,.5,.5,.5];
+	this.lookMaterials['colored']['specular'] = [.5,.5,.5,.5];
+	this.lookMaterials['colored']['emission'] = [.5,.5,.5,.5];
+	this.lookMaterials['colored']['shininess'] = 1;
 
 
 	this.lookMaterials['wood'] = this.lookMaterials['default'];
