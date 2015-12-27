@@ -44,7 +44,6 @@ DominupScene.prototype.initLights = function () {
 };
 
 DominupScene.prototype.loadGame = function(){
-	this.initGame();
 	this.state = 'LOAD';
 };
 
@@ -412,7 +411,7 @@ DominupScene.prototype.updateLights = function() {
 }
 
 DominupScene.prototype.initGameLooks = function () {
-	this.gameLooks = ['default']//, 'other1', 'other2'];
+	this.gameLooks = ['default', 'color_def'];//, 'other2'];
 	this.gameLook = this.gameLooks[0];
 
 	this.lookMaterials = [];
@@ -422,6 +421,12 @@ DominupScene.prototype.initGameLooks = function () {
 	this.lookMaterials['default']['specular'] = [.5,.5,.5,.5];
 	this.lookMaterials['default']['emission'] = [.5,.5,.5,.5];
 	this.lookMaterials['default']['shininess'] = 1;
+	this.lookMaterials['color_def'] = [];
+	this.lookMaterials['color_def']['ambient'] = [.5,.5,.5,.5];
+	this.lookMaterials['color_def']['diffuse'] = [.5,.5,.5,.5];
+	this.lookMaterials['color_def']['specular'] = [.5,.5,.5,.5];
+	this.lookMaterials['color_def']['emission'] = [.5,.5,.5,.5];
+	this.lookMaterials['color_def']['shininess'] = 1;
 
 
 	this.lookMaterials['wood'] = this.lookMaterials['default'];
