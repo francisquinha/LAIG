@@ -29,13 +29,14 @@ MyInterface.prototype.createMainMenu = function() {
 	this.startGameMenu = this.mainMenu.addFolder("New/Load Game");
 	this.startGameMenu.add(this, 'newGame').name("New Game");
 	this.startGameMenu.add(this, 'loadGame').name("Load Game");
+	this.startGameMenu.click = 1;
 
-	// Game settings
-	this.gameSettings = this.mainMenu.addFolder("Game Configurations");
-	this.gameSettings.add(this.scene, 'timeout', 0, 180).step(5).name("Timeout");
-	this.gameEnvironment = this.gameSettings.addFolder("Game Scenes");
+	// Game cofigurations
+	this.gameConfigurations = this.mainMenu.addFolder("Game Configurations");
+	this.gameConfigurations.add(this.scene, 'timeout', 0, 180).step(5).name("Timeout");
+	this.gameEnvironment = this.gameConfigurations.addFolder("Game Scenes");
 	this.gameEnvironment.add(this.scene, 'gameEnvironment', this.scene.gameEnvironments).name("Game Environment");
-	this.gameLookFolder = this.gameSettings.addFolder("Global Appearance");
+	this.gameLookFolder = this.gameConfigurations.addFolder("Global Appearance");
 	this.gameLookFolder.add(this.scene, 'gameLook', this.scene.gameLooks).name("Game Look");
 };
 
@@ -51,18 +52,19 @@ MyInterface.prototype.newGame = function() {
 	//TODO Avoid additional gui new games
 	
 	// Additional Gui to select game type 
+	if(this.startGameMenu.click == 1){
 	this.newGameMenu = new dat.GUI();
 	this.newGameFolder = this.newGameMenu.addFolder("Start New Game");
 	this.newGameFolder.add(this.scene, 'gameType', this.scene.gameTypes).name("Game Type");
 	this.newGameFolder.open();
-	
-	/*if(this.scene.gameType == this.scene.gameTypes[1]){
-		this.requestNamePlayer(2);
+	this.startGameMenu.click++;
 	}
-	else if(this.scene.gameType == this.scene.gameTypes[2]){
-		this.requestNamePlayer(1);
+	else {
+			this.newGameMenu.destroy();
+			this.mainMenu.destroy();
+			this.createMainMenu();
 	}
-	*/
+
 };
 
 MyInterface.prototype.loadGame = function() {
@@ -80,32 +82,9 @@ MyInterface.prototype.loadGame = function() {
 	this.newGameFolder.open();
 	this.scene.loadGame();
 	
-	/*if(this.scene.gameType == this.scene.gameTypes[1]){
-		this.requestNamePlayer(2);
-	}
-	else if(this.scene.gameType == this.scene.gameTypes[2]){
-		this.requestNamePlayer(1);
-	}
-	*/
 };
 
-// Treat player names /////////////////////////////////////////////
 
-var FizzyText = function() {
-  this.namePlayer1 = 'namePlayer1'; 
-  this.namePlayer2 = 'namePlayer2';
-};
-
-MyInterface.prototype.requestNamePlayer = function(numberOfPlayers) {
-
-	var text = new FizzyText();
-
-	this.newGameFolder.add(text, 'namePlayer1');
-	if(numberOfPlayers == 2)
-		this.newGameFolder.add(text, 'namePlayer2');
-};
-
-/////////////////////////////////////////////////////////////////////
 
 MyInterface.prototype.createGameMenu = function() {
 	this.gameMenu = new dat.GUI();
@@ -152,3 +131,25 @@ MyInterface.prototype.showLoadFile = function(){
 	this.loadFile = this.loadGameMenu.addFolder('Choose file');
 	this.loadFile.open();
 };
+
+// Treat player names /////////////////////////////////////////////
+
+MyInterface.prototype.showNamePlayer = function(number){
+	
+	this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
+	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
+   		console.log(newValue); 		
+	});
+	this.nPlayer1.open();
+	
+	
+	if(number == 2){
+		this.nPlayer2 = this.newGameMenu.addFolder('Choose namePlayer2');
+		this.nPlayer2.add(this.scene, 'namePlayer2').name("Name P2").onFinishChange(function(newValue) {
+	   		console.log(newValue); 		
+		});
+		this.nPlayer2.open();
+	}
+};
+
+

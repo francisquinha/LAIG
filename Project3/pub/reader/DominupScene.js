@@ -48,6 +48,7 @@ DominupScene.prototype.loadGame = function(){
 };
 
 DominupScene.prototype.saveGame = function (){
+	this.message.showString('You have successfully saved the game');
 	console.log('save game');
 };
 
@@ -186,12 +187,15 @@ DominupScene.prototype.updateGameState = function(){
 		case 'TYPE':
 			this.load_file = 'saves/file1.pl';
 			if(this.gameType == this.gameTypes[1]){
-				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
-	        	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
-   	     		this.startGame();
+				this.state = 'NAMES';
+				this.myInterface.showNamePlayer(2);
+				//this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
+	        	//this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
+   	     		
 			}
 			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
+				this.myInterface.showNamePlayer(1);
 				this.myInterface.showLevelPlayer('Computer');
 			}
 			else if(this.gameType == this.gameTypes[3]){
@@ -199,6 +203,13 @@ DominupScene.prototype.updateGameState = function(){
 				this.myInterface.showLevelPlayer('Computer 1');
 			}
 			break;
+
+			case 'NAMES':
+			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
+        	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
+			this.startGame();
+			break;
+
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
@@ -262,12 +273,12 @@ DominupScene.prototype.update = function(currTime) {
 	//this.clock.update(currTime);
 
   // update game environment
-  if(this.gameEnvironment in this.environments)
+  /*if(this.gameEnvironment in this.environments)
     this.environments[this.gameEnvironment].update(currTime);
 
   if(this.cameraAnimation != undefined && this.cameraAnimation.isActive())
     this.cameraAnimation.update(currTime);
-
+*/
 	if(!this.pauseGame){
     	if(this.timeout != 0 && this.responseTime >= this.timeout * 1000){
       	// loose turn
@@ -306,6 +317,11 @@ DominupScene.prototype.initGame = function () {
   	// game levels
 	this.gameLevels = ['(select one level)', 'Easy', 'Hard'];
 	this.gameLevel = this.gameLevels[0];
+
+	// game players names
+	this.namePlayer1 = 'nameP1';
+	this.namePlayer2 = 'nameP2';
+	
 	this.initGameEnvironments();
   	this.initGameLooks();
 };
@@ -319,7 +335,7 @@ DominupScene.prototype.initGameEnvironments = function () {
 
 DominupScene.prototype.initGamePieces = function () {
 	this.pieces = [];
-	var piecesId = 500;  // ID range for domino pieces
+	var piecesId = 5000;  // ID range for domino pieces
 
  	for(var i = 0 ; i < 8 ; i++)
 		for(var j = i ; j < 8 ; j++){
@@ -329,10 +345,10 @@ DominupScene.prototype.initGamePieces = function () {
 };
 
 DominupScene.prototype.initGameSurface = function () {
-	/*this.gameSurfaceXX = 26;
+	this.gameSurfaceXX = 26;
 	this.gameSurfaceYY = 26;
-	this.gameSurface = new GameSurface(this, this.gameSurfaceXX, this.gameSurfaceYY);*/
-	this.gameSurface = new Board26(this,26);
+	this.gameSurface = new GameSurface(this, this.gameSurfaceXX, this.gameSurfaceYY);
+	//this.gameSurface = new Board26(this,26);
 };
 
 
@@ -340,7 +356,7 @@ DominupScene.prototype.initGamePlayers = function () {
 
   this.state = 'PLAY';
 
-/*
+
   this.players['player1'] = new Player(this, 'player1');
   this.players['player2'] = new Player(this, 'player2');
   var initIds = [];
@@ -350,7 +366,7 @@ DominupScene.prototype.initGamePlayers = function () {
   var t1 = initIds.slice(0, 18);
   var t2 = initIds.slice(18, 36);
   this.players['player1'].setPieces(t1);
-  this.players['player2'].setPieces(t2);*/
+  this.players['player2'].setPieces(t2);
 };
 
 
