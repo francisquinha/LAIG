@@ -206,6 +206,35 @@ DominupScene.prototype.playComputerRequest = function() {
 	this.postGameRequest('[playComputerHTTP]', this.handlePlayComputerReply, this.handleError);
 }
 
+DominupScene.prototype.processMoves = function(moves_list) {
+	var move;
+	var cardinal;
+	for (move in moves_list) {
+		this.selectedPiece[0] = moves_list[move][1];
+		this.selectedPiece[1] = moves_list[move][2];
+		this.posA[0] = moves_list[move][3];
+		this.posA[1] = moves_list[move][4];
+		cardinal = moves_list[move][5];
+		if (cardinal == "n") {
+			this.posB[0] = this.posA[0] - 1;
+			this.posB[1] = this.posA[1];
+		}		
+		else if (cardinal == "s") {
+			this.posB[0] = this.posA[0] + 1;
+			this.posB[1] = this.posA[1];
+		}		
+		else if (cardinal == "e") {
+			this.posB[0] = this.posA[0];
+			this.posB[1] = this.posA[1] + 1;
+		}		
+		else {
+			this.posB[0] = this.posA[0];
+			this.posB[1] = this.posA[1] - 1;
+		}
+		this.processMove();
+	}
+}
+
 DominupScene.prototype.startGame = function(){
 	this.myInterface.createGameMenu();
 	this.myInterface.hideNewGameMenu();
@@ -457,7 +486,7 @@ DominupScene.prototype.initCameras = function () {
   	this.cameraPositionsAngle['board view'] = Math.PI;
   	
 
-  this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(30, 30, 30), vec3.fromValues(0, 0, 0));
+  this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 40, 50), vec3.fromValues(0, -10, 0));
   
   // create animation for camera
   this.cameraAnimation = undefined;
