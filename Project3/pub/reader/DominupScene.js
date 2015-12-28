@@ -53,10 +53,10 @@ DominupScene.prototype.saveGame = function (){
 };
 
 DominupScene.prototype.newGame = function(){
-  	this.turn = 'player1'; 
 	this.initGamePieces();
 	this.initGameSurface();
-	this.initGamePlayers();
+//	this.initGamePlayers();
+  	this.state = 'PLAY';
 };
 
 DominupScene.prototype.endGame = function(winner){
@@ -104,6 +104,8 @@ DominupScene.prototype.handleSetupStartReply = function(data){
 	}
 	myScene.players['player1'].setPieces(pieces1);
 	myScene.players['player2'].setPieces(pieces2);
+	myScene.turn = parseInt(response.player);
+	myScene.gameOver = parseInt(response.gameover);
 }
 
 DominupScene.prototype.handleLoadReply = function(data){
@@ -122,7 +124,6 @@ DominupScene.prototype.handleLoadReply = function(data){
 	myScene.players['player2'].name = name2;
 	myScene.players['player1'].level = level1;
 	myScene.players['player2'].level = level2;
-	console.log(myScene.players);
 	var i = 0;
 	for (id in myScene.pieces) {
 		if (distribution[i] == "1")
@@ -132,6 +133,51 @@ DominupScene.prototype.handleLoadReply = function(data){
 	}
 	myScene.players['player1'].setPieces(pieces1);
 	myScene.players['player2'].setPieces(pieces2);
+	myScene.turn = parseInt(response.player);
+	myScene.gameOver = parseInt(response.gameover);
+	var board_string = response.board.split("[[")[1].split("]]")[0].split("],[");
+	var board = [];
+	var move;
+	var i;
+	for (string in board_string) {
+		move = board_string[string].split(",");
+		for (i = 0; i < 5; i++) {
+			move[i] = parseInt(move[i]);
+		}
+		board.push(move);
+	}
+//	myScene.processMoves(board);
+}
+
+DominupScene.prototype.handlePlayReply = function(data){
+	console.log(data.target.response);
+	var response = JSON.parse(data.target.response);
+	var message = response.message;
+	if (message = "OK") {
+//		myScene.processMove();
+		myScene.turn = parseInt(response.player);
+		myScene.gameOver = parseInt(response.gameover);
+	}
+}
+
+DominupScene.prototype.handlePlayComputerReply = function(data){
+	console.log(data.target.response);
+	var response = JSON.parse(data.target.response);
+	var board_string = response.board.split("[[")[1].split("]]")[0].split("],[");
+	var board = [];
+	var move;
+	var i;
+	for (string in board_string) {
+		move = board_string[string].split(",");
+		for (i = 0; i < 5; i++) {
+			move[i] = parseInt(move[i]);
+		}
+		board.push(move);
+	}
+	myScene.processMoves(board);
+	myScene.turn = parseInt(response.player);
+	myScene.gameOver = parseInt(response.gameover);
+	myScene.gameState = 'SELECT_PIECE';
 }
 
 DominupScene.prototype.handleError = function(data){
@@ -151,9 +197,13 @@ DominupScene.prototype.loadRequest = function(new_load, computer_human, load_fil
 }
 
 DominupScene.prototype.playRequest = function(player, number1, number2, row, column, cardinal) {
-	var requestString = '[playHTTP,' + v_player + ',' + v_number1 + ',' + v_number2 + ',' + v_row + ',' + v_column + ',' + v_cardinal + ']';
+	var requestString = '[playHTTP,' + player + ',' + number1 + ',' + number2 + ',' + row + ',' + column + ',' + cardinal + ']';
 	console.log(requestString);
-	this.postGameRequest(requestString, this.handleReply, this.handleError);
+	this.postGameRequest(requestString, this.handlePlayReply, this.handleError);
+}
+
+DominupScene.prototype.playComputerRequest = function() {
+	this.postGameRequest('[playComputerHTTP]', this.handlePlayComputerReply, this.handleError);
 }
 
 DominupScene.prototype.startGame = function(){
@@ -188,12 +238,19 @@ DominupScene.prototype.updateGameState = function(){
 		case 'TYPE':
 			this.load_file = 'saves/file1.pl';
 			if(this.gameType == this.gameTypes[1]){
-				this.myInterface.showNamePlayer(2); 		
+   				 //this.myInterface.showNamePlayer(2);   
+   				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
+          		this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
+    			this.startGame();			
+			}
+
+/*    		if(this.gameType == this.gameTypes[1]){
+				//this.myInterface.showNamePlayer(2); 		
 				this.state = 'NAMES';
 			}
-			else if(this.gameType == this.gameTypes[2]){
+*/			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
-				this.myInterface.showNamePlayer(1);
+				//this.myInterface.showNamePlayer(1);
 				this.myInterface.showLevelPlayer('Computer');
 			}
 			else if(this.gameType == this.gameTypes[3]){
@@ -206,7 +263,7 @@ DominupScene.prototype.updateGameState = function(){
 			//this.myInterface.showNamePlayer(2); 		
 			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
         	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
-			this.startGame();
+			//this.startGame();
 			break;
 
 		case 'LEVELP1':
@@ -352,20 +409,16 @@ DominupScene.prototype.initGameSurface = function () {
 
 
 DominupScene.prototype.initGamePlayers = function () {
-
-  this.state = 'PLAY';
-
-
-  this.players['player1'] = new Player(this, 'player1');
-  this.players['player2'] = new Player(this, 'player2');
-  var initIds = [];
-  for(id in this.pieces)
-    initIds.push(id);
-
-  var t1 = initIds.slice(0, 18);
-  var t2 = initIds.slice(18, 36);
-  this.players['player1'].setPieces(t1);
-  this.players['player2'].setPieces(t2);
+	this.state = 'PLAY';
+	this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
+	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
+  	var initIds = [];
+  	for(id in this.pieces)
+    	initIds.push(id);
+	var t1 = initIds.slice(0, 18);
+	var t2 = initIds.slice(18, 36);
+	this.players['player1'].setPieces(t1);
+	this.players['player2'].setPieces(t2);
 };
 
 
@@ -543,9 +596,10 @@ DominupScene.prototype.reviewGame = function (){
   console.log('review');
 };
 
-DominupScene.prototype.makeMove = function (){
-	   console.log("piece and location chosen, make move");
-
+DominupScene.prototype.makeMove = function (cardinal){
+	console.log("piece and location chosen, make move");
+	console.log(this.selectedPiece);
+	this.playRequest(this.turn, this.selectedPiece[0], this.selectedPiece[1], this.posA[0], this.posA[1], cardinal);
     // set piece animation
 
     this.moves.push({player: this.turn, piece: this.selectedPieceId});
@@ -559,25 +613,29 @@ DominupScene.prototype.makeMove = function (){
     }
 
 
-    this.turn = (this.turn == 'player1') ? 'player2' : 'player1';
     this.selectedPieceId = undefined;
-
-
-    if(!this.players[this.turn].human){
-      this.players[this.turn].makeMove();
-      this.makeMove();
+	var playerTurn = 'player' + this.turn;
+    if (!this.players[playerTurn].human){
+      	playComputerRequest();
     }
     else this.gameState = 'SELECT_PIECE';
 };
 
 
 function checkPosition(posA, posB){
-  if((Math.abs(posA[0] - posB[0]) == 1 && posA[1] == posB[1]) || (posA[0] == posB[0] && Math.abs(posA[1] - posB[1]) == 1))
-      return true;
-  else return false;
+	if (posA[0] - posB[0] == 1 && posA[1] == posB[1])
+		return "w";
+	else if (posA[0] - posB[0] == -1 && posA[1] == posB[1]) 
+		return "e";
+	else if (posA[0] == posB[0] && posA[1] - posB[1] == 1) 
+		return "n";
+	else if (posA[0] == posB[0] && posA[1] - posB[1] == -1)
+		return "s";
+	else return false;
 }
 
 DominupScene.prototype.pickHandler = function (id){
+
   if(this.pauseGame)
     return;
 
@@ -597,20 +655,19 @@ DominupScene.prototype.pickHandler = function (id){
 	    else this.pieceSelected(id);
 	}
 	else{
-    console.log('position selected' + this.gameSurface.getPosition(id));
-
+    console.log('position selected ' + this.gameSurface.getPosition(id));
   	// if a position was picked
 		if(this.gameState == 'PIECE_SELECTED'){
 			this.posA = this.gameSurface.getPosition(id);
-      this.gameState='SELECT_LOCATION_B';
+      		this.gameState='SELECT_LOCATION_B';
     	}
     	else if(this.gameState == 'SELECT_LOCATION_B'){
-				this.posB = this.gameSurface.getPosition(id);
-
-      // check if valid combination
-      if(!checkPosition(this.posA, this.posB))
-        this.posA = this.gameSurface.getPosition(id);
-      else this.makeMove();
+			this.posB = this.gameSurface.getPosition(id);
+			// check if valid combination
+			var cardinal;
+			if (!(cardinal = checkPosition(this.posA, this.posB)))
+        		this.posA = this.gameSurface.getPosition(id);
+      		else this.makeMove(cardinal);
 		}
 	}
 };

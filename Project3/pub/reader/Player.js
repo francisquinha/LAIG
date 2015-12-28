@@ -27,7 +27,7 @@ Player.prototype.setPieces = function (pieces) {
 
 	// calculate initial position for each piece
 	for(var i = 0 ; i < this.pieces.length ; i++){
-		if(i % 4 == 0){
+		if(i % 9 == 0){
 			line+=2;
 			column = 0;
 		}
@@ -36,17 +36,18 @@ Player.prototype.setPieces = function (pieces) {
 		mat4.identity(matrx);
 
 		if(this.playerId=='player1'){
-			if(i>15)
-				mat4.translate(matrx, matrx, vec3.fromValues(10 + line, 0.5, 3 + 2/3 - column));
-			else mat4.translate(matrx, matrx, vec3.fromValues(10 + line, 0.5, 9 - column));
+			//if(i>15)
+			//	mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.5, 3 + 2/3 - column));
+			//else 
+			mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.5, 25 - column));
 			mat4.rotateY(matrx, matrx, -Math.PI/2);
 		}else if(this.playerId=='player2'){
-			mat4.translate(matrx, matrx, vec3.fromValues(-line, 0.5, 9 - column));
+			mat4.translate(matrx, matrx, vec3.fromValues(-line, 0.5, 25 - column));
 			mat4.rotateY(matrx, matrx, Math.PI/2);
 		}
 
 		this.scene.pieces[this.pieces[i]].initialPosition = matrx;
-		column+=2 + 2/3.0;
+		column+=3;
 	}
 };
 
@@ -65,10 +66,14 @@ Player.prototype.showPlayerPieces = function (){
 	this.scene.pushMatrix();
 	for(var i=0; i<this.pieces.length; i++){
 		if(this.scene.pickMode){
-			if(this.scene.turn == this.playerId){
-				this.scene.pieces[this.pieces[i]].setSelectable();
-				this.scene.pieces[this.pieces[i]].display();
-			}
+			if (this.scene.turn != undefined) {
+                var playerTurn = 'player' + this.scene.turn;
+				if(playerTurn == this.playerId){
+					this.scene.pieces[this.pieces[i]].setSelectable();
+					this.scene.pieces[this.pieces[i]].display();
+				}
+            }
+
 		}else this.scene.pieces[this.pieces[i]].display();
 	}
 	this.scene.popMatrix();
