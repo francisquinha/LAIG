@@ -4,6 +4,8 @@
  */
 
 function patch(scene, args) {
+    this.scene = scene;
+	
 	this.default = [
         1, 1, 1, [ [1, 1, 1], [-1, 1, 1], [1, -1, 1], [1, 1, -1]]];
 

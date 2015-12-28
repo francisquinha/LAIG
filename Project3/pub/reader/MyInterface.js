@@ -43,7 +43,7 @@ MyInterface.prototype.createMainMenu = function() {
 MyInterface.prototype.newGame = function() {
 	
 	if(this.gameMenu != undefined){
-		this.scene.state = 'GAME_TYPE';
+		this.scene.state = 'TYPE';
 		this.gameMenu.destroy();
 	}
 
@@ -70,7 +70,7 @@ MyInterface.prototype.newGame = function() {
 MyInterface.prototype.loadGame = function() {
 	
 	if(this.gameMenu != undefined){
-		this.scene.state = 'LOAD_GAME';
+		this.scene.state = 'LOAD';
 		this.gameMenu.destroy();
 	}
 

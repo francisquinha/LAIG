@@ -347,7 +347,7 @@ DominupScene.prototype.initGameSurface = function () {
 	this.gameSurfaceXX = 26;
 	this.gameSurfaceYY = 26;
 	this.gameSurface = new GameSurface(this, this.gameSurfaceXX, this.gameSurfaceYY);
-	//this.gameSurface = new Board26(this,26);
+	var squareId = 2000;
 };
 
 
@@ -499,7 +499,7 @@ DominupScene.prototype.pieceSelected = function (id){
 	}
 
 	this.selectedPieceId = id;
-  	this.gameState = 'PIECE_SELECTED';
+  	this.gameState='SELECT_LOCATION_A';
 
 	// do animation to new piece
   for(piece in this.pieces)
@@ -548,7 +548,10 @@ DominupScene.prototype.makeMove = function (){
 
     // set piece animation
 
-    this.moves.push({player: this.turn, piece: this.selectedPieceId});
+    this.moves.push({
+    				player: this.turn, 
+    				piece: this.selectedPieceId
+    				});
 
     // check if game over
     var winner;
@@ -582,7 +585,7 @@ DominupScene.prototype.pickHandler = function (id){
     return;
 
 	// if a piece was picked
-	if(id >= 500){
+	if(id >= 5000){
     	console.log("piecetouched " + id);
     	if(this.selectedPieceId == id){
       	// unselect piece
@@ -600,7 +603,7 @@ DominupScene.prototype.pickHandler = function (id){
     console.log('position selected' + this.gameSurface.getPosition(id));
 
   	// if a position was picked
-		if(this.gameState == 'PIECE_SELECTED'){
+		if(this.gameState == 'SELECT_LOCATION_A'){
 			this.posA = this.gameSurface.getPosition(id);
       this.gameState='SELECT_LOCATION_B';
     	}
@@ -612,7 +615,10 @@ DominupScene.prototype.pickHandler = function (id){
         this.posA = this.gameSurface.getPosition(id);
       else this.makeMove();
 		}
+		
 	}
+
+	
 };
 
 
