@@ -106,6 +106,7 @@ DominupScene.prototype.handleSetupStartReply = function(data){
 	myScene.players['player2'].setPieces(pieces2);
 	myScene.turn = parseInt(response.player);
 	myScene.gameOver = parseInt(response.gameover);
+	myScene.processBoard(response.board);
 }
 
 DominupScene.prototype.handleLoadReply = function(data){
@@ -135,46 +136,56 @@ DominupScene.prototype.handleLoadReply = function(data){
 	myScene.players['player2'].setPieces(pieces2);
 	myScene.turn = parseInt(response.player);
 	myScene.gameOver = parseInt(response.gameover);
-	var board_string = response.board.split("[[")[1].split("]]")[0].split("],[");
+	myScene.processBoard(response.board);
+}
+
+DominupScene.prototype.processBoard = function(response_board) {
+	var board_string = response_board.split("[[")[1].split("]]")[0].split("],[");
 	var board = [];
+	var half_move1;
+	var half_move2;
 	var move;
 	var i;
-	for (string in board_string) {
-		move = board_string[string].split(",");
-		for (i = 0; i < 5; i++) {
-			move[i] = parseInt(move[i]);
-		}
+	var j;
+	for (j = 0; j < board_string.length; j += 2 ) {
+		move = [];
+		half_move1 = board_string[j].split(",");
+		half_move2 = board_string[j + 1].split(",");
+		move.push(parseInt(half_move1[4]));
+		move.push(parseInt(half_move2[4]));
+		move.push(parseInt(half_move1[1]));
+		move.push(parseInt(half_move1[2]));
+		move.push(half_move1[5]);
+		move.push(parseInt(half_move1[3]));
 		board.push(move);
 	}
-//	myScene.processMoves(board);
+	myScene.processMoves(board);
 }
 
 DominupScene.prototype.handlePlayReply = function(data){
 	console.log(data.target.response);
 	var response = JSON.parse(data.target.response);
-	var message = response.message;
-	if (message = "OK") {
-//		myScene.processMove();
-		myScene.turn = parseInt(response.player);
-		myScene.gameOver = parseInt(response.gameover);
-	}
+	myScene.processBoard(response.board);
+	myScene.turn = parseInt(response.player);
+	myScene.gameOver = parseInt(response.gameover);
+    // check if game over
+    var winner;
+    if((winner = myScene.gameOver)!=0) {
+      	console.log('gameOver');
+      	myScene.endGame(winner);
+      	return null;
+    }
+    myScene.selectedPieceId = undefined;
+	var playerTurn = 'player' + myScene.turn;
+    if (myScene.players[playerTurn].level != 0)
+      	myScene.playComputerRequest();
+    else myScene.gameState = 'SELECT_PIECE';
 }
 
 DominupScene.prototype.handlePlayComputerReply = function(data){
 	console.log(data.target.response);
 	var response = JSON.parse(data.target.response);
-	var board_string = response.board.split("[[")[1].split("]]")[0].split("],[");
-	var board = [];
-	var move;
-	var i;
-	for (string in board_string) {
-		move = board_string[string].split(",");
-		for (i = 0; i < 5; i++) {
-			move[i] = parseInt(move[i]);
-		}
-		board.push(move);
-	}
-	myScene.processMoves(board);
+	myScene.processBoard(response.board);
 	myScene.turn = parseInt(response.player);
 	myScene.gameOver = parseInt(response.gameover);
 	myScene.gameState = 'SELECT_PIECE';
@@ -206,31 +217,51 @@ DominupScene.prototype.playComputerRequest = function() {
 	this.postGameRequest('[playComputerHTTP]', this.handlePlayComputerReply, this.handleError);
 }
 
+
+DominupScene.prototype.processMove = function() {
+	var matrx = mat4.create();
+	mat4.identity(matrx);
+	mat4.translate(matrx, matrx, vec3.fromValues(this.posA[0], -0.25 + this.level * 0.5, this.posA[1])); // number1 of piece in position posA with cardinal south
+	if (this.cardinal == "w") {
+		mat4.translate(matrx, matrx, vec3.fromValues(0.5, 0, 0)); 
+		mat4.rotateY(matrx, matrx, Math.PI/2);
+	}
+	else if (this.cardinal == "n") {
+		mat4.translate(matrx, matrx, vec3.fromValues(0, 0, 0.5)); 
+		mat4.rotateY(matrx, matrx, Math.PI);		
+	}
+	else if (this.cardinal == "e") {
+		mat4.translate(matrx, matrx, vec3.fromValues(0.5, 0, 1)); 
+		mat4.rotateY(matrx, matrx, -Math.PI/2);
+	}
+	else {
+		mat4.translate(matrx, matrx, vec3.fromValues(1, 0, 0.5)); 
+	}
+	for(piece in this.pieces) {
+    	if(this.pieces[piece].getId() == this.selectedPieceId){
+			this.pieces[piece].initialPosition = matrx;
+			this.pieces[piece].played = true;
+        	break;
+      	}
+	}
+}
+
 DominupScene.prototype.processMoves = function(moves_list) {
 	var move;
-	var cardinal;
 	for (move in moves_list) {
-		this.selectedPiece[0] = moves_list[move][1];
-		this.selectedPiece[1] = moves_list[move][2];
-		this.posA[0] = moves_list[move][3];
-		this.posA[1] = moves_list[move][4];
-		cardinal = moves_list[move][5];
-		if (cardinal == "n") {
-			this.posB[0] = this.posA[0] - 1;
-			this.posB[1] = this.posA[1];
-		}		
-		else if (cardinal == "s") {
-			this.posB[0] = this.posA[0] + 1;
-			this.posB[1] = this.posA[1];
-		}		
-		else if (cardinal == "e") {
-			this.posB[0] = this.posA[0];
-			this.posB[1] = this.posA[1] + 1;
-		}		
-		else {
-			this.posB[0] = this.posA[0];
-			this.posB[1] = this.posA[1] - 1;
-		}
+		console.log(moves_list[move]);
+		this.selectedPiece[0] = moves_list[move][0];
+		this.selectedPiece[1] = moves_list[move][1];
+		for(piece in this.pieces) {
+    		if(this.pieces[piece].getValues()[0] == this.selectedPiece[0] && this.pieces[piece].getValues()[1] == this.selectedPiece[1]){
+    			this.selectedPieceId = this.pieces[piece].getId();
+	        	break;
+    		}
+      	}
+		this.posA[0] = moves_list[move][2] - 1;
+		this.posA[1] = moves_list[move][3] - 1;
+		this.cardinal = moves_list[move][4];
+		this.level = moves_list[move][5];
 		this.processMove();
 	}
 }
@@ -387,6 +418,12 @@ DominupScene.prototype.initGame = function () {
 	this.state = 'TYPE';
 	this.moves = [];
   	this.players = [];
+  	this.selectedPiece = [8, 8];
+  	this.selectedPieceId = 5036;
+  	this.posA = [26, 26];
+  	this.posB = [26, 26];
+	this.cardinal = "e";
+	this.level = 0;
 
 	this.pauseGame = false;
 	this.timePaused = 0;
@@ -537,7 +574,7 @@ DominupScene.prototype.initGameLooks = function () {
 
 		this.textures[look] = [];
 
-		for(var j = 0 ; j < 8 ; j++)
+		for(var j = 0 ; j < 9 ; j++)
 			 this.textures[look][j] = new CGFtexture(this, 'textures/' + look + '_' + j + '.png');
 
    		this.textures[look]['gameSurface'] = new CGFtexture(this, 'textures/' + look + 'gameSurface.png');
@@ -625,17 +662,16 @@ DominupScene.prototype.reviewGame = function (){
   console.log('review');
 };
 
-DominupScene.prototype.makeMove = function (cardinal){
+DominupScene.prototype.makeMove = function (){
 	console.log("piece and location chosen, make move");
 	console.log(this.selectedPiece);
-	this.playRequest(this.turn, this.selectedPiece[0], this.selectedPiece[1], this.posA[0], this.posA[1], cardinal);
     // set piece animation
 
     this.moves.push({player: this.turn, piece: this.selectedPieceId});
 
     // check if game over
     var winner;
-    if((winner = this.isGameOver())!=null) {
+    if((winner = this.gameOver)!=0) {
       console.log('gameOver');
       this.endGame(winner);
       return null;
@@ -644,22 +680,31 @@ DominupScene.prototype.makeMove = function (cardinal){
 
     this.selectedPieceId = undefined;
 	var playerTurn = 'player' + this.turn;
-    if (!this.players[playerTurn].human){
+	console.log(this.players[playerTurn]);
+    if (!this.players[playerTurn].level != 0){
       	playComputerRequest();
     }
     else this.gameState = 'SELECT_PIECE';
 };
 
 
-function checkPosition(posA, posB){
-	if (posA[0] - posB[0] == 1 && posA[1] == posB[1])
-		return "w";
-	else if (posA[0] - posB[0] == -1 && posA[1] == posB[1]) 
-		return "e";
-	else if (posA[0] == posB[0] && posA[1] - posB[1] == 1) 
-		return "n";
-	else if (posA[0] == posB[0] && posA[1] - posB[1] == -1)
-		return "s";
+DominupScene.prototype.checkPosition = function(){
+	if (this.posA[0] - this.posB[0] == 1 && this.posA[1] == this.posB[1]) {
+		this.cardinal = "s";
+		return true;
+	}
+	else if (this.posA[0] - this.posB[0] == -1 && this.posA[1] == this.posB[1]) {
+		this.cardinal = "n";
+		return true;
+	}
+	else if (this.posA[0] == this.posB[0] && this.posA[1] - this.posB[1] == 1) {
+		this.cardinal = "w";
+		return true;
+	}
+	else if (this.posA[0] == this.posB[0] && this.posA[1] - this.posB[1] == -1) {
+		this.cardinal = "e";
+		return true;		
+	}
 	else return false;
 }
 
@@ -694,9 +739,11 @@ DominupScene.prototype.pickHandler = function (id){
 			this.posB = this.gameSurface.getPosition(id);
 			// check if valid combination
 			var cardinal;
-			if (!(cardinal = checkPosition(this.posA, this.posB)))
+			if (!this.checkPosition())
         		this.posA = this.gameSurface.getPosition(id);
-      		else this.makeMove(cardinal);
+      		else {
+      			this.playRequest(this.turn, this.selectedPiece[0], this.selectedPiece[1], this.posA[0] + 1, this.posA[1] + 1, this.cardinal);
+      		}
 		}
 	}
 };

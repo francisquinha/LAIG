@@ -5,7 +5,6 @@
 function Player(scene, id, level, name){
 	this.scene = scene;
 	this.name = name;
-	this.human = (level == 0);
 	this.level = level;
 	this.playerId = id;
 	this.pieces = [];
@@ -37,15 +36,14 @@ Player.prototype.setPieces = function (pieces) {
 
 		if(this.playerId=='player1'){
 			//if(i>15)
-			//	mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.5, 3 + 2/3 - column));
+			//	mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.25, 3 + 2/3 - column));
 			//else 
-			mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.5, 25 - column));
-			mat4.rotateY(matrx, matrx, -Math.PI/2);
-		}else if(this.playerId=='player2'){
-			mat4.translate(matrx, matrx, vec3.fromValues(-line, 0.5, 25 - column));
+			mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.25, 25 - column));
 			mat4.rotateY(matrx, matrx, Math.PI/2);
+		}else if(this.playerId=='player2'){
+			mat4.translate(matrx, matrx, vec3.fromValues(-line, 0.25, 25 - column));
+			mat4.rotateY(matrx, matrx, -Math.PI/2);
 		}
-
 		this.scene.pieces[this.pieces[i]].initialPosition = matrx;
 		column+=3;
 	}

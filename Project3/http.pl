@@ -157,9 +157,7 @@ reset :-
         abolish(lastPlay/4) ,
         dynamic(lastPlay/4) ,
         abolish(turn/1) ,
-        dynamic(turn/1) ,
-        abolish(position/2) ,
-        dynamic(position/2).
+        dynamic(turn/1) .
 
 playGameHTTP :-                             
         distributePieces(0, 0, 0, 0) ,
@@ -210,7 +208,8 @@ playHTTP(PlayerNow, Number1, Number2, Row, Column, Cardinal, Player, Distributio
         (nextPlayer(PlayerNow, Level) ,
          turn(Player) ,
          Distribution = [] ,
-         Board = [] ,
+         getPlayNumber(Play) ,
+         collectPlays(Play, Board) ,
          getGameOver(GameOver) ,
          Message = "OK") ;
         (Player = PlayerNow ,

@@ -88,7 +88,7 @@ Piece.prototype.makeHalfPiece = function (value){
 
 Piece.prototype.centerSide = function(){
     this.material = this.scene.materials[this.scene.gameLook];
-    this.material.setTexture(this.scene.textures[this.scene.gameLook][0]);
+    this.material.setTexture(this.scene.textures[this.scene.gameLook][8]);
     this.material.apply();
     this.scene.translate(-0.5, -0.25, 0, 0);
     this.scene.scale(1, 0.5, 1);
@@ -102,13 +102,13 @@ Piece.prototype.centerTop = function(value){
         this.material.apply();
     } else {
         this.material = this.scene.materials[this.scene.gameLook];
-        this.material.setTexture(this.scene.textures[this.scene.gameLook][0]);
+        this.material.setTexture(this.scene.textures[this.scene.gameLook][8]);
         this.material.apply();
     }
     this.scene.rotate(-Math.PI/2, 1, 0, 0);
     this.scene.translate(-0.5, -0.5, 0, 0);
     this.rectangle.display();
-    this.material.setTexture(this.scene.textures[this.scene.gameLook][0]);
+    this.material.setTexture(this.scene.textures[this.scene.gameLook][8]);
     this.material.apply();
 };
 
