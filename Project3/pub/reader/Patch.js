@@ -1,6 +1,8 @@
 /**
  * Patch
  * @constructor
+ * @param scene
+ * @param args
  */
 function Patch(scene, order, partsU, partsV, controlPoints) {
 	CGFobject.call(this,scene);
@@ -59,3 +61,13 @@ Patch.prototype.initBuffers = function () {
 Patch.prototype.display = function () {
 	this.surface.display();	
 };
+
+
+/*
+ * updateTextelCoordinates
+ * No need to update the textel's coordinates according to amplifS and amplifT.
+ *
+ * @param amplifS amplification factor s
+ * @param amplifT amplification factor t
+ */
+Patch.prototype.updateTexelCoordinates = function (amplifS, amplifT) {};

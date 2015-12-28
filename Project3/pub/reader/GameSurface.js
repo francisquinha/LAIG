@@ -21,12 +21,11 @@ function GameSurface(scene, sizeX, sizeY) {
 
 	this.positions = [];
 	this.positionID = [];
-	var hitBoxId = 2000;
+	var hitBoxId = 200;
 	for(var n = 0 ; n < this.sizeY ; n++)
 		for(var m = 0 ; m < this.sizeX ; m++){
-			this.positions[[m, n]] = new Patch(this.scene, 1, 1, 1, [[-0.5, 0, 0.5], [-0.5, 0, -0.5], [0.5, 0, 0.5], [0.5, 0,-0.5]]);
+			this.positions[[m, n]] = new Patch(scene, 1, 1, 1, [[-0.5, 0, 0.5], [-0.5, 0, -0.5], [0.5, 0, 0.5], [0.5, 0,-0.5]]);
 			this.positionID[hitBoxId++] = [m,n];
-
 		}
 };
 
@@ -72,7 +71,6 @@ GameSurface.prototype.constructor=GameSurface;
 
 GameSurface.prototype.display = function () {
 
-	
 	this.scene.pushMatrix();
 
 		if(!this.scene.pickMode){
@@ -86,15 +84,13 @@ GameSurface.prototype.display = function () {
 		}
 
 		// draw position's hitboxes
-
-		if(this.scene.pickMode ){//&& (this.scene.gameState=='SELECT_LOCATION_A' || this.scene.gameState=='SELECT_LOCATION_B')){
-			
-		 	var hitBoxId = 2000;
+		if(this.scene.pickMode){ //&& (this.scene.gameState=='SELECT_LOCATION_A' || this.scene.gameState=='SELECT_LOCATION_B')){
+		 	var hitBoxId = 200;
 
 			for(var n = 0 ; n < this.sizeY ; n++)
 				for(var m = 0 ; m < this.sizeX ; m++){
 					this.scene.pushMatrix();
-						this.scene.registerForPick(hitBoxId++, this.positions[[m, n]]);	
+						this.scene.registerForPick(hitBoxId++, this.positions[[m, n]]);
 						this.scene.translate(m, (this.table[n][m].length - 1) + 0.1, n, 1);
 						this.scene.translate(0.5, 0, 0.5, 1);
 						this.positions[[m, n]].display();
