@@ -208,26 +208,27 @@ getGameOver(GameOver) :-
 playHTTP(PlayerNow, Number1, Number2, Row, Column, Cardinal, Player, Distribution, Board, GameOver, Message) :-
         playPiece(Number1, Number2, PlayerNow, Row, Column, Cardinal, Level) ->
         (nextPlayer(PlayerNow, Level) ,
-         turn(PlayerNext) ,
+         turn(Player) ,
          Distribution = [] ,
+         Board = [] ,
          getGameOver(GameOver) ,
-         Message = "OK" ,
-         (PlayerNow == PlayerNext ->
-          (Board = [] ,
-           Player = PlayerNow) ;
-          (player(PlayerNext, _, Type) ,
-           (Type == 1 -> 
-            (Board = [] ,
-             Player = PlayerNext) ;
-            (getComputerPlays(PlayerNext, Type, Board) ,
-             changeTurn(PlayerNext) ,
-             turn(Player)))))) ;
+         Message = "OK") ;
         (Player = PlayerNow ,
          Distribution = [] ,
          Board = [] ,
          GameOver = 0 ,
          Message = "KO").
-
+         
+playComputerHTTP(Player, Distribution, Board, GameOver, Message) :-
+        turn(PlayerNow) ,
+        player(PlayerNow, _, Type) ,
+        getComputerPlays(PlayerNow, Type, Board) ,
+        changeTurn(PlayerNow) ,
+        turn(Player) ,
+        Distribution = [] ,
+        getGameOver(GameOver) ,
+        Message = "OK".
+        
 getComputerPlays(Player, Type, Plays) :-
         getPlayNumber(LastPlay) ,
         Play is LastPlay + 1 ,

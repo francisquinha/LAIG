@@ -96,8 +96,11 @@ MessageBoard.prototype.display = function () {
         if(this.scene.state == 'PLAY'){
             this.showString(this.text);
             this.scene.translate(0,-1,0);
-            this.showString(this.scene.turn);
-
+            if (this.scene.turn != undefined) {
+                if (this.scene.turn == 1)
+                    this.showString(this.scene.players['player1'].name);
+                else this.showString(this.scene.players['player2'].name);    
+            }
         }
         else if(this.scene.state == 'REVIEW'){
 
