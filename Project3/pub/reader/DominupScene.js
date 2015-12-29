@@ -140,6 +140,7 @@ DominupScene.prototype.handleLoadReply = function(data){
 }
 
 DominupScene.prototype.processBoard = function(response_board) {
+	if (response_board == "[]") return; 
 	var board_string = response_board.split("[[")[1].split("]]")[0].split("],[");
 	var board = [];
 	var half_move1;
