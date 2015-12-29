@@ -34,6 +34,7 @@ function GameSurface(scene, sizeX, sizeY) {
 GameSurface.prototype = Object.create(CGFobject.prototype);
 GameSurface.prototype.constructor=GameSurface;
 
+
 GameSurface.prototype.movePatch = function (row, column, height) {
 			this.heights[[row, column]] = height;
 }
@@ -87,6 +88,7 @@ GameSurface.prototype.display = function () {
 				this.surface.display();
 		 	this.scene.popMatrix();
 		}
+
 
 		if(this.scene.pickMode ){
 			
