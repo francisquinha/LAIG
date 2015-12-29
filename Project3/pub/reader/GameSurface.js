@@ -8,7 +8,7 @@ function GameSurface(scene, sizeX, sizeY) {
 	this.sizeX = sizeX;
 	this.sizeY = sizeY;
 
-	this.surface = new plane(scene, sizeX);//, sizeY);
+	this.surface = new plane(scene, sizeX);
 
 	this.placedPieces = [];
 
@@ -32,12 +32,13 @@ function GameSurface(scene, sizeX, sizeY) {
 };
 
 GameSurface.prototype = Object.create(CGFobject.prototype);
+GameSurface.prototype.constructor=GameSurface;
 
 GameSurface.prototype.movePatch = function (row, column, height) {
 			this.heights[[row, column]] = height;
 }
 
-// position format aX,aY, bX, bY, domino [L,R]
+
 GameSurface.prototype.placePiece = function (position, piece) {
 	this.placedPieces.push({ height: (this.table[position.aY][position.aX].length -1), coords: position, domino: piece });
 
@@ -73,8 +74,6 @@ GameSurface.prototype.getTable = function () {
 		return plainTable;
 };
 
-GameSurface.prototype.constructor=GameSurface;
-
 GameSurface.prototype.display = function () {
 
 	
@@ -90,9 +89,7 @@ GameSurface.prototype.display = function () {
 		 	this.scene.popMatrix();
 		}
 
-		// draw position's hitboxes
-
-		if(this.scene.pickMode ){//&& (this.scene.gameState=='SELECT_LOCATION_A' || this.scene.gameState=='SELECT_LOCATION_B')){
+		if(this.scene.pickMode ){
 			
 		 	var hitBoxId = 200;
 

@@ -24,7 +24,6 @@ Player.prototype.setPieces = function (pieces) {
 	var line = 0;
 	var column = 0;
 
-	// calculate initial position for each piece
 	for(var i = 0 ; i < this.pieces.length ; i++){
 		if(i % 9 == 0){
 			line+=2;
@@ -35,9 +34,6 @@ Player.prototype.setPieces = function (pieces) {
 		mat4.identity(matrx);
 
 		if(this.playerId=='player1'){
-			//if(i>15)
-			//	mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.25, 3 + 2/3 - column));
-			//else 
 			mat4.translate(matrx, matrx, vec3.fromValues(26 + line, 0.25, 25 - column));
 			mat4.rotateY(matrx, matrx, Math.PI/2);
 		}else if(this.playerId=='player2'){

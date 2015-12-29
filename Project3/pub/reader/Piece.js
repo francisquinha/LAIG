@@ -10,7 +10,6 @@ function Piece(scene, halfL, halfR) {
     this.initialPosition = mat4.create();
     this.played = false;
 		mat4.identity(this.initialPosition);
-    //this.currentMatrix = initialPosition;
 
     this.rectangle = new rectangle(this.scene, [0, 1, 1 ,0]);
 };
@@ -29,7 +28,6 @@ Piece.prototype.selected = function() {
 
 Piece.prototype.unselected = function() {
     
-    // criar e iniciar animacao de volta
 };
 
 Piece.prototype.setSelectable = function() {
@@ -130,11 +128,3 @@ Piece.prototype.setInitialPosition = function(side, x, z){
     this.initialPosition = matrx;
 };
 
-Piece.prototype.update = function(curTime){
-  if(this.animation!=undefined)
-    this.animation.update();
-};
-
-Piece.prototype.animationOnMovement = function(time, center, radius, angStart, angRot){
-  //
-}

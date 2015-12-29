@@ -2,7 +2,6 @@
  * DominupScene
  * @constructor
  */
-
 function DominupScene() {
     CGFscene.call(this);
 }
@@ -289,12 +288,7 @@ DominupScene.prototype.updateGameState = function(){
           		this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
     			this.startGame();			
 			}
-
-/*    		if(this.gameType == this.gameTypes[1]){
-				//this.myInterface.showNamePlayer(2); 		
-				this.state = 'NAMES';
-			}
-*/			else if(this.gameType == this.gameTypes[2]){
+			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
 				//this.myInterface.showNamePlayer(1);
 				this.myInterface.showLevelPlayer('Computer');
@@ -405,6 +399,7 @@ DominupScene.prototype.initGame = function () {
 	this.gameTypes = ['(select one type)', 'Human vs Human', 'Human vs Computer', 'Computer vs Computer'];
 	this.gameType = this.gameTypes[0];
 
+	// load files
 	this.loadFiles = ['(choose load file)', 'File 1', 'File 2', 'File 3', 'File 4'];
 	this.loadFile = this.loadFiles[0];
 
@@ -452,19 +447,19 @@ DominupScene.prototype.updateCameraPosition = function () {
     switch (this.currCameraPosition) {
       case 'start game':
       		this.pushMatrix();
-      			this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      			//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       			this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       		this.popMatrix();
       	break;
       case 'player1 view':
       	this.pushMatrix();
-      		this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player2 view':
       		this.pushMatrix();
-      		this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       		this.popMatrix();
       	break;
@@ -494,7 +489,7 @@ DominupScene.prototype.initCameras = function () {
   	this.cameraPositionsAngle['board view'] = Math.PI;
   	
 
-  this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 40, 50), vec3.fromValues(0, -10, 0));
+  	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 40, 50), vec3.fromValues(0, -10, 0));
 };
 
 DominupScene.prototype.cleanCamera = function (angle) {
@@ -603,10 +598,6 @@ DominupScene.prototype.pieceSelected = function (id){
 DominupScene.prototype.undoLastMove = function (){
   var lastPlay = this.moves.pop();
 
-  // do animation to piece
-
-  // return piece to player
-
   this.players[lastPlay['player']].addPiece(this.pieces[lastPlay['piece']].getValues());
 
 
@@ -647,7 +638,7 @@ DominupScene.prototype.checkPosition = function(){
 DominupScene.prototype.pickHandler = function (id){
 	if(this.pauseGame)
     	return;
-	// if a piece was picked
+	
 	if(id >= 5000){
     	console.log("piecetouched " + id);
     	if(this.selectedPieceId == id){
