@@ -61,19 +61,19 @@ Player.prototype.play = function () {
 };
 
 Player.prototype.showPlayerPieces = function (){
-	this.scene.pushMatrix();
-	for(var i=0; i<this.pieces.length; i++){
-		if (this.scene.turn != undefined) {
-			var playerTurn = 'player' + this.scene.turn;
-			if(playerTurn == this.playerId) {
+	if (this.scene.turn != undefined) {
+		var playerTurn = 'player' + this.scene.turn;
+		if(playerTurn == this.playerId && this.level == 0) {
+			for(var i=0; i<this.pieces.length; i++){
 				if (!this.scene.pieces[this.pieces[i]].played) {
+					this.scene.pushMatrix();
 					this.scene.pieces[this.pieces[i]].setSelectable();
 					this.scene.pieces[this.pieces[i]].display();
+					this.scene.popMatrix();
 				}
 			}
 		}
 	}
-	this.scene.popMatrix();
 };
 
 Player.prototype.showPlayedPieces = function (){

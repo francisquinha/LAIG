@@ -690,11 +690,11 @@ DominupScene.prototype.makeMove = function (){
 
 DominupScene.prototype.checkPosition = function(){
 	if (this.posA[0] - this.posB[0] == 1 && this.posA[1] == this.posB[1]) {
-		this.cardinal = "s";
+		this.cardinal = "n";
 		return true;
 	}
 	else if (this.posA[0] - this.posB[0] == -1 && this.posA[1] == this.posB[1]) {
-		this.cardinal = "n";
+		this.cardinal = "s";
 		return true;
 	}
 	else if (this.posA[0] == this.posB[0] && this.posA[1] - this.posB[1] == 1) {
