@@ -38,7 +38,6 @@ GameSurface.prototype.movePatch = function (row, column, height) {
 			this.heights[[row, column]] = height;
 }
 
-
 GameSurface.prototype.placePiece = function (position, piece) {
 	this.placedPieces.push({ height: (this.table[position.aY][position.aX].length -1), coords: position, domino: piece });
 

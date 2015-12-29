@@ -127,4 +127,3 @@ Piece.prototype.setInitialPosition = function(side, x, z){
     mat4.translate(matrx, matrx, vectr);
     this.initialPosition = matrx;
 };
-

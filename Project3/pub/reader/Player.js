@@ -57,17 +57,12 @@ Player.prototype.play = function () {
 };
 
 Player.prototype.showPlayerPieces = function (){
-	if (this.scene.turn != undefined) {
-		var playerTurn = 'player' + this.scene.turn;
-		if(playerTurn == this.playerId && this.level == 0) {
-			for(var i=0; i<this.pieces.length; i++){
-				if (!this.scene.pieces[this.pieces[i]].played) {
-					this.scene.pushMatrix();
-					this.scene.pieces[this.pieces[i]].setSelectable();
-					this.scene.pieces[this.pieces[i]].display();
-					this.scene.popMatrix();		
-				}
-			}
+	for(var i=0; i<this.pieces.length; i++){
+		if (!this.scene.pieces[this.pieces[i]].played) {
+			this.scene.pushMatrix();
+			this.scene.pieces[this.pieces[i]].setSelectable();
+			this.scene.pieces[this.pieces[i]].display();
+			this.scene.popMatrix();	
 		}
 	}
 };

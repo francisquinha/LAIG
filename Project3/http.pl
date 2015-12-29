@@ -202,7 +202,7 @@ playHTTP(PlayerNow, Number1, Number2, Row, Column, Cardinal, Player, Distributio
          collectPlays(Play, Board) ,
          getGameOver(GameOver) ,
          Message = "OK") ;
-        (Player = PlayerNow ,
+        (turn(Player) ,
          Distribution = [] ,
          Board = [] ,
          GameOver = 0 ,

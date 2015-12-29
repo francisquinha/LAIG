@@ -57,6 +57,7 @@ main=function()
 	var filename=getUrlVars()['file'] || "monster/dominup_scene1.xml";
 	//var filename=getUrlVars()['file'] || "monster/dominup_scene2.xml"; 
 
+
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
 	var myGraph = new MySceneGraph(filename, myScene);
