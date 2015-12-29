@@ -66,17 +66,10 @@ Player.prototype.showPlayerPieces = function (){
 		if(playerTurn == this.playerId && this.level == 0) {
 			for(var i=0; i<this.pieces.length; i++){
 				if (!this.scene.pieces[this.pieces[i]].played) {
-//					if (this.scene.pickMode) {
-						this.scene.pushMatrix();
-						this.scene.pieces[this.pieces[i]].setSelectable();
-						this.scene.pieces[this.pieces[i]].display();
-						this.scene.popMatrix();		
-/*					}
-					else {
-						this.scene.pushMatrix();
-						this.scene.pieces[this.pieces[i]].display();
-						this.scene.popMatrix();	
-					}*/
+					this.scene.pushMatrix();
+					this.scene.pieces[this.pieces[i]].setSelectable();
+					this.scene.pieces[this.pieces[i]].display();
+					this.scene.popMatrix();		
 				}
 			}
 		}

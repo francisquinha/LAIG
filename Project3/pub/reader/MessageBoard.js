@@ -101,6 +101,10 @@ MessageBoard.prototype.display = function () {
                 this.showString(this.scene.players[playerTurn].name);    
             }
         }
+        else if(this.scene.state == 'OVER'){
+            var winner = 'player' + this.scene.gameOver;
+            this.showString('Congratulations ' + this.scene.players[winner].name);
+        }
         else if(this.scene.state == 'REVIEW'){
 
         }

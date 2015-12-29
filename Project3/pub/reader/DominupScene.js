@@ -48,21 +48,14 @@ DominupScene.prototype.loadGame = function(){
 };
 
 DominupScene.prototype.saveGame = function (){
-	this.message.showString('You have successfully saved the game');
+	this.message.showString('You have successfully saved the game'); //acho que estes message.showString nao funcionam
 	console.log('save game');
 };
 
 DominupScene.prototype.newGame = function(){
 	this.initGamePieces();
 	this.initGameSurface();
-//	this.initGamePlayers();
   	this.state = 'PLAY';
-};
-
-DominupScene.prototype.endGame = function(winner){
-  this.message.showString('Congratulations ' + winner);
-  console.log(winner); 
-  this.myInterface.hideGameMenu();
 };
 
 DominupScene.prototype.quitReview = function(){
@@ -169,12 +162,9 @@ DominupScene.prototype.handlePlayReply = function(data){
 	myScene.processBoard(response.board);
 	myScene.turn = parseInt(response.player);
 	myScene.gameOver = parseInt(response.gameover);
-    // check if game over
-    var winner;
-    if((winner = myScene.gameOver)!=0) {
-      	console.log('gameOver');
-      	myScene.endGame(winner);
-      	return null;
+    if(myScene.gameOver != 0) {
+      	myScene.state = 'OVER';
+      	this.myInterface.hideGameMenu();
     }
     myScene.selectedPieceId = undefined;
 	if (myScene.players['player' + myScene.turn].level != 0) {
@@ -207,7 +197,9 @@ DominupScene.prototype.playRequest = function(player, number1, number2, row, col
 }
 
 DominupScene.prototype.playComputerRequest = function() {
-	this.postGameRequest('[playComputerHTTP]', this.handlePlayReply, this.handleError);
+	var requestString = '[playComputerHTTP]';
+	console.log(requestString);
+	this.postGameRequest(requestString, this.handlePlayReply, this.handleError);
 }
 
 
@@ -239,7 +231,6 @@ DominupScene.prototype.processMove = function(piece, posA, posB, cardinal, level
 DominupScene.prototype.processMoves = function(moves_list) {
 	var move;
 	for (move in moves_list) {
-		console.log(moves_list[move]);
 		var piece;
 		for(piece in this.pieces) {
     		if(this.pieces[piece].getValues()[0] == moves_list[move][0] && this.pieces[piece].getValues()[1] == moves_list[move][1]){
@@ -258,9 +249,6 @@ DominupScene.prototype.processMoves = function(moves_list) {
 			posB = [posA[0],posA[1] - 1];
 		else if (cardinal == "e") 
 			posB = [posA[0], posA[1] + 1];
-		console.log(piece.getValues());
-		console.log(posA);
-		console.log(posB);
 		var level = moves_list[move][5];
 		this.processMove(piece, posA, posB, cardinal, level);
 	}
@@ -296,9 +284,7 @@ DominupScene.prototype.updateGameState = function(){
 	        	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
   			}
 		case 'TYPE':
-			this.load_file = 'saves/file1.pl';
 			if(this.gameType == this.gameTypes[1]){
-   				 //this.myInterface.showNamePlayer(2);   
    				this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
           		this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
     			this.startGame();			
@@ -372,9 +358,10 @@ DominupScene.prototype.updateGameState = function(){
       		}
       		else new_load = 1;
       		if (new_load == 0)
-	   	     	this.setupStartRequest(0, game_type, this.load_file, this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
-	   	    else 
+	   	     	this.setupStartRequest(0, game_type, 'saves/file1.pl', this.players['player1'].playerId, this.players['player2'].playerId, this.players['player1'].level, this.players['player2'].level);
+	   	    else {
 	   	    	this.loadRequest(1, 0, this.load_file, 'p1', 'p2', 0, 0);
+	   	    }
       		break;
     	
     	case 'PLAY':
@@ -422,8 +409,6 @@ DominupScene.prototype.initGame = function () {
   	this.selectedPieceId = 5036;
   	this.posA = [26, 26];
   	this.posB = [26, 26];
-	this.cardinal = "e";
-	this.level = 0;
 
 	this.pauseGame = false;
 	this.timePaused = 0;
@@ -470,23 +455,7 @@ DominupScene.prototype.initGameSurface = function () {
 	this.gameSurfaceXX = 26;
 	this.gameSurfaceYY = 26;
 	this.gameSurface = new GameSurface(this, this.gameSurfaceXX, this.gameSurfaceYY);
-	//this.gameSurface = new Board26(this,26);
 };
-
-
-DominupScene.prototype.initGamePlayers = function () {
-	this.state = 'PLAY';
-	this.players['player1'] = new Player(this, 'player1', 0, 'Player1');
-	this.players['player2'] = new Player(this, 'player2', 0, 'Player2');
-  	var initIds = [];
-  	for(id in this.pieces)
-    	initIds.push(id);
-	var t1 = initIds.slice(0, 18);
-	var t2 = initIds.slice(18, 36);
-	this.players['player1'].setPieces(t1);
-	this.players['player2'].setPieces(t2);
-};
-
 
 DominupScene.prototype.updateCameraPosition = function () {
   if(this.cameraPosition != this.currCameraPosition){
@@ -630,14 +599,6 @@ DominupScene.prototype.pieceSelected = function (id){
    }
 };
 
-DominupScene.prototype.isGameOver = function (){
-  for(playerId in this.players)
-    if(this.players[playerId].length==0)
-      return playerId;
-
-  return null;
-};
-
 DominupScene.prototype.undoLastMove = function (){
   var lastPlay = this.moves.pop();
 
@@ -661,32 +622,6 @@ DominupScene.prototype.reviewGame = function (){
 
   console.log('review');
 };
-
-DominupScene.prototype.makeMove = function (){
-	console.log("piece and location chosen, make move");
-	console.log(this.selectedPiece);
-    // set piece animation
-
-    this.moves.push({player: this.turn, piece: this.selectedPieceId});
-
-    // check if game over
-    var winner;
-    if((winner = this.gameOver)!=0) {
-      console.log('gameOver');
-      this.endGame(winner);
-      return null;
-    }
-
-
-    this.selectedPieceId = undefined;
-	var playerTurn = 'player' + this.turn;
-	console.log(this.players[playerTurn]);
-    if (!this.players[playerTurn].level != 0){
-      	playComputerRequest();
-    }
-    else this.gameState = 'SELECT_PIECE';
-};
-
 
 DominupScene.prototype.checkPosition = function(){
 	if (this.posA[0] - this.posB[0] == 1 && this.posA[1] == this.posB[1]) {
@@ -812,16 +747,13 @@ DominupScene.prototype.display = function () {
 };
 
 DominupScene.prototype.showPlayedPieces = function (){
-//	if (!this.pickMode) {
-		for (var piece in this.pieces) {
-			if (this.pieces[piece].played) {
-				this.pushMatrix();
-//				this.clearPickRegistration();
-				this.pieces[piece].display();
-				this.popMatrix();
-			}
+	for (var piece in this.pieces) {
+		if (this.pieces[piece].played) {
+			this.pushMatrix();
+			this.pieces[piece].display();
+			this.popMatrix();
 		}
-//	}
+	}
 };
 
 

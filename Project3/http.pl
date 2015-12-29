@@ -136,7 +136,6 @@ saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
         listing(lastPlay/4) ,  
         listing(turn/1) , 
         close(Save) ,
-        reset ,
         Player = 0 ,
         Distribution = [] ,
         Board = [] ,
@@ -144,20 +143,13 @@ saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
         Message = "OK".
 
 reset :-
-        abolish(loadFile/1) ,
-        dynamic(loadFile/1) ,
-        abolish(newLoad/1) ,
-        dynamic(newLoad/1) ,
-        abolish(player/3) ,
-        dynamic(player/3) ,
-        abolish(piece/4) ,
-        dynamic(piece/4) ,
-        abolish(halfPiece/6) ,
-        dynamic(halfPiece/6) ,
-        abolish(lastPlay/4) ,
-        dynamic(lastPlay/4) ,
-        abolish(turn/1) ,
-        dynamic(turn/1) .
+        retractall(loadFile(_)) ,
+        retractall(newLoad(_)) ,
+        retractall(player(_, _, _)) ,
+        retractall(piece(_, _, _, _)) ,
+        retractall(halfPiece(_, _, _, _, _, _)) ,
+        retractall(lastPlay(_, _, _, _)) ,
+        retractall(turn(_)).
 
 playGameHTTP :-                             
         distributePieces(0, 0, 0, 0) ,
@@ -195,12 +187,10 @@ checkPlayNumber(PlayNumber, Row, Column, Level, Number, Cardinal, Play) :-
 getGameOver(GameOver) :-                                         
         numberPieces(1, 0, 0, 0, R1) ,                 
         (R1 == 0 ->                                    
-         (reset ,
-          GameOver = 1) ;                    
-         (numberPieces(2, 0, 0, 0, R2),                
+         GameOver = 1;                    
+         (numberPieces(2, 0, 0, 0, R2) ,                
           (R2 == 0 ->
-           (reset ,                                  
-            GameOver = 2) ;                 
+           GameOver = 2 ;                 
            GameOver = 0))).
 
 playHTTP(PlayerNow, Number1, Number2, Row, Column, Cardinal, Player, Distribution, Board, GameOver, Message) :-
