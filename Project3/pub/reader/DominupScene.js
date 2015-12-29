@@ -249,7 +249,6 @@ DominupScene.prototype.processMove = function() {
 DominupScene.prototype.processMoves = function(moves_list) {
 	var move;
 	for (move in moves_list) {
-		console.log(moves_list[move]);
 		this.selectedPiece[0] = moves_list[move][0];
 		this.selectedPiece[1] = moves_list[move][1];
 		for(piece in this.pieces) {

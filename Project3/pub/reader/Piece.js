@@ -8,6 +8,7 @@ function Piece(scene, halfL, halfR) {
 
     this.animation = null;
     this.initialPosition = mat4.create();
+    this.played = false;
 		mat4.identity(this.initialPosition);
     //this.currentMatrix = initialPosition;
 

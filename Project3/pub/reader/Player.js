@@ -66,8 +66,11 @@ Player.prototype.showPlayerPieces = function (){
 		if(this.scene.pickMode){
 			if (this.scene.turn != undefined) {
                 var playerTurn = 'player' + this.scene.turn;
-				if(playerTurn == this.playerId){
-					this.scene.pieces[this.pieces[i]].setSelectable();
+				if(playerTurn == this.playerId) {
+					if (!this.scene.pieces[this.pieces[i]].played)
+						this.scene.pieces[this.pieces[i]].setSelectable();
+					else
+						this.scene.clearPickRegistration();
 					this.scene.pieces[this.pieces[i]].display();
 				}
             }
