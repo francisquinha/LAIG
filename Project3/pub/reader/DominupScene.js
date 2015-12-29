@@ -160,7 +160,7 @@ DominupScene.prototype.processBoard = function(response_board) {
 		move.push(parseInt(half_move1[3]));
 		board.push(move);
 	}
-	myScene.processMoves(board);
+	this.processMoves(board);
 }
 
 DominupScene.prototype.handlePlayReply = function(data){
@@ -177,19 +177,11 @@ DominupScene.prototype.handlePlayReply = function(data){
       	return null;
     }
     myScene.selectedPieceId = undefined;
-	var playerTurn = 'player' + myScene.turn;
-    if (myScene.players[playerTurn].level != 0)
-      	myScene.playComputerRequest();
-    else myScene.gameState = 'SELECT_PIECE';
-}
-
-DominupScene.prototype.handlePlayComputerReply = function(data){
-	console.log(data.target.response);
-	var response = JSON.parse(data.target.response);
-	myScene.processBoard(response.board);
-	myScene.turn = parseInt(response.player);
-	myScene.gameOver = parseInt(response.gameover);
-	myScene.gameState = 'SELECT_PIECE';
+	if (myScene.players['player' + myScene.turn].level != 0) {
+		myScene.gameState = 'COMPUTER_PLAY';
+      	myScene.playComputerRequest();		
+	}
+    myScene.gameState = 'SELECT_PIECE';
 }
 
 DominupScene.prototype.handleError = function(data){
@@ -215,54 +207,62 @@ DominupScene.prototype.playRequest = function(player, number1, number2, row, col
 }
 
 DominupScene.prototype.playComputerRequest = function() {
-	this.postGameRequest('[playComputerHTTP]', this.handlePlayComputerReply, this.handleError);
+	this.postGameRequest('[playComputerHTTP]', this.handlePlayReply, this.handleError);
 }
 
 
-DominupScene.prototype.processMove = function() {
+DominupScene.prototype.processMove = function(piece, posA, posB, cardinal, level) {
 	var matrx = mat4.create();
 	mat4.identity(matrx);
-	mat4.translate(matrx, matrx, vec3.fromValues(this.posA[0], -0.25 + this.level * 0.5, this.posA[1])); // number1 of piece in position posA with cardinal south
-	if (this.cardinal == "w") {
+	mat4.translate(matrx, matrx, vec3.fromValues(posA[0], -0.25 + level * 0.5, posA[1])); // number1 of piece in position posA with cardinal south
+	if (cardinal == "w") {
 		mat4.translate(matrx, matrx, vec3.fromValues(0.5, 0, 0)); 
 		mat4.rotateY(matrx, matrx, Math.PI/2);
 	}
-	else if (this.cardinal == "n") {
+	else if (cardinal == "n") {
 		mat4.translate(matrx, matrx, vec3.fromValues(0, 0, 0.5)); 
 		mat4.rotateY(matrx, matrx, Math.PI);		
 	}
-	else if (this.cardinal == "e") {
+	else if (cardinal == "e") {
 		mat4.translate(matrx, matrx, vec3.fromValues(0.5, 0, 1)); 
 		mat4.rotateY(matrx, matrx, -Math.PI/2);
 	}
 	else {
 		mat4.translate(matrx, matrx, vec3.fromValues(1, 0, 0.5)); 
 	}
-	for(piece in this.pieces) {
-    	if(this.pieces[piece].getId() == this.selectedPieceId){
-			this.pieces[piece].initialPosition = matrx;
-			this.pieces[piece].played = true;
-        	break;
-      	}
-	}
+	piece.initialPosition = matrx;
+	piece.played = true;
+	this.gameSurface.movePatch(posA[0], posA[1], level * 0.5);
+	this.gameSurface.movePatch(posB[0], posB[1], level * 0.5);
 }
 
 DominupScene.prototype.processMoves = function(moves_list) {
 	var move;
 	for (move in moves_list) {
-		this.selectedPiece[0] = moves_list[move][0];
-		this.selectedPiece[1] = moves_list[move][1];
+		console.log(moves_list[move]);
+		var piece;
 		for(piece in this.pieces) {
-    		if(this.pieces[piece].getValues()[0] == this.selectedPiece[0] && this.pieces[piece].getValues()[1] == this.selectedPiece[1]){
-    			this.selectedPieceId = this.pieces[piece].getId();
+    		if(this.pieces[piece].getValues()[0] == moves_list[move][0] && this.pieces[piece].getValues()[1] == moves_list[move][1]){
+    			piece = this.pieces[piece];
 	        	break;
     		}
       	}
-		this.posA[0] = moves_list[move][2] - 1;
-		this.posA[1] = moves_list[move][3] - 1;
-		this.cardinal = moves_list[move][4];
-		this.level = moves_list[move][5];
-		this.processMove();
+      	var posA = [moves_list[move][2] - 1, moves_list[move][3] - 1];
+		var posB;
+		var cardinal = moves_list[move][4];
+		if (cardinal == "n")
+			posB = [posA[0] - 1, posA[1]];
+		else if (cardinal == "s")
+			posB = [posA[0] + 1, posA[1]];
+		else if (cardinal == "w") 
+			posB = [posA[0],posA[1] - 1];
+		else if (cardinal == "e") 
+			posB = [posA[0], posA[1] + 1];
+		console.log(piece.getValues());
+		console.log(posA);
+		console.log(posB);
+		var level = moves_list[move][5];
+		this.processMove(piece, posA, posB, cardinal, level);
 	}
 }
 
@@ -545,7 +545,7 @@ DominupScene.prototype.updateLights = function() {
 }
 
 DominupScene.prototype.initGameLooks = function () {
-	this.gameLooks = ['default', 'colored'];//, 'other2'];
+	this.gameLooks = ['colored', 'default'];//, 'other2'];
 	this.gameLook = this.gameLooks[0];
 
 	this.lookMaterials = [];
@@ -709,10 +709,8 @@ DominupScene.prototype.checkPosition = function(){
 }
 
 DominupScene.prototype.pickHandler = function (id){
-
-  if(this.pauseGame)
-    return;
-
+	if(this.pauseGame)
+    	return;
 	// if a piece was picked
 	if(id >= 5000){
     	console.log("piecetouched " + id);
@@ -746,6 +744,7 @@ DominupScene.prototype.pickHandler = function (id){
       		}
 		}
 	}
+
 };
 
 
@@ -804,11 +803,25 @@ DominupScene.prototype.display = function () {
  
       this.translate(-5,0,-5);
       this.players['player1'].showPlayerPieces();
-      this.players['player1'].showPlayedPieces();
       this.players['player2'].showPlayerPieces();
-      this.players['player2'].showPlayedPieces();
+      this.showPlayedPieces();
       this.gameSurface.display();
       
       this.popMatrix();
 	}
 };
+
+DominupScene.prototype.showPlayedPieces = function (){
+//	if (!this.pickMode) {
+		for (var piece in this.pieces) {
+			if (this.pieces[piece].played) {
+				this.pushMatrix();
+//				this.clearPickRegistration();
+				this.pieces[piece].display();
+				this.popMatrix();
+			}
+		}
+//	}
+};
+
+

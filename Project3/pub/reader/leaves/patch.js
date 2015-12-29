@@ -4,7 +4,7 @@
  */
 
 function patch(scene, args) {
-	
+		
 	this.default = [
         1, 1, 1, [ [1, 1, 1], [-1, 1, 1], [1, -1, 1], [1, 1, -1]]];
 
@@ -22,8 +22,9 @@ function patch(scene, args) {
         return nurbsSurface.getPoint(u, v);
     };
 
-    CGFnurbsObject.call(this, scene, getSurfacePoint, this.partsU, this.partsV);
- }
+    this.surface =	new CGFnurbsObject(scene, getSurfacePoint, this.partsU, this.partsV);
+
+}
  
  patch.prototype = Object.create(CGFnurbsObject.prototype);
  patch.prototype.constructor = patch;
@@ -53,4 +54,8 @@ patch.prototype.getKnots = function() {
         knots.push(1);
 
     return knots;
+};
+
+patch.prototype.display = function () {
+	this.surface.display();	
 };

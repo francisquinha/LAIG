@@ -35,6 +35,7 @@ serialInclude(['../lib/CGF.js',
 				'Plane.js',
 				'Board26.js',
 				'Patch.js',
+				
 main=function()
 {
 	// Standard application, scene and interface setup

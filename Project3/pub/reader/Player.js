@@ -66,25 +66,19 @@ Player.prototype.showPlayerPieces = function (){
 		if(playerTurn == this.playerId && this.level == 0) {
 			for(var i=0; i<this.pieces.length; i++){
 				if (!this.scene.pieces[this.pieces[i]].played) {
-					this.scene.pushMatrix();
-					this.scene.pieces[this.pieces[i]].setSelectable();
-					this.scene.pieces[this.pieces[i]].display();
-					this.scene.popMatrix();
+//					if (this.scene.pickMode) {
+						this.scene.pushMatrix();
+						this.scene.pieces[this.pieces[i]].setSelectable();
+						this.scene.pieces[this.pieces[i]].display();
+						this.scene.popMatrix();		
+/*					}
+					else {
+						this.scene.pushMatrix();
+						this.scene.pieces[this.pieces[i]].display();
+						this.scene.popMatrix();	
+					}*/
 				}
 			}
 		}
 	}
 };
-
-Player.prototype.showPlayedPieces = function (){
-	this.scene.pushMatrix();
-	if (!this.scene.pickMode) {
-		for(var i=0; i<this.pieces.length; i++){
-			if (this.scene.pieces[this.pieces[i]].played)
-				this.scene.pieces[this.pieces[i]].display();
-		}
-	}
-	this.scene.popMatrix();
-};
-
-

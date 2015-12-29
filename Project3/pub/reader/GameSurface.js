@@ -20,17 +20,22 @@ function GameSurface(scene, sizeX, sizeY) {
 	}
 
 	this.positions = [];
+	this.heights = [];
 	this.positionID = [];
 	var hitBoxId = 200;
 	for(var n = 0 ; n < this.sizeY ; n++)
 		for(var m = 0 ; m < this.sizeX ; m++){
 			this.positions[[m, n]] = new Patch(scene, 1, 1, 1, [[-0.5, 0, 0.5], [-0.5, 0, -0.5], [0.5, 0, 0.5], [0.5, 0,-0.5]]);
+			this.heights[[m, n]] = 0;
 			this.positionID[hitBoxId++] = [m,n];
-
 		}
 };
 
 GameSurface.prototype = Object.create(CGFobject.prototype);
+
+GameSurface.prototype.movePatch = function (row, column, height) {
+			this.heights[[row, column]] = height;
+}
 
 // position format aX,aY, bX, bY, domino [L,R]
 GameSurface.prototype.placePiece = function (position, piece) {
@@ -96,7 +101,7 @@ GameSurface.prototype.display = function () {
 					this.scene.pushMatrix();
 						this.scene.registerForPick(hitBoxId++, this.positions[[m, n]]);	
 						this.scene.translate(m, (this.table[n][m].length - 1) + 0.1, n, 1);
-						this.scene.translate(0.5, 0, 0.5, 1);
+						this.scene.translate(0.5, this.heights[[m,n]], 0.5, 1); 
 						this.positions[[m, n]].display();
 					this.scene.popMatrix();
 				}
