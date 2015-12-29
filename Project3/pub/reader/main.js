@@ -33,7 +33,6 @@ serialInclude(['../lib/CGF.js',
 				'Piece.js',
 				'GameSurface.js',
 				'Plane.js',
-				'Board26.js',
 				'Patch.js',
 				
 main=function()
@@ -57,7 +56,6 @@ main=function()
 
 	var filename=getUrlVars()['file'] || "monster/dominup_scene1.xml";
 	//var filename=getUrlVars()['file'] || "monster/dominup_scene2.xml"; 
-
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors

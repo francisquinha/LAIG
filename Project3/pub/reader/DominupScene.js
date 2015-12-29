@@ -373,30 +373,17 @@ DominupScene.prototype.updateGameState = function(){
 };
 
 DominupScene.prototype.update = function(currTime) {
-	//this.clock.update(currTime);
-
-  // update game environment
-  /*if(this.gameEnvironment in this.environments)
-    this.environments[this.gameEnvironment].update(currTime);
-
-  if(this.cameraAnimation != undefined && this.cameraAnimation.isActive())
-    this.cameraAnimation.update(currTime);
-*/
+	
 	if(!this.pauseGame){
     	if(this.timeout != 0 && this.responseTime >= this.timeout * 1000){
       	// loose turn
     	}
     	else this.responseTime += currTime - this.timePaused;
 	
-	    for(pieceId in this.pieces)
-        this.pieces[pieceId].update(currTime - this.timePaused);
-
 		this.updateGameState();
 	}
-	else this.timePaused += (currTime - this.previousTime);
+};
 
-	this.previousTime = currTime;
-}
 
 
 DominupScene.prototype.initGame = function () {
@@ -442,7 +429,7 @@ DominupScene.prototype.initGameEnvironments = function () {
 
 DominupScene.prototype.initGamePieces = function () {
 	this.pieces = [];
-	var piecesId = 5000;  // ID range for domino pieces
+	var piecesId = 5000;  
 
  	for(var i = 0 ; i < 8 ; i++)
 		for(var j = i ; j < 8 ; j++){
@@ -459,22 +446,34 @@ DominupScene.prototype.initGameSurface = function () {
 
 DominupScene.prototype.updateCameraPosition = function () {
   if(this.cameraPosition != this.currCameraPosition){
-    console.log('camera Position Changed to ' + this.cameraPosition);
-    console.log('camera Position Changed to ' + this.currCameraPosition);
+    console.log('camera Position ' + this.cameraPosition);
+    console.log('camera Position ' + this.currCameraPosition);
     
-    // TODO animations to camera
     switch (this.cameraPosition) {
       case 'start game':
+      	this.pushMatrix();
+      	this.camera.rotate(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
+      	this.popMatrix();
       	break;
       case 'player1 view':
+      this.pushMatrix();
+      	this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);//30 * Math.PI / 180);//degToradthis.cameraPositionsAngle[this.cameraPosition]);
+      	this.popMatrix();
       	break;
       case 'player2 view':
+      this.pushMatrix();
+      	this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
+      	this.popMatrix();
       	break;
       case 'board view':
+      this.pushMatrix();
+      	var vector = vec4.fromValues(0, 1, 0, 1);
+      	this.camera.zoom(vector);
+      	this.popMatrix();
         break;
     }
 
-    this.cameraAnimation.activate();
+    
     this.currCameraPosition = this.cameraPosition;
   }
 };
@@ -493,10 +492,6 @@ DominupScene.prototype.initCameras = function () {
   	
 
   this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 40, 50), vec3.fromValues(0, -10, 0));
-  
-  // create animation for camera
-  this.cameraAnimation = undefined;
-  
 };
 
 
@@ -710,22 +705,14 @@ DominupScene.prototype.display = function () {
   this.updateProjectionMatrix();
   this.loadIdentity();
 
-  /*this.pushMatrix();
-    this.statusBoard.display();
-  this.popMatrix();*/
-
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
- 
-  if(this.cameraAnimation!=undefined)
-    this.multMatrix(this.cameraAnimation.getCurrentTransformation());
 
 	//this.setDefaultAppearance();
 	this.updateLights();
 
 	this.logPicking();
 	this.clearPickRegistration();
-
  
     this.pushMatrix();
       this.translate(0,5,0);

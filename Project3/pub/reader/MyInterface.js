@@ -132,24 +132,22 @@ MyInterface.prototype.showLoadFile = function(){
 	this.loadFile.open();
 };
 
-// Treat player names /////////////////////////////////////////////
-
 MyInterface.prototype.showNamePlayer = function(number){
-	
+		
 	if(number == 1){
 		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
-	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
-   		console.log(newValue); 		
-	});
-	this.nPlayer1.open();
+		this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {		
+		});
+		this.nPlayer1.open();
 	}
 	
 	else if(number == 2){
 		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
-	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
+		this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
    		console.log(newValue); 		
-	});
-	this.nPlayer1.open();
+		});
+		this.nPlayer1.open();
+		
 		this.nPlayer2 = this.newGameMenu.addFolder('Choose namePlayer2');
 		this.nPlayer2.add(this.scene, 'namePlayer2').name("Name P2").onFinishChange(function(newValue) {
 	   		console.log(newValue); 		
@@ -157,5 +155,3 @@ MyInterface.prototype.showNamePlayer = function(number){
 		this.nPlayer2.open();
 	}
 };
-
-
