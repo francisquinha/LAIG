@@ -447,29 +447,32 @@ DominupScene.prototype.initGameSurface = function () {
 DominupScene.prototype.updateCameraPosition = function () {
   if(this.cameraPosition != this.currCameraPosition){
     console.log('camera Position ' + this.cameraPosition);
-    console.log('camera Position ' + this.currCameraPosition);
+    console.log('Currcamera Position ' + this.currCameraPosition);
     
-    switch (this.cameraPosition) {
+    switch (this.currCameraPosition) {
       case 'start game':
-      	this.pushMatrix();
-      	this.camera.rotate(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
-      	this.popMatrix();
+      		this.pushMatrix();
+      			this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      			this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
+      		this.popMatrix();
       	break;
       case 'player1 view':
-      this.pushMatrix();
-      	this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);//30 * Math.PI / 180);//degToradthis.cameraPositionsAngle[this.cameraPosition]);
+      	this.pushMatrix();
+      		this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player2 view':
-      this.pushMatrix();
-      	this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
-      	this.popMatrix();
+      		this.pushMatrix();
+      		this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
+      		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
+      		this.popMatrix();
       	break;
       case 'board view':
-      this.pushMatrix();
-      	var vector = vec4.fromValues(0, 1, 0, 1);
-      	this.camera.zoom(vector);
-      	this.popMatrix();
+      		this.pushMatrix();
+      			this.camera.setTarget([0,-40,0]);
+      			this.camera.zoom([0,1,0,1]);	
+      		this.popMatrix();
         break;
     }
 
@@ -494,6 +497,9 @@ DominupScene.prototype.initCameras = function () {
   this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 40, 50), vec3.fromValues(0, -10, 0));
 };
 
+DominupScene.prototype.cleanCamera = function (angle) {
+	this.camera.orbit(0,1,0,-angle);
+}
 
 DominupScene.prototype.setDefaultAppearance = function () {
     this.setAmbient(0.3, 0.3, 0.3, 1.0);

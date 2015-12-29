@@ -114,5 +114,5 @@ startGame :- player(1, _, _) -> playTurn ;
 playAgain :- 
         prompt(_, 'Play again (y/n)? ') , 
         getChar(C) ,
-        (C == 'y' -> reconsult('src/main.pl') ; halt).
+        (C == 'y' -> reconsult('src/plog/main.pl') ; halt).
 
