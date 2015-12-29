@@ -63,19 +63,28 @@ Player.prototype.play = function () {
 Player.prototype.showPlayerPieces = function (){
 	this.scene.pushMatrix();
 	for(var i=0; i<this.pieces.length; i++){
-		if(this.scene.pickMode){
-			if (this.scene.turn != undefined) {
-                var playerTurn = 'player' + this.scene.turn;
-				if(playerTurn == this.playerId) {
-					if (!this.scene.pieces[this.pieces[i]].played)
-						this.scene.pieces[this.pieces[i]].setSelectable();
-					else
-						this.scene.clearPickRegistration();
+		if (this.scene.turn != undefined) {
+			var playerTurn = 'player' + this.scene.turn;
+			if(playerTurn == this.playerId) {
+				if (!this.scene.pieces[this.pieces[i]].played) {
+					this.scene.pieces[this.pieces[i]].setSelectable();
 					this.scene.pieces[this.pieces[i]].display();
 				}
-            }
-
-		}else this.scene.pieces[this.pieces[i]].display();
+			}
+		}
 	}
 	this.scene.popMatrix();
 };
+
+Player.prototype.showPlayedPieces = function (){
+	this.scene.pushMatrix();
+	if (!this.scene.pickMode) {
+		for(var i=0; i<this.pieces.length; i++){
+			if (this.scene.pieces[this.pieces[i]].played)
+				this.scene.pieces[this.pieces[i]].display();
+		}
+	}
+	this.scene.popMatrix();
+};
+
+

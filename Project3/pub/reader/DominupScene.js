@@ -804,7 +804,9 @@ DominupScene.prototype.display = function () {
  
       this.translate(-5,0,-5);
       this.players['player1'].showPlayerPieces();
+      this.players['player1'].showPlayedPieces();
       this.players['player2'].showPlayerPieces();
+      this.players['player2'].showPlayedPieces();
       this.gameSurface.display();
       
       this.popMatrix();
