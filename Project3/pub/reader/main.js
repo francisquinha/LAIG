@@ -53,13 +53,15 @@ main=function()
 	
 	// scenes to be loaded from graph scene
 
-	var filename=getUrlVars()['file'] || "moon/moon.xml";
+	myScene.filename1=getUrlVars()['file'] || "moon/moon.xml";
+	myScene.filename2=getUrlVars()['file'] || "noise/noise.xml";
 
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
-	var myGraph = new MySceneGraph(filename, myScene);
-	
+	var myGraph1 = new MySceneGraph(myScene.filename1, myScene);
+	var myGraph2 = new MySceneGraph(myScene.filename2, myScene);
+
 	// start
     app.run();
 }

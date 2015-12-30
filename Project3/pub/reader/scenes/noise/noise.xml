@@ -55,17 +55,9 @@
 
 
 <TEXTURES>
-    <TEXTURE id="stars">
-        <file path="textures/stars.jpg"/>      
+    <TEXTURE id="wallpaper">
+        <file path="textures/wallpaper.jpg"/>      
         <amplif_factor s="2" t="1"/>          
-    </TEXTURE>
-    <TEXTURE id="earthtext">
-        <file path="textures/earth.jpg"/>      
-        <amplif_factor s="6.28318530718" t="3.14159265359"/>          
-    </TEXTURE>
-    <TEXTURE id="moontext">
-        <file path="textures/moon_color.jpg"/>      
-        <amplif_factor s="6.28318530718" t="3.14159265359"/>          
     </TEXTURE>
 </TEXTURES>
 
@@ -186,50 +178,18 @@
         <TEXTURE id="null"/>
         <TRANSLATION x="-30" y="-10" z="-30"/>
 		<DESCENDANTS>
-            <DESCENDANT id="earth"/>
-            <DESCENDANT id="moon"/>
-            <DESCENDANT id="sky"/>
-        </DESCENDANTS>
-    </NODE>
-
-	<NODE id="moon">
-        <MATERIAL id="branco"/>
-        <TEXTURE id="moontext"/>
-        <TRANSLATION x="25" y="0" z="25"/>
-        <ROTATION axis="y" angle="-45"/>
-        <SCALE sx="300" sy="10" sz="300"/>
-        <DESCENDANTS>
-            <DESCENDANT id="elevterrain"/>
+            <DESCENDANT id="wall"/>
         </DESCENDANTS>
     </NODE>
  
-    <NODE id="sky">
+    <NODE id="wall">
         <MATERIAL id="branco"/>
-        <TEXTURE id="stars"/>
-        <TRANSLATION x="-60" y="0" z="-60"/>
+        <TEXTURE id="wallpaper"/>
+        <TRANSLATION x="-60" y="-60" z="-60"/>
         <ROTATION axis="y" angle="45"/>
-        <SCALE sx="200" sy="200" sz="1"/>
+        <SCALE sx="300" sy="300" sz="1"/>
 		<DESCENDANTS>
             <DESCENDANT id="rectangle"/>
-        </DESCENDANTS>
-    </NODE>
-
-    <NODE id="earth">
-        <MATERIAL id="null"/>
-        <TEXTURE id="null"/>
-        <TRANSLATION x="-50" y="50" z="0"/>
-        <SCALE sx="6" sy="6" sz="6"/>
-		<DESCENDANTS>
-            <DESCENDANT id="earth_sphere"/>
-        </DESCENDANTS>
-    </NODE>
-
-    <NODE id="earth_sphere">
-        <MATERIAL id="branco"/>
-        <TEXTURE id="earthtext"/>
-        <ROTATION axis="x" angle="90"/>
-		<DESCENDANTS>
-            <DESCENDANT id="sphere"/>
         </DESCENDANTS>
     </NODE>
 
