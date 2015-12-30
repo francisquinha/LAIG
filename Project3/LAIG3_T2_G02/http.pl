@@ -124,9 +124,8 @@ setupStartGameHTTP(NewLoad, ComputerHuman, LoadFile, Name1, Name2, EasyHard1, Ea
         atom_concat(Message6, Type2, Message).
 
 saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
-        atom_concat(SaveFile, '.pl', Spl) , 
-        atom_concat('saves/', Spl, SSpl) ,
-        open(SSpl, write, Save) , 
+        current_output(Stream) ,
+        open(SaveFile, write, Save) , 
         set_output(Save) ,
         write('/* -*- Mode:Prolog; coding:iso-8859-1; -*- */') ,
         nl , nl ,
@@ -136,10 +135,11 @@ saveHTTP(SaveFile, Player, Distribution, Board, GameOver, Message) :-
         listing(lastPlay/4) ,  
         listing(turn/1) , 
         close(Save) ,
-        Player = 0 ,
-        Distribution = [] ,
+        set_output(Stream) ,
+        turn(Player) ,
+        Distribution = [],
         Board = [] ,
-        GameOver = 0 ,
+        getGameOver(GameOver) ,
         Message = "OK".
 
 reset :-

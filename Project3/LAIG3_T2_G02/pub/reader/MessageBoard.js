@@ -1,6 +1,5 @@
 /**
- * MessageBoard
- * @constructor
+ *
  */
 function MessageBoard(scene, deltaX, deltaY) {
     CGFobject.call(this,scene);
@@ -107,6 +106,9 @@ MessageBoard.prototype.display = function () {
             this.showString('Congratulations ')
             this.scene.translate(2,-1,0);
             this.showString(this.scene.players[winner].name);
+        }
+        else if(this.scene.state == 'DONE'){
+            this.showString('Game Saved ')
         }
         else if(this.scene.state == 'REVIEW'){
 

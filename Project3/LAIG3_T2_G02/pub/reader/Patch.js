@@ -47,6 +47,7 @@ Patch.prototype.initBuffers = function () {
 		controlPointsOrdered.push(group);
 	}
 
+	// create surface
 	var nurbsSurface = new CGFnurbsSurface(this.order, this.order, knots, knots, controlPointsOrdered);
 	getSurfacePoint = function(u, v) {
 		return nurbsSurface.getPoint(u, v);
