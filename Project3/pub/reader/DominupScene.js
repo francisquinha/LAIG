@@ -298,19 +298,17 @@ DominupScene.prototype.updateGameState = function(){
   			}
 		case 'TYPE':
 			if(this.gameType == this.gameTypes[1]){
-   				this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
-          		this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
-    			this.startGame();			
+				this.state = "NAMES";
+				this.myInterface.showNamePlayers(); 	
+   				//this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
+          		//this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
+    			//this.startGame();			
 			}
-
-/*    		if(this.gameType == this.gameTypes[1]){
-				//this.myInterface.showNamePlayer(2); 		
-				this.state = 'NAMES';
-			}
-*/			else if(this.gameType == this.gameTypes[2]){
+			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
-				//this.myInterface.showNamePlayer(1);
 				this.myInterface.showLevelPlayer('Computer');
+				this.myInterface.showNamePlayer();
+				
 			}
 			else if(this.gameType == this.gameTypes[3]){
 				this.state = 'LEVELP1';
@@ -319,21 +317,27 @@ DominupScene.prototype.updateGameState = function(){
 			break;
 
 		case 'NAMES':
-			//this.myInterface.showNamePlayer(2); 		
+			//this.myInterface.showNamePlayer(); 		
 			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
         	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
-			//this.startGame();
+			if(this.enter == "Yes"){
+				console.log(this.namePlayer1);
+				console.log(this.namePlayer2);
+				this.startGame();
+			}
 			break;
 
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 1;
-          		else level = 2;
+          		if (this.gameLevel == this.gameLevels[1]) level = 2;
+          		else level = 3;
 				if(this.gameType == this.gameTypes[2]){
           			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
           			this.players['player2'] = new Player(this, 'player2', level, 'Computer');
+          			if(this.enter == "Yes"){
           			this.startGame();
+          			}
 				}
 				else{
 					this.players['player1'] = new Player(this, 'player1', level, 'Compute1');
@@ -346,10 +350,12 @@ DominupScene.prototype.updateGameState = function(){
 		case 'LEVELP2':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 1;
-          		else level = 2;
+          		if (this.gameLevel == this.gameLevels[1]) level = 2;
+          		else level = 3;
 		        this.players['player2'] = new Player(this, 'player2', level, 'Compute2');
-				this.startGame();
+				if(this.enter == "Yes"){
+          			this.startGame();
+          		}
 			}
 			break;
     	
@@ -416,6 +422,9 @@ DominupScene.prototype.initGame = function () {
 	this.gameTypes = ['(select one type)', 'Human vs Human', 'Human vs Computer', 'Computer vs Computer'];
 	this.gameType = this.gameTypes[0];
 
+	this.enters = ["Start Now?", "Yes"];
+	this.enter = this.enters[0];
+		
 	// load files
 	this.loadFiles = ['(choose load file)', 'File 1', 'File 2', 'File 3', 'File 4'];
 	this.loadFile = this.loadFiles[0];

@@ -109,7 +109,7 @@ MyInterface.prototype.createReviewMenu = function() {
 }
 
 MyInterface.prototype.hideGameMenu = function() {
-	this.gameMenu.destroy();
+	this.gameMenu.close();//destroy();
 };
 
 MyInterface.prototype.hideReviewMenu = function() {
@@ -125,6 +125,16 @@ MyInterface.prototype.showLevelPlayer = function(namePlayer){
 	this.gameLevel = this.newGameMenu.addFolder('Choose Level for ' + namePlayer);
 	this.gameLevel.add(this.scene, 'gameLevel', this.scene.gameLevels).name("Game Level");
 	this.gameLevel.open();
+
+	if(this.scene.state == "LEVELP2")
+	{
+		this.scene.enter = this.scene.enter[0];
+		this.enterGame = this.newGameMenu.addFolder('Start the Game');
+		this.enterGame.add(this.scene, 'enter', this.scene.enters).name("Start").onFinishChange(function(newValue) {
+   			this.enter = newValue;	
+		});;
+		this.enterGame.open();
+	}
 };
 
 MyInterface.prototype.showLoadFile = function(){
@@ -134,28 +144,42 @@ MyInterface.prototype.showLoadFile = function(){
 
 // Treat player names /////////////////////////////////////////////
 
-MyInterface.prototype.showNamePlayer = function(number){
+MyInterface.prototype.showNamePlayer = function(){
 	
-	if(number == 1){
 		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
-	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
-   		console.log(newValue); 		
-	});
-	this.nPlayer1.open();
-	}
-	
-	else if(number == 2){
-		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
-	this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
-   		console.log(newValue); 		
-	});
-	this.nPlayer1.open();
-		this.nPlayer2 = this.newGameMenu.addFolder('Choose namePlayer2');
-		this.nPlayer2.add(this.scene, 'namePlayer2').name("Name P2").onFinishChange(function(newValue) {
-	   		console.log(newValue); 		
+		this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
+   		this.namePlayer1 = newValue;	
 		});
-		this.nPlayer2.open();
-	}
+		this.nPlayer1.open();
+
+		this.scene.enter = this.scene.enter[0];
+		this.enterGame = this.newGameMenu.addFolder('Start the Game');
+		this.enterGame.add(this.scene, 'enter', this.scene.enters).name("Start").onFinishChange(function(newValue) {
+   			this.enter = newValue;	
+		});;
+		this.enterGame.open();
 };
 
 
+MyInterface.prototype.showNamePlayers = function(){
+	
+		this.nPlayer1 = this.newGameMenu.addFolder('Choose namePlayer1');
+		this.nPlayer1.add(this.scene, 'namePlayer1').name("Name P1").onFinishChange(function(newValue) {
+   		this.namePlayer1 = newValue;	
+        		
+		});
+		this.nPlayer1.open();
+		
+		this.nPlayer2 = this.newGameMenu.addFolder('Choose namePlayer2');
+		this.nPlayer2.add(this.scene, 'namePlayer2').name("Name P2").onFinishChange(function(newValue) {
+	   	this.namePlayer2 = newValue;	
+		});
+		this.nPlayer2.open();
+
+		this.scene.enter = this.scene.enter[0];
+		this.enterGame = this.newGameMenu.addFolder('Start the Game');
+		this.enterGame.add(this.scene, 'enter', this.scene.enters).name("Start").onFinishChange(function(newValue) {
+   			this.enter = newValue;	
+		});;
+		this.enterGame.open();
+};
