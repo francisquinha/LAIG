@@ -12,7 +12,6 @@ function getUrlVars() {
 }	 
 
 serialInclude(['../lib/CGF.js', 
-				'XMLscene.js', 
 				'MySceneGraph.js',
 				'leaves/triangle.js',
 				'leaves/rectangle.js',
@@ -54,8 +53,7 @@ main=function()
 	
 	// scenes to be loaded from graph scene
 
-	var filename=getUrlVars()['file'] || "monster/dominup_scene1.xml";
-	//var filename=getUrlVars()['file'] || "monster/dominup_scene2.xml"; 
+	var filename=getUrlVars()['file'] || "moon/moon.xml";
 
 
 	// create and load graph, and associate it to scene. 

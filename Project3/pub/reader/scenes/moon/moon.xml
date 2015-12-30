@@ -139,11 +139,17 @@
     <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
     <LEAF id="sphere" type="sphere" args="1 16 16"/>
 	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
+    <!-- Parameters of the above primitives: -->
+        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
+        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
+        <!-- sphere: radius, parts along radius, parts per section -->
+        <!-- triangle: coordinates of each vertex -->
 
-	<!-- Nova primitiva: patch, gerada por NURBS parâmetros: order: ordem, pode ser 1,2,3 
-														partsU: divisão em partes no domínio U a ser usada para o cálculo da superficie
-														partsV: divisão em partes no domínio V a ser usada para cálculo da superficie
-														o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
+	<!-- Nova primitiva: patch, gerada por NURBS parâmetros: 
+		order: pode ser 1,2,3 
+		partsU: divisão em partes no domínio U a ser usada para o cálculo da superficie
+		partsV: divisão em partes no domínio V a ser usada para cálculo da superficie
+		o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
 	<LEAF id="hemisphere" type="patch" order="3" partsU="20" partsV="20">           
         <controlpoint x="0" y="0" z="1" w="1"/>
         <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
@@ -211,13 +217,6 @@
 		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
 	<LEAF id="elevterrain" type="terrain" texture="textures/moon_color.jpg" heightmap="textures/moon_height_high.png" />
 		    
-    <!-- Parameters of the above primitives: -->
-        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
-        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
-        <!-- sphere: radius, parts along radius, parts per section -->
-        <!-- triangle: coordinates of each vertex -->
-        <!-- plane: number of divisions -->
-        <!-- patch:  -->
 
 </LEAVES>
 
@@ -229,12 +228,54 @@
     <NODE id="scene">
         <MATERIAL id="null"/>
         <TEXTURE id="null"/>
+        <TRANSLATION x="-30" y="-10" z="-30"/>
 		<DESCENDANTS>
-            
-        
+            <DESCENDANT id="earth"/>
+            <DESCENDANT id="moon"/>
+            <DESCENDANT id="sky"/>
         </DESCENDANTS>
     </NODE>
 
+	<NODE id="moon">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="moontext"/>
+        <TRANSLATION x="25" y="0" z="25"/>
+        <ROTATION axis="y" angle="-45"/>
+        <SCALE sx="300" sy="10" sz="300"/>
+        <DESCENDANTS>
+            <DESCENDANT id="elevterrain"/>
+        </DESCENDANTS>
+    </NODE>
+ 
+    <NODE id="sky">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="stars"/>
+        <TRANSLATION x="-60" y="0" z="-60"/>
+        <ROTATION axis="y" angle="45"/>
+        <SCALE sx="200" sy="200" sz="1"/>
+		<DESCENDANTS>
+            <DESCENDANT id="rectangle"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="earth">
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <TRANSLATION x="-50" y="50" z="0"/>
+        <SCALE sx="6" sy="6" sz="6"/>
+		<DESCENDANTS>
+            <DESCENDANT id="earth_sphere"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="earth_sphere">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="earthtext"/>
+        <ROTATION axis="x" angle="90"/>
+		<DESCENDANTS>
+            <DESCENDANT id="sphere"/>
+        </DESCENDANTS>
+    </NODE>
 
 </NODES>
 

@@ -21,7 +21,7 @@ function plane(scene, nrDivs) {
 	this.testAppearance.setDiffuse(0.7, 0.7, 0.7, 1);
 	this.testAppearance.setSpecular(0.0, 0.0, 0.0, 1);	
 	this.testAppearance.setShininess(120);
-	this.texture = new CGFtexture(this.scene, "scenes/monster/textures/texture.jpg");
+	this.texture = new CGFtexture(this.scene, "scenes/moon/textures/texture.jpg");
 	this.testAppearance.setTexture(this.texture);
 	this.testAppearance.setTextureWrap ('REPEAT', 'REPEAT');
 	

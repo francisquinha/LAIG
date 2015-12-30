@@ -90,7 +90,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
-	//this.scene.onGraphLoaded();
+	this.scene.onGraphLoaded();
 	
 };
 
@@ -282,7 +282,6 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 	var all_animations = tag_animations[0];
 	
 	var animations = all_animations.getElementsByTagName("ANIMATION");
-	if(animations.length == 0) console.warn("No animations");
 	
 	for(var i = 0 ; i < animations.length ; i++){
 		var currAnimation = {};
@@ -301,7 +300,6 @@ MySceneGraph.prototype.parseAnimations = function(rootElement) {
 				var coord_x = this.reader.getFloat(all_control_points[j], "xx", true);
 				var coord_y = this.reader.getFloat(all_control_points[j], "yy", true);
 				var coord_z = this.reader.getFloat(all_control_points[j], "zz", true);
-	//console.log("coord_x=" + coord_x + ",coord_y=" + coord_y + ",coord_z=" + coord_z);
 				if(isNaN(coord_x) || isNaN(coord_y) || isNaN(coord_z))
 	                console.warn("xx = " + coord_x + ", yy = " + coord_y + ", zz = " + coord_z + ", at least one of those axis has no number!");
 				
@@ -820,15 +818,6 @@ MySceneGraph.prototype.onXMLError=function (message) {
 	console.error("XML Loading Error: " + message);	
 	this.loadedOk=false;
 };
-
-/*
-MySceneGraph.prototype.findNode = function(id) {
-    for (i = 0; i < this.nodes.length; i++)
-        if (this.nodes[i].id == id) return this.nodes[i];
-
-    return null;
-};
-*/
 
 MySceneGraph.prototype.findType = function(type){ 
 	for (i = 0; i < this.types.length; i++)

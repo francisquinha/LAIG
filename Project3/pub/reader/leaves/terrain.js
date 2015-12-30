@@ -17,7 +17,7 @@ function terrain(scene, args) {
     this.heightmapTerrain = new CGFtexture(scene, this.args[1]);
     this.materialTerrain.setTexture(this.textureTerrain);
 
-    this.myShader = new CGFshader(scene.gl, "scenes/monster/shaders/myShader.vert", "scenes/monster/shaders/myShader.frag");
+    this.myShader = new CGFshader(scene.gl, "scenes/moon/shaders/myShader.vert", "scenes/moon/shaders/myShader.frag");
     this.myShader.setUniformsValues({uSampler2: 1});
     this.myShader.setUniformsValues({scale: 0.5});
     
