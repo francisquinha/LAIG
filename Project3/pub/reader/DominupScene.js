@@ -292,8 +292,8 @@ DominupScene.prototype.updateGameState = function(){
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 2;
-          		else level = 3;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
 				if(this.gameType == this.gameTypes[2]){
           			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
           			this.players['player2'] = new Player(this, 'player2', level, 'Computer');
@@ -310,8 +310,8 @@ DominupScene.prototype.updateGameState = function(){
 		case 'LEVELP2':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 2;
-          		else level = 3;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
 		        this.players['player2'] = new Player(this, 'player2', level, 'Compute2');
 				this.startGame();
 			}
@@ -335,7 +335,7 @@ DominupScene.prototype.updateGameState = function(){
       		}
       		else new_load = 1;
       		if (new_load == 0)
-	   	     	this.setupStartRequest(0, game_type, 'saves/file1.pl', this.players['player1'].name, this.players['player2'].name, this.players['player1'].level, this.players['player2'].level);
+	   	     	this.setupStartRequest(0, game_type, 'saves/file1.pl', this.players['player1'].name, this.players['player2'].name, this.players['player1'].level + 1, this.players['player2'].level + 1);
 	   	    else {
 	   	    	this.setupStartRequest(1, 0, this.load_file, 'p1', 'p2', 0, 0);
 	   	    }
@@ -371,7 +371,7 @@ DominupScene.prototype.initGame = function () {
   	this.selectedPieceId = 5036;
   	this.posA = [26, 26];
   	this.posB = [26, 26];
-
+	this.turn = 2;
 	this.pauseGame = false;
 	this.timePaused = 0;
 	this.previousTime;
@@ -689,7 +689,7 @@ DominupScene.prototype.display = function () {
 
  
     this.pushMatrix();
-      this.translate(0,5,0);
+      this.translate(4,5,-5);
       this.message.display();
     this.popMatrix();
 

@@ -95,7 +95,7 @@ MessageBoard.prototype.display = function () {
 
         if(this.scene.state == 'PLAY'){
             this.showString(this.text);
-            this.scene.translate(0,-1,0);
+            this.scene.translate(2,-1,0);
             if (this.scene.turn != undefined) {
                 var playerTurn = 'player' + this.scene.turn;
                 this.showString(this.scene.players[playerTurn].name);    
@@ -103,7 +103,9 @@ MessageBoard.prototype.display = function () {
         }
         else if(this.scene.state == 'OVER'){
             var winner = 'player' + this.scene.gameOver;
-            this.showString('Congratulations ' + this.scene.players[winner].name);
+            this.showString('Congratulations ')
+            this.scene.translate(2,-1,0);
+            this.showString(this.scene.players[winner].name);
         }
         else if(this.scene.state == 'REVIEW'){
 
