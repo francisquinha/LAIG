@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Dominup</title>
+	</head>
+	<body>
+		<h2>Load Game</h2>
+		
+		<div id="content">
+			<div id="params">
+				<input type="file" name="save_file" id="save_file">
+				<br>
+				<input type="button" onClick="makeRequest();" value="Start"/>
+		</div>	
+
+		<script type="text/javascript">
+			function postGameRequest(requestString, onSuccess, onError)
+			{
+				var request = new XMLHttpRequest();
+				request.open('POST', '../../game', true);
+
+				request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+				request.onerror = onError || function(){console.log("Error waiting for response");};
+
+				request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+				request.send('requestString='+encodeURIComponent(requestString));			
+			}
+
+			function makeRequest()
+			{
+				// Get Parameter Values
+				var v_new_load = 1;
+				var v_computer_human = 0;
+				var v_load_file = 'saves/' + document.querySelector("#save_file").files[0].name;  
+				var v_name1 = 'Player1';
+				var v_name2 = 'Player2';
+				var v_easy_hard1 = 0;
+				var v_easy_hard2 = 0;
+				
+				// Compose Request String
+				var requestString = '[setupGameHTTP,' + v_new_load + ',' + v_computer_human + ',"' 
+				+ v_load_file + '","' + v_name1 + '","' + v_name2 + '",' + v_easy_hard1 + ',' + v_easy_hard2 + ']';
+				console.log(requestString);
+				postGameRequest(requestString, handleReply);
+			}
+			
+			//Handle the JSON Reply
+			function handleReply(data){
+				location.href='play.html';
+			}
+
+			function handleError(data){
+				console.log(data.target.response);
+			}
+			
+		</script>
+	</body>
+</html>

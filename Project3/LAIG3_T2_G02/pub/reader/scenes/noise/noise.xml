@@ -1,0 +1,199 @@
+
+<SCENE>
+
+
+<INITIALS>
+    <frustum near="0.1" far="500"/>
+    <translation x="-100" y="-140" z="-100"/>
+    <rotation axis="x" angle="0"/>                 
+    <rotation axis="y" angle="0"/>                 
+    <rotation axis="z" angle="0"/>               
+    <scale sx="1" sy="1" sz="1"/>                 
+    <reference length="0"/>                         
+</INITIALS>
+
+
+<ANIMATIONS>
+ 		<ANIMATION id="helloline" span="8" type="linear">
+ 			<controlpoint xx="0" yy="0" zz="0"/> 			
+ 			<controlpoint xx="0" yy="-5" zz="-15"/> 	
+ 			<controlpoint xx="10" yy="0" zz="-10"/> 	
+ 			<controlpoint xx="0" yy="0" zz="-5"/> 	
+ 			<controlpoint xx="6.5" yy="0" zz="3"/> 	
+ 		</ANIMATION>
+		<ANIMATION id="earthcircle" span="8" type="circularAxis" center="-5 0 0" radius="5" startang="0" rotang="-360" axis = "0 1 0"/> 		
+		<ANIMATION id="earthrotation" span="100" type="circular" center="0 0 0" radius="0" startang="0" rotang="360"/> 		
+		<ANIMATION id="earthrevolution" span="100" type="circular" center="10 0 0" radius="-10" startang="0" rotang="20"/> 		
+		<ANIMATION id="what" span="4" type="circularAxis" center="0 0 0" radius="0" startang="0" rotang="35" axis = "-1 0 1"/> 		
+		<ANIMATION id="nothing_ini" span="2" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
+		<ANIMATION id="nothing_head" span="16" type="circular" center="0 0 0" radius="0" startang="0" rotang="0"/> 		
+</ANIMATIONS>
+
+
+<ILLUMINATION>
+    <ambient r="0.25" g="0.25" b="0.25" a="1"/>        
+    <background r="0" g="0" b="0" a="1"/>           
+</ILLUMINATION>
+
+
+<LIGHTS>
+    <LIGHT id="headlight">                          
+        <enable value ="1"/>         				
+        <position x="5.6" y="18.4" z="5.6" w="1"/>   
+        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
+        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
+        <specular r="0.2" g="0.2" b="0.2" a="1"/>   
+    </LIGHT>
+    <LIGHT id="sunlight">                          
+        <enable value ="1"/>         				
+        <position x="100" y="100" z="100" w="1"/>      
+        <ambient r="0.4" g="0.4" b="0.4" a="1"/>    
+        <diffuse r="0.4" g="0.4" b="0.4" a="1"/>  	
+        <specular r="0.2" g="0.2" b="0.2" a="1"/>   
+    </LIGHT>
+</LIGHTS>
+
+
+<TEXTURES>
+    <TEXTURE id="wallpaper">
+        <file path="textures/wallpaper.jpg"/>      
+        <amplif_factor s="2" t="1"/>          
+    </TEXTURE>
+</TEXTURES>
+
+
+<MATERIALS>
+    <MATERIAL id="branco">                                  
+        <shininess value="1"/>
+        <specular r="0.2" g="0.2" b="0.2" a="1"/>           
+        <diffuse r="0.8" g="0.8" b="0.8" a="1"/>            
+        <ambient r="0.8" g="0.8" b="0.8" a="1"/>            
+        <emission r="0" g="0" b="0" a="1"/>           
+    </MATERIAL>
+    <MATERIAL id="branco_brilhante">                            
+        <shininess value="1"/>
+        <specular r="1" g="1" b="1" a="1"/>           
+        <diffuse r="0.5" g="0.5" b="0.5" a="1"/>            
+        <ambient r="0.5" g="0.5" b="0.5" a="1"/>            
+        <emission r="1" g="1" b="1" a="1"/>           
+    </MATERIAL>
+</MATERIALS>
+
+
+<LEAVES>
+    <LEAF id="square" type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+    <LEAF id="rectangle" type="rectangle" args="-1 0.5 1 -0.5"/>
+    <LEAF id="cylinder" type="cylinder" args="1 1 1 16 16"/> 
+    <LEAF id="cone" type="cylinder" args="1 0.5 1 16 16"/> 
+    <LEAF id="sphere" type="sphere" args="1 16 16"/>
+	<!--<LEAF id="triangle" type="triangle" args="0 0 0 1 0 0 0 1 0"/> -->
+    <!-- Parameters of the above primitives: -->
+        <!-- rectangle: 2D coordinates for left-top and right-bottom vertices -->
+        <!-- cylinder: height, bottom radius, top radius, sections along height, parts per section -->
+        <!-- sphere: radius, parts along radius, parts per section -->
+        <!-- triangle: coordinates of each vertex -->
+
+	<!-- Nova primitiva: patch, gerada por NURBS parâmetros: 
+		order: pode ser 1,2,3 
+		partsU: divisão em partes no domínio U a ser usada para o cálculo da superficie
+		partsV: divisão em partes no domínio V a ser usada para cálculo da superficie
+		o número de pontos de controlo dentro da primitiva patch é (ordem+1)^2 --> 
+	<LEAF id="hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-4" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-4" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-4" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-4" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
+	<LEAF id="flat_hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-1" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-1" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-1" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-1" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
+	<LEAF id="super_flat_hemisphere" type="patch" order="3" partsU="20" partsV="20">           
+		<controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="2" y="-0.3" z="1" w="0.1111111111111111"/>
+        <controlpoint x="2" y="-0.3" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="-0.3" z="1" w="0.1111111111111111"/>
+        <controlpoint x="-2" y="-0.3" z="-1" w="0.1111111111111111"/>
+        <controlpoint x="0" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="1" w="1"/>
+        <controlpoint x="-2" y="0" z="1" w="0.3333333333333333"/>
+        <controlpoint x="-2" y="0" z="-1" w="0.3333333333333333"/>
+        <controlpoint x="0" y="0" z="-1" w="1"/>
+    </LEAF>
+
+	<!-- Nova primitiva: plano, gerado por NURBS
+		ex: <plane parts=”5” /> um plano de dimensões 1 x 1 unidades assente em XZ, centrado na origem e com a face visível apontando para +Y com divisão em cinco partes por eixo -->
+	<LEAF id="plane1" type="plane" parts="10"/>
+
+	<!-- Nova primitiva: terreno baseado em shaders
+		parâmetros:
+		ficheiro de textura jpg ou png com a textura que deve ser visualizada sobre o terreno (dimensões devem ser potências de 2)
+		ficheiro jpg ou png com o mapa de alturas que deve ser usado para formar o terreno (dimensões devem ser potências de 2) -->
+	<LEAF id="elevterrain" type="terrain" texture="textures/moon_color.jpg" heightmap="textures/moon_height_high.png" />
+		    
+
+</LEAVES>
+
+
+<NODES>
+
+    <ROOT id="scene"/>          
+
+    <NODE id="scene">
+        <MATERIAL id="null"/>
+        <TEXTURE id="null"/>
+        <TRANSLATION x="-30" y="-10" z="-30"/>
+		<DESCENDANTS>
+            <DESCENDANT id="wall"/>
+        </DESCENDANTS>
+    </NODE>
+ 
+    <NODE id="wall">
+        <MATERIAL id="branco"/>
+        <TEXTURE id="wallpaper"/>
+        <TRANSLATION x="-60" y="-60" z="-60"/>
+        <ROTATION axis="y" angle="45"/>
+        <SCALE sx="300" sy="300" sz="1"/>
+		<DESCENDANTS>
+            <DESCENDANT id="rectangle"/>
+        </DESCENDANTS>
+    </NODE>
+
+</NODES>
+
+
+</SCENE>
