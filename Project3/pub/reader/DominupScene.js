@@ -1,13 +1,11 @@
-/*
- * DominupScene
- * @constructor
- */
-
-
 function deg2rad(degrees) {
 	return degrees * Math.PI / 180;
 }
 
+/*
+ * DominupScene
+ * @constructor
+ */
 
 function DominupScene() {
     CGFscene.call(this);
@@ -43,11 +41,6 @@ DominupScene.prototype.init = function (application) {
 	this.initGame();
 };
 
-/*DominupScene.prototype.initLights = function () {
-	this.lights[0].setPosition(5, 5, 5, 1);
-  	this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-  	this.lights[0].update();
-};*/
 
 DominupScene.prototype.initLights = function () {
 
@@ -84,7 +77,7 @@ DominupScene.prototype.loadGame = function(){
 };
 
 DominupScene.prototype.saveGame = function (){
-	this.message.showString('You have successfully saved the game'); //acho que estes message.showString nao funcionam
+	this.message.showString('You have saved the game'); 
 	console.log('save game');
 };
 
@@ -299,10 +292,7 @@ DominupScene.prototype.updateGameState = function(){
 		case 'TYPE':
 			if(this.gameType == this.gameTypes[1]){
 				this.state = "NAMES";
-				this.myInterface.showNamePlayers(); 	
-   				//this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
-          		//this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
-    			//this.startGame();			
+				this.myInterface.showNamePlayers(); 		
 			}
 			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
@@ -317,7 +307,6 @@ DominupScene.prototype.updateGameState = function(){
 			break;
 
 		case 'NAMES':
-			//this.myInterface.showNamePlayer(); 		
 			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
         	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
 			if(this.enter == "Yes"){
@@ -393,11 +382,6 @@ DominupScene.prototype.updateGameState = function(){
 
 DominupScene.prototype.update = function(currTime) {
 	if(!this.pauseGame){
-    	if(this.timeout != 0 && this.responseTime >= this.timeout * 1000){
-      	// loose turn
-    	}
-    	else this.responseTime += currTime - this.timePaused;
-	
 		this.updateGameState();
 	}
 }
@@ -450,7 +434,7 @@ DominupScene.prototype.initGameEnvironments = function () {
 
 DominupScene.prototype.initGamePieces = function () {
 	this.pieces = [];
-	var piecesId = 5000;  // ID range for domino pieces
+	var piecesId = 5000;  
 
  	for(var i = 0 ; i < 8 ; i++)
 		for(var j = i ; j < 8 ; j++){
@@ -473,19 +457,16 @@ DominupScene.prototype.updateCameraPosition = function () {
     switch (this.currCameraPosition) {
       case 'start game':
       	this.pushMatrix();
-      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player1 view':
       	this.pushMatrix();
-      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player2 view':
        	this.pushMatrix();
-      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
      	break;
@@ -526,17 +507,13 @@ DominupScene.prototype.setDefaultAppearance = function () {
     this.setShininess(1);
 };
 
-DominupScene.prototype.cleanCamera = function (angle) {
-	this.camera.orbit(0,1,0,-angle);
-}
-
 DominupScene.prototype.updateLights = function() {
 	for (var i = 0; i < this.lights.length; i++)
 		this.lights[i].update();
 }
 
 DominupScene.prototype.initGameLooks = function () {
-	this.gameLooks = ['colored', 'default'];//, 'other2'];
+	this.gameLooks = ['colored', 'default'];
 	this.gameLook = this.gameLooks[0];
 
 	this.lookMaterials = [];
@@ -600,7 +577,7 @@ DominupScene.prototype.initGameLooks = function () {
 DominupScene.prototype.pieceSelected = function (id){
 
 	if(this.selectedPieceId!=undefined){
-	   // do anitation to old piece
+	   
    	 for(piece in this.pieces)
     	 if(this.pieces[piece].getId() == this.selectedPieceId){
         	this.pieces[piece].unselected();
@@ -611,7 +588,6 @@ DominupScene.prototype.pieceSelected = function (id){
 	this.selectedPieceId = id;
   	this.gameState = 'PIECE_SELECTED';
 
-	// do animation to new piece
   for(piece in this.pieces)
    if(this.pieces[piece].getId()==id){
      this.selectedPiece=this.pieces[piece].getValues();
@@ -663,7 +639,7 @@ DominupScene.prototype.pickHandler = function (id){
 	if(id >= 5000){
     	console.log("piecetouched " + id);
     	if(this.selectedPieceId == id){
-      	// unselect piece
+      	
       	this.gameState='SELECT_PIECE';
       	for(piece in this.pieces)
        	if(this.pieces[piece].getId() == this.selectedPieceId){
@@ -676,14 +652,14 @@ DominupScene.prototype.pickHandler = function (id){
 	}
 	else{
     console.log('position selected ' + this.gameSurface.getPosition(id));
-  	// if a position was picked
+  	
 		if(this.gameState == 'PIECE_SELECTED'){
 			this.posA = this.gameSurface.getPosition(id);
       		this.gameState='SELECT_LOCATION_B';
     	}
     	else if(this.gameState == 'SELECT_LOCATION_B'){
 			this.posB = this.gameSurface.getPosition(id);
-			// check if valid combination
+			
 			var cardinal;
 			if (!this.checkPosition())
         		this.posA = this.gameSurface.getPosition(id);
@@ -723,10 +699,8 @@ DominupScene.prototype.display = function () {
   this.updateProjectionMatrix();
   this.loadIdentity();
 
-	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
-	//this.setDefaultAppearance();
 	this.updateLights();
 
 	this.logPicking();

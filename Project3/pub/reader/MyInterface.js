@@ -11,10 +11,6 @@ MyInterface.prototype = Object.create(CGFinterface.prototype);
 
 MyInterface.prototype.constructor = MyInterface;
 
-/*
- * init
- * @param CGFapplication application
- */
 MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 	return true;
@@ -49,8 +45,6 @@ MyInterface.prototype.newGame = function() {
 
 	this.scene.gameType = this.scene.gameTypes[0];
 		
-	//TODO Avoid additional gui new games
-	
 	// Additional Gui to select game type 
 	if(this.startGameMenu.click == 1){
 	this.newGameMenu = new dat.GUI();
@@ -73,8 +67,6 @@ MyInterface.prototype.loadGame = function() {
 		this.scene.state = 'LOAD_GAME';
 		this.gameMenu.destroy();
 	}
-
-	//TODO Avoid additional gui load games
 	
 	this.newGameMenu = new dat.GUI();
 	this.newGameFolder = this.newGameMenu.addFolder("Load Game");
@@ -109,7 +101,7 @@ MyInterface.prototype.createReviewMenu = function() {
 }
 
 MyInterface.prototype.hideGameMenu = function() {
-	this.gameMenu.close();//destroy();
+	this.gameMenu.close();
 };
 
 MyInterface.prototype.hideReviewMenu = function() {
@@ -141,8 +133,6 @@ MyInterface.prototype.showLoadFile = function(){
 	this.loadFile = this.loadGameMenu.addFolder('Choose file');
 	this.loadFile.open();
 };
-
-// Treat player names /////////////////////////////////////////////
 
 MyInterface.prototype.showNamePlayer = function(){
 	

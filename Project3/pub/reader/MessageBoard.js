@@ -1,5 +1,6 @@
 /**
- *
+ * MessageBoard
+ * @constructor
  */
 function MessageBoard(scene, deltaX, deltaY) {
     CGFobject.call(this,scene);
