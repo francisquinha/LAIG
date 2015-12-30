@@ -22,12 +22,12 @@ function GameSurface(scene, sizeX, sizeY) {
 	this.positions = [];
 	this.heights = [];
 	this.positionID = [];
-	var hitId = 2000;
+	var hitBoxId = 200;
 	for(var n = 0 ; n < this.sizeY ; n++)
 		for(var m = 0 ; m < this.sizeX ; m++){
 			this.positions[[m, n]] = new Patch(scene, 1, 1, 1, [[-0.5, 0, 0.5], [-0.5, 0, -0.5], [0.5, 0, 0.5], [0.5, 0,-0.5]]);
 			this.heights[[m, n]] = 0;
-			this.positionID[hitId++] = [m,n];
+			this.positionID[hitBoxId++] = [m,n];
 		}
 };
 
@@ -92,12 +92,12 @@ GameSurface.prototype.display = function () {
 
 		if(this.scene.pickMode ){
 			
-		 	var hitId = 200;
+		 	var hitBoxId = 200;
 
 			for(var n = 0 ; n < this.sizeY ; n++)
 				for(var m = 0 ; m < this.sizeX ; m++){
 					this.scene.pushMatrix();
-						this.scene.registerForPick(hitId++, this.positions[[m, n]]);	
+						this.scene.registerForPick(hitBoxId++, this.positions[[m, n]]);	
 						this.scene.translate(m, (this.table[n][m].length - 1) + 0.1, n, 1);
 						this.scene.translate(0.5, this.heights[[m,n]], 0.5, 1); 
 						this.positions[[m, n]].display();

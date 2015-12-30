@@ -1,11 +1,13 @@
-function deg2rad(degrees) {
-	return degrees * Math.PI / 180;
-}
-
 /*
  * DominupScene
  * @constructor
  */
+
+
+function deg2rad(degrees) {
+	return degrees * Math.PI / 180;
+}
+
 
 function DominupScene() {
     CGFscene.call(this);
@@ -41,6 +43,11 @@ DominupScene.prototype.init = function (application) {
 	this.initGame();
 };
 
+/*DominupScene.prototype.initLights = function () {
+	this.lights[0].setPosition(5, 5, 5, 1);
+  	this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
+  	this.lights[0].update();
+};*/
 
 DominupScene.prototype.initLights = function () {
 
@@ -77,8 +84,7 @@ DominupScene.prototype.loadGame = function(){
 };
 
 DominupScene.prototype.saveGame = function (){
-	this.message.showString('You have saved the game'); 
-	console.log('save game');
+	this.state = 'SAVE';
 };
 
 DominupScene.prototype.newGame = function(){
@@ -135,6 +141,48 @@ DominupScene.prototype.handleSetupStartReply = function(data){
     if(myScene.gameOver != 0) {
       	myScene.state = 'OVER';
       	myScene.myInterface.hideGameMenu();
+      	return;
+    }
+    myScene.selectedPieceId = undefined;
+	if (myScene.players['player' + myScene.turn].level != 0) {
+		myScene.gameState = 'COMPUTER_PLAY';
+      	myScene.playComputerRequest();		
+	}
+    myScene.gameState = 'SELECT_PIECE';
+}
+
+DominupScene.prototype.handleSetupStartReply = function(data){
+	console.log(data.target.response);
+	var response = JSON.parse(data.target.response);
+	var message = response.message;
+	var player_order = message.split(" / ");
+	var name1 = player_order[0].split(" - ")[1];
+	var name2 = player_order[1].split(" - ")[1];
+	var level1 = parseInt(player_order[0].split(" - ")[2]) - 1;
+	var level2 = parseInt(player_order[1].split(" - ")[2]) - 1;
+	myScene.players['player1'].name = name1;
+	myScene.players['player2'].name = name2;
+	myScene.players['player1'].level = level1;
+	myScene.players['player2'].level = level2;
+	var distribution = response.distribution.split("[")[1].split("]")[0].split(",");
+	var pieces1 = [];
+	var pieces2 = [];
+	var i = 0;
+	for (id in myScene.pieces) {
+		if (distribution[i] == "1")
+			pieces1.push(id);
+		else pieces2.push(id);
+		i++;
+	}
+	myScene.players['player1'].setPieces(pieces1);
+	myScene.players['player2'].setPieces(pieces2);
+	myScene.turn = parseInt(response.player);
+	myScene.gameOver = parseInt(response.gameover);
+	myScene.processBoard(response.board);
+    if(myScene.gameOver != 0) {
+      	myScene.state = 'OVER';
+      	myScene.myInterface.hideGameMenu();
+      	return;
     }
     myScene.selectedPieceId = undefined;
 	if (myScene.players['player' + myScene.turn].level != 0) {
@@ -177,6 +225,7 @@ DominupScene.prototype.handlePlayReply = function(data){
     if(myScene.gameOver != 0) {
       	myScene.state = 'OVER';
       	myScene.myInterface.hideGameMenu();
+      	return;
     }
     myScene.selectedPieceId = undefined;
 	if (myScene.players['player' + myScene.turn].level != 0) {
@@ -184,6 +233,10 @@ DominupScene.prototype.handlePlayReply = function(data){
       	myScene.playComputerRequest();		
 	}
     myScene.gameState = 'SELECT_PIECE';
+}
+
+DominupScene.prototype.handleSaveReply = function(data){
+	console.log(data.target.response);
 }
 
 DominupScene.prototype.handleError = function(data){
@@ -208,6 +261,11 @@ DominupScene.prototype.playComputerRequest = function() {
 	this.postGameRequest(requestString, this.handlePlayReply, this.handleError);
 }
 
+DominupScene.prototype.saveRequest = function(save_file) {
+	var requestString = '[saveHTTP,"' + save_file + '"]';
+	console.log(requestString);
+	this.postGameRequest(requestString, this.handleSaveReply, this.handleError);
+}
 
 DominupScene.prototype.processMove = function(piece, posA, posB, cardinal, level) {
 	var matrx = mat4.create();
@@ -268,6 +326,24 @@ DominupScene.prototype.startGame = function(){
 
 DominupScene.prototype.updateGameState = function(){
   	switch(this.state){
+  		case 'SAVE':
+  			if (this.saveFile != this.saveFiles[0]) {  			
+  				if (this.saveFile == this.saveFiles[1]) {
+  					this.save_file = 'saves/file1.pl';
+  				}
+  				else if (this.saveFile == this.saveFiles[2]) {
+  					this.save_file = 'saves/file2.pl';
+  				}
+  				else if (this.saveFile == this.saveFiles[3]) {
+  					this.save_file = 'saves/file3.pl';
+  				}
+  				else if (this.saveFile == this.saveFiles[4]) {
+  					this.save_file = 'saves/file4.pl';
+  				}
+	   	   		this.saveRequest(this.save_file);
+  				this.state = 'DONE';
+  			}
+  			break;
   		case 'LOAD':
   			if (this.loadFile != this.loadFiles[0]) {  			
   				if (this.loadFile == this.loadFiles[1]) {
@@ -289,10 +365,14 @@ DominupScene.prototype.updateGameState = function(){
 				this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
 	        	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
   			}
+  			break;
 		case 'TYPE':
 			if(this.gameType == this.gameTypes[1]){
 				this.state = "NAMES";
-				this.myInterface.showNamePlayers(); 		
+				this.myInterface.showNamePlayers(); 	
+   				//this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
+          		//this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
+    			//this.startGame();			
 			}
 			else if(this.gameType == this.gameTypes[2]){
 				this.state = 'LEVELP1';
@@ -307,6 +387,7 @@ DominupScene.prototype.updateGameState = function(){
 			break;
 
 		case 'NAMES':
+			//this.myInterface.showNamePlayer(); 		
 			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
         	this.players['player2'] = new Player(this, 'player2', 0, this.namePlayer2);
 			if(this.enter == "Yes"){
@@ -319,8 +400,8 @@ DominupScene.prototype.updateGameState = function(){
 		case 'LEVELP1':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 2;
-          		else level = 3;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
 				if(this.gameType == this.gameTypes[2]){
           			this.players['player1'] = new Player(this, 'player1', 0, this.namePlayer1);
           			this.players['player2'] = new Player(this, 'player2', level, 'Computer');
@@ -339,8 +420,8 @@ DominupScene.prototype.updateGameState = function(){
 		case 'LEVELP2':
 			if(this.gameLevel != this.gameLevels[0]){
           		var level;
-          		if (this.gameLevel == this.gameLevels[1]) level = 2;
-          		else level = 3;
+          		if (this.gameLevel == this.gameLevels[1]) level = 1;
+          		else level = 2;
 		        this.players['player2'] = new Player(this, 'player2', level, 'Compute2');
 				if(this.enter == "Yes"){
           			this.startGame();
@@ -382,6 +463,11 @@ DominupScene.prototype.updateGameState = function(){
 
 DominupScene.prototype.update = function(currTime) {
 	if(!this.pauseGame){
+    	if(this.timeout != 0 && this.responseTime >= this.timeout * 1000){
+      	// loose turn
+    	}
+    	else this.responseTime += currTime - this.timePaused;
+	
 		this.updateGameState();
 	}
 }
@@ -410,8 +496,12 @@ DominupScene.prototype.initGame = function () {
 	this.enter = this.enters[0];
 		
 	// load files
-	this.loadFiles = ['(choose load file)', 'File 1', 'File 2', 'File 3', 'File 4'];
+	this.loadFiles = ['(choose file)', 'File 1', 'File 2', 'File 3', 'File 4'];
 	this.loadFile = this.loadFiles[0];
+
+	// load files
+	this.saveFiles = ['(choose file)', 'File 1', 'File 2', 'File 3', 'File 4'];
+	this.saveFile = this.saveFiles[0];
 
   	// game levels
 	this.gameLevels = ['(select one level)', 'Easy', 'Hard'];
@@ -434,7 +524,7 @@ DominupScene.prototype.initGameEnvironments = function () {
 
 DominupScene.prototype.initGamePieces = function () {
 	this.pieces = [];
-	var piecesId = 5000;  
+	var piecesId = 5000;  // ID range for domino pieces
 
  	for(var i = 0 ; i < 8 ; i++)
 		for(var j = i ; j < 8 ; j++){
@@ -457,16 +547,19 @@ DominupScene.prototype.updateCameraPosition = function () {
     switch (this.currCameraPosition) {
       case 'start game':
       	this.pushMatrix();
+      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player1 view':
       	this.pushMatrix();
+      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
       	break;
       case 'player2 view':
        	this.pushMatrix();
+      		//this.cleanCamera(this.cameraPositionsAngle[this.currCameraPosition]);
       		this.camera.orbit(0,1,0,this.cameraPositionsAngle[this.cameraPosition]);
       	this.popMatrix();
      	break;
@@ -507,13 +600,17 @@ DominupScene.prototype.setDefaultAppearance = function () {
     this.setShininess(1);
 };
 
+DominupScene.prototype.cleanCamera = function (angle) {
+	this.camera.orbit(0,1,0,-angle);
+}
+
 DominupScene.prototype.updateLights = function() {
 	for (var i = 0; i < this.lights.length; i++)
 		this.lights[i].update();
 }
 
 DominupScene.prototype.initGameLooks = function () {
-	this.gameLooks = ['colored', 'default'];
+	this.gameLooks = ['colored', 'default'];//, 'other2'];
 	this.gameLook = this.gameLooks[0];
 
 	this.lookMaterials = [];
@@ -577,7 +674,7 @@ DominupScene.prototype.initGameLooks = function () {
 DominupScene.prototype.pieceSelected = function (id){
 
 	if(this.selectedPieceId!=undefined){
-	   
+	   // do anitation to old piece
    	 for(piece in this.pieces)
     	 if(this.pieces[piece].getId() == this.selectedPieceId){
         	this.pieces[piece].unselected();
@@ -588,6 +685,7 @@ DominupScene.prototype.pieceSelected = function (id){
 	this.selectedPieceId = id;
   	this.gameState = 'PIECE_SELECTED';
 
+	// do animation to new piece
   for(piece in this.pieces)
    if(this.pieces[piece].getId()==id){
      this.selectedPiece=this.pieces[piece].getValues();
@@ -639,7 +737,7 @@ DominupScene.prototype.pickHandler = function (id){
 	if(id >= 5000){
     	console.log("piecetouched " + id);
     	if(this.selectedPieceId == id){
-      	
+      	// unselect piece
       	this.gameState='SELECT_PIECE';
       	for(piece in this.pieces)
        	if(this.pieces[piece].getId() == this.selectedPieceId){
@@ -652,14 +750,14 @@ DominupScene.prototype.pickHandler = function (id){
 	}
 	else{
     console.log('position selected ' + this.gameSurface.getPosition(id));
-  	
+  	// if a position was picked
 		if(this.gameState == 'PIECE_SELECTED'){
 			this.posA = this.gameSurface.getPosition(id);
       		this.gameState='SELECT_LOCATION_B';
     	}
     	else if(this.gameState == 'SELECT_LOCATION_B'){
 			this.posB = this.gameSurface.getPosition(id);
-			
+			// check if valid combination
 			var cardinal;
 			if (!this.checkPosition())
         		this.posA = this.gameSurface.getPosition(id);
@@ -699,8 +797,10 @@ DominupScene.prototype.display = function () {
   this.updateProjectionMatrix();
   this.loadIdentity();
 
+	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
+	//this.setDefaultAppearance();
 	this.updateLights();
 
 	this.logPicking();
@@ -712,7 +812,7 @@ DominupScene.prototype.display = function () {
       this.message.display();
     this.popMatrix();
 
-	if(this.state == 'PLAY' || this.state == 'OVER'){
+	if(this.state == 'PLAY' || this.state == 'OVER' || this.state == 'SAVE' || this.state == 'DONE'){
    	  
 		this.pushMatrix();
  

@@ -11,6 +11,10 @@ MyInterface.prototype = Object.create(CGFinterface.prototype);
 
 MyInterface.prototype.constructor = MyInterface;
 
+/*
+ * init
+ * @param CGFapplication application
+ */
 MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 	return true;
@@ -40,11 +44,13 @@ MyInterface.prototype.newGame = function() {
 	
 	if(this.gameMenu != undefined){
 		this.scene.state = 'GAME_TYPE';
-		this.gameMenu.destroy();
+		this.gameMenu.close();
 	}
 
 	this.scene.gameType = this.scene.gameTypes[0];
 		
+	//TODO Avoid additional gui new games
+	
 	// Additional Gui to select game type 
 	if(this.startGameMenu.click == 1){
 	this.newGameMenu = new dat.GUI();
@@ -54,8 +60,8 @@ MyInterface.prototype.newGame = function() {
 	this.startGameMenu.click++;
 	}
 	else {
-			this.newGameMenu.destroy();
-			this.mainMenu.destroy();
+			this.newGameMenu.close();
+			this.mainMenu.close();
 			this.createMainMenu();
 	}
 
@@ -65,8 +71,10 @@ MyInterface.prototype.loadGame = function() {
 	
 	if(this.gameMenu != undefined){
 		this.scene.state = 'LOAD_GAME';
-		this.gameMenu.destroy();
+		this.gameMenu.close();
 	}
+
+	//TODO Avoid additional gui load games
 	
 	this.newGameMenu = new dat.GUI();
 	this.newGameFolder = this.newGameMenu.addFolder("Load Game");
@@ -76,6 +84,13 @@ MyInterface.prototype.loadGame = function() {
 	
 };
 
+MyInterface.prototype.saveGame = function() {
+	this.saveGameMenu = new dat.GUI();
+	this.saveGameFolder = this.saveGameMenu.addFolder("Save Game");
+	this.saveGameFolder.add(this.scene, 'saveFile', this.scene.saveFiles).name("Save File");
+	this.saveGameFolder.open();
+	this.scene.saveGame();
+};
 
 
 MyInterface.prototype.createGameMenu = function() {
@@ -86,7 +101,7 @@ MyInterface.prototype.createGameMenu = function() {
 	this.gameOptions.add(this.scene, 'undoLastMove').name("Back");
 	this.gameOptions.add(this.scene, 'cameraPosition', this.scene.cameraPositions).name("Change Camera");
 	this.gameOptions.add(this.scene, 'reviewGame').name("Game Movie");
-	this.gameOptions.add(this.scene, 'saveGame').name("Save Game");
+	this.gameOptions.add(this, 'saveGame').name("Save Game");
 
 	this.gameOptions.open();
 };
@@ -101,15 +116,15 @@ MyInterface.prototype.createReviewMenu = function() {
 }
 
 MyInterface.prototype.hideGameMenu = function() {
-	this.gameMenu.close();
+	this.gameMenu.close();//destroy();
 };
 
 MyInterface.prototype.hideReviewMenu = function() {
-	this.reviewMenu.destroy();
+	this.reviewMenu.close();
 };
 
 MyInterface.prototype.hideNewGameMenu = function() {
-	this.newGameMenu.destroy();
+	this.newGameMenu.close();
 };
 
 MyInterface.prototype.showLevelPlayer = function(namePlayer){
@@ -133,6 +148,13 @@ MyInterface.prototype.showLoadFile = function(){
 	this.loadFile = this.loadGameMenu.addFolder('Choose file');
 	this.loadFile.open();
 };
+
+MyInterface.prototype.showSaveFile = function(){
+	this.saveFile = this.saveGameMenu.addFolder('Choose file');
+	this.saveFile.open();
+};
+
+// Treat player names /////////////////////////////////////////////
 
 MyInterface.prototype.showNamePlayer = function(){
 	
